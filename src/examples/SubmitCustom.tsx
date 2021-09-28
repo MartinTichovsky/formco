@@ -76,8 +76,8 @@ export const SubmitCustom = (
                 }
               />
             </div>
-            <div className="field-row">
-              <CustomSubmitComponent controller={controller} />{" "}
+            <div className="field-row buttons">
+              <CustomSubmitComponent controller={controller} />
               <button
                 data-testid="reset"
                 onClick={() => controller.resetForm()}

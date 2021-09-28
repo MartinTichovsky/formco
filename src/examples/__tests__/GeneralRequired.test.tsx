@@ -1,11 +1,7 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
-import {
-  invalidFieldClassName,
-  requiredStarClassName,
-  validFieldClassName
-} from "../../constants";
+import { cnInvalidField, cnRequiredStar, cnValidField } from "../../constants";
 import { GeneralRequired } from "../GeneralRequired";
 import { testInvalidMessage } from "../utils/selectors";
 
@@ -27,85 +23,57 @@ const submitTestId = "submit";
 const textareaTestId = "textarea";
 
 const allFieldsMustHaveInvalidClassName = () => {
-  expect(screen.getByTestId(input1TestId)).toHaveClass(invalidFieldClassName);
-  expect(screen.getByTestId(input2TestId)).toHaveClass(invalidFieldClassName);
+  expect(screen.getByTestId(input1TestId)).toHaveClass(cnInvalidField);
+  expect(screen.getByTestId(input2TestId)).toHaveClass(cnInvalidField);
   expect(() => screen.getByTestId(radio1TestId)).toThrowError();
-  expect(screen.getByTestId(radio2TestId)).toHaveClass(invalidFieldClassName);
-  expect(screen.getByTestId(radio3TestId)).toHaveClass(invalidFieldClassName);
-  expect(screen.getByTestId(selectTestId)).toHaveClass(invalidFieldClassName);
-  expect(screen.getByTestId(textareaTestId)).toHaveClass(invalidFieldClassName);
-  expect(screen.getByTestId(checkbox1TestId)).toHaveClass(
-    invalidFieldClassName
-  );
-  expect(screen.getByTestId(checkbox2TestId)).toHaveClass(
-    invalidFieldClassName
-  );
+  expect(screen.getByTestId(radio2TestId)).toHaveClass(cnInvalidField);
+  expect(screen.getByTestId(radio3TestId)).toHaveClass(cnInvalidField);
+  expect(screen.getByTestId(selectTestId)).toHaveClass(cnInvalidField);
+  expect(screen.getByTestId(textareaTestId)).toHaveClass(cnInvalidField);
+  expect(screen.getByTestId(checkbox1TestId)).toHaveClass(cnInvalidField);
+  expect(screen.getByTestId(checkbox2TestId)).toHaveClass(cnInvalidField);
 };
 
 const checkStarCount = (container: HTMLElement) => {
-  expect(container.querySelectorAll(`.${requiredStarClassName}`).length).toBe(
-    7
-  );
+  expect(container.querySelectorAll(`.${cnRequiredStar}`).length).toBe(7);
 };
 
 const expectNotTohaveClasses = (testId: string) => {
-  expect(screen.getByTestId(testId)).not.toHaveClass(invalidFieldClassName);
-  expect(screen.getByTestId(testId)).not.toHaveClass(validFieldClassName);
+  expect(screen.getByTestId(testId)).not.toHaveClass(cnInvalidField);
+  expect(screen.getByTestId(testId)).not.toHaveClass(cnValidField);
 };
 
 const expectToBeInvalid = (testId: string) => {
-  expect(screen.getByTestId(testId)).toHaveClass(invalidFieldClassName);
-  expect(screen.getByTestId(testId)).not.toHaveClass(validFieldClassName);
+  expect(screen.getByTestId(testId)).toHaveClass(cnInvalidField);
+  expect(screen.getByTestId(testId)).not.toHaveClass(cnValidField);
 };
 
 const expectToBeValid = (testId: string) => {
-  expect(screen.getByTestId(testId)).not.toHaveClass(invalidFieldClassName);
-  expect(screen.getByTestId(testId)).toHaveClass(validFieldClassName);
+  expect(screen.getByTestId(testId)).not.toHaveClass(cnInvalidField);
+  expect(screen.getByTestId(testId)).toHaveClass(cnValidField);
 };
 
 const noInvalidClassNamesAreProvided = () => {
-  expect(screen.getByTestId(input1TestId)).not.toHaveClass(
-    invalidFieldClassName
-  );
-  expect(screen.getByTestId(input2TestId)).not.toHaveClass(
-    invalidFieldClassName
-  );
+  expect(screen.getByTestId(input1TestId)).not.toHaveClass(cnInvalidField);
+  expect(screen.getByTestId(input2TestId)).not.toHaveClass(cnInvalidField);
   expect(() => screen.getByTestId(radio1TestId)).toThrowError();
-  expect(screen.getByTestId(radio2TestId)).not.toHaveClass(
-    invalidFieldClassName
-  );
-  expect(screen.getByTestId(radio3TestId)).not.toHaveClass(
-    invalidFieldClassName
-  );
-  expect(screen.getByTestId(selectTestId)).not.toHaveClass(
-    invalidFieldClassName
-  );
-  expect(screen.getByTestId(textareaTestId)).not.toHaveClass(
-    invalidFieldClassName
-  );
-  expect(screen.getByTestId(checkbox1TestId)).not.toHaveClass(
-    invalidFieldClassName
-  );
-  expect(screen.getByTestId(checkbox2TestId)).not.toHaveClass(
-    invalidFieldClassName
-  );
+  expect(screen.getByTestId(radio2TestId)).not.toHaveClass(cnInvalidField);
+  expect(screen.getByTestId(radio3TestId)).not.toHaveClass(cnInvalidField);
+  expect(screen.getByTestId(selectTestId)).not.toHaveClass(cnInvalidField);
+  expect(screen.getByTestId(textareaTestId)).not.toHaveClass(cnInvalidField);
+  expect(screen.getByTestId(checkbox1TestId)).not.toHaveClass(cnInvalidField);
+  expect(screen.getByTestId(checkbox2TestId)).not.toHaveClass(cnInvalidField);
 };
 
 const noValidClassNamesAreProvided = () => {
-  expect(screen.getByTestId(input1TestId)).not.toHaveClass(validFieldClassName);
-  expect(screen.getByTestId(input2TestId)).not.toHaveClass(validFieldClassName);
-  expect(screen.getByTestId(radio2TestId)).not.toHaveClass(validFieldClassName);
-  expect(screen.getByTestId(radio3TestId)).not.toHaveClass(validFieldClassName);
-  expect(screen.getByTestId(selectTestId)).not.toHaveClass(validFieldClassName);
-  expect(screen.getByTestId(textareaTestId)).not.toHaveClass(
-    validFieldClassName
-  );
-  expect(screen.getByTestId(checkbox1TestId)).not.toHaveClass(
-    validFieldClassName
-  );
-  expect(screen.getByTestId(checkbox2TestId)).not.toHaveClass(
-    validFieldClassName
-  );
+  expect(screen.getByTestId(input1TestId)).not.toHaveClass(cnValidField);
+  expect(screen.getByTestId(input2TestId)).not.toHaveClass(cnValidField);
+  expect(screen.getByTestId(radio2TestId)).not.toHaveClass(cnValidField);
+  expect(screen.getByTestId(radio3TestId)).not.toHaveClass(cnValidField);
+  expect(screen.getByTestId(selectTestId)).not.toHaveClass(cnValidField);
+  expect(screen.getByTestId(textareaTestId)).not.toHaveClass(cnValidField);
+  expect(screen.getByTestId(checkbox1TestId)).not.toHaveClass(cnValidField);
+  expect(screen.getByTestId(checkbox2TestId)).not.toHaveClass(cnValidField);
 };
 
 const submitInvalidForm = async () => {
@@ -143,19 +111,13 @@ describe("GeneralRequired", () => {
 
     // first radio option should have a star not the others
     expect(
-      screen
-        .getByTestId(radioField1TestId)
-        .querySelector(`.${requiredStarClassName}`)
+      screen.getByTestId(radioField1TestId).querySelector(`.${cnRequiredStar}`)
     ).toBeNull();
     expect(
-      screen
-        .getByTestId(radioField2TestId)
-        .querySelector(`.${requiredStarClassName}`)
+      screen.getByTestId(radioField2TestId).querySelector(`.${cnRequiredStar}`)
     ).toBeTruthy();
     expect(
-      screen
-        .getByTestId(radioField3TestId)
-        .querySelector(`.${requiredStarClassName}`)
+      screen.getByTestId(radioField3TestId).querySelector(`.${cnRequiredStar}`)
     ).toBeNull();
 
     // input an empty values
@@ -483,19 +445,13 @@ describe("GeneralRequired", () => {
 
     // first radio option should have a star not the others
     expect(
-      screen
-        .getByTestId(radioField1TestId)
-        .querySelector(`.${requiredStarClassName}`)
+      screen.getByTestId(radioField1TestId).querySelector(`.${cnRequiredStar}`)
     ).toBeNull();
     expect(
-      screen
-        .getByTestId(radioField2TestId)
-        .querySelector(`.${requiredStarClassName}`)
+      screen.getByTestId(radioField2TestId).querySelector(`.${cnRequiredStar}`)
     ).toBeTruthy();
     expect(
-      screen
-        .getByTestId(radioField3TestId)
-        .querySelector(`.${requiredStarClassName}`)
+      screen.getByTestId(radioField3TestId).querySelector(`.${cnRequiredStar}`)
     ).toBeNull();
 
     await submitInvalidForm();
@@ -527,19 +483,13 @@ describe("GeneralRequired", () => {
 
     // first radio option should have a star not the others
     expect(
-      screen
-        .getByTestId(radioField1TestId)
-        .querySelector(`.${requiredStarClassName}`)
+      screen.getByTestId(radioField1TestId).querySelector(`.${cnRequiredStar}`)
     ).toBeTruthy();
     expect(
-      screen
-        .getByTestId(radioField2TestId)
-        .querySelector(`.${requiredStarClassName}`)
+      screen.getByTestId(radioField2TestId).querySelector(`.${cnRequiredStar}`)
     ).toBeNull();
     expect(
-      screen
-        .getByTestId(radioField3TestId)
-        .querySelector(`.${requiredStarClassName}`)
+      screen.getByTestId(radioField3TestId).querySelector(`.${cnRequiredStar}`)
     ).toBeNull();
 
     await submitInvalidForm();

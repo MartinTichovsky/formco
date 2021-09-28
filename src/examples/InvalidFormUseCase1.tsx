@@ -30,8 +30,8 @@ export const InvalidFormUseCase1 = (
                 placeholder="Input a surname"
               />
             </div>
-            <div className="field-row">
-              <Submit controller={controller}>Submit</Submit>{" "}
+            <div className="field-row buttons">
+              <Submit controller={controller}>Submit</Submit>
               <button
                 data-testid="reset"
                 onClick={() => controller.resetForm()}

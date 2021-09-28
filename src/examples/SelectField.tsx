@@ -31,10 +31,10 @@ export const SelectField = (
                 <option value="option-3">Option 3</option>
               </Select>
             </div>
-            <div className="field-row">
+            <div className="field-row buttons">
               <Submit controller={controller} data-testid="submit">
                 Submit
-              </Submit>{" "}
+              </Submit>
               <button
                 data-testid="reset"
                 onClick={() => controller.resetForm()}

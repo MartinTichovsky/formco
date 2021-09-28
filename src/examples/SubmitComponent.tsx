@@ -132,7 +132,7 @@ export const SubmitComponent = (
                 }
               />
             </div>
-            <div className="field-row">
+            <div className="field-row full-width">
               <Submit
                 ButtonComponent={FunctionalSubmitComponent}
                 controller={controller}
@@ -141,7 +141,7 @@ export const SubmitComponent = (
                 Functional Component Submit
               </Submit>
             </div>
-            <div className="field-row">
+            <div className="field-row full-width">
               <Submit
                 ButtonComponent={ClassSubmitComponent}
                 controller={controller}
@@ -150,7 +150,7 @@ export const SubmitComponent = (
                 Class Component Submit
               </Submit>
             </div>
-            <div className="field-row">
+            <div className="field-row full-width">
               <button
                 data-testid="reset"
                 onClick={() => controller.resetForm()}

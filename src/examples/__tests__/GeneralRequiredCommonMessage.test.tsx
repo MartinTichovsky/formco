@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
-import { requiredStarClassName } from "../../constants";
+import { cnRequiredStar } from "../../constants";
 import { GeneralRequiredCommonMessage } from "../GeneralRequiredCommonMessage";
 import { testInvalidMessage } from "../utils/selectors";
 
@@ -27,9 +27,7 @@ const validGlobalClassName = "valid-global";
 const validValidationClassName = "valid-validation";
 
 const checkStarCount = (container: HTMLElement) => {
-  expect(container.querySelectorAll(`.${requiredStarClassName}`).length).toBe(
-    5
-  );
+  expect(container.querySelectorAll(`.${cnRequiredStar}`).length).toBe(5);
 };
 
 test("GeneralRequiredCommonMessage", async () => {

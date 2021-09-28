@@ -56,10 +56,10 @@ export const RadioField = (
                 />
               </div>
             </Validation>
-            <div className="field-row">
+            <div className="field-row buttons">
               <Submit controller={controller} data-testid="submit">
                 Submit
-              </Submit>{" "}
+              </Submit>
               <button
                 data-testid="reset"
                 onClick={() => controller.resetForm()}

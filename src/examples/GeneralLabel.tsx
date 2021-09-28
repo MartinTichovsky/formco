@@ -19,7 +19,7 @@ export const GeneralLabel = (
         onSubmit={(fields) => console.log(fields)}
       >
         {(controller) => (
-          <>
+          <div className="g-label-120">
             <div className="field-row">
               <label htmlFor="salutation">Salutation</label>{" "}
               <Input
@@ -53,10 +53,10 @@ export const GeneralLabel = (
                 placeholder="Input a surname"
               />
             </div>
-            <div className="field-row">
+            <div className="field-row buttons">
               <Submit controller={controller} data-testid="submit">
                 Submit
-              </Submit>{" "}
+              </Submit>
               <button
                 data-testid="reset"
                 onClick={() => controller.resetForm()}
@@ -68,7 +68,7 @@ export const GeneralLabel = (
             <div className="info">
               * Three different ways how to provide a label
             </div>
-          </>
+          </div>
         )}
       </FormController>
     </Template>

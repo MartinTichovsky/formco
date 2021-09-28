@@ -74,7 +74,7 @@ export const SelectFieldComponent = (
         onSubmit={(fields) => console.log(fields)}
       >
         {(controller) => (
-          <>
+          <div className="g-label-150">
             <div className="field-row">
               <Select
                 Component={ClassSelectComponent}
@@ -105,10 +105,10 @@ export const SelectFieldComponent = (
                 <option value="option-2-3">Option 2-3</option>
               </Select>
             </div>
-            <div className="field-row">
+            <div className="field-row buttons">
               <Submit controller={controller} data-testid="submit">
                 Submit
-              </Submit>{" "}
+              </Submit>
               <button
                 data-testid="reset"
                 onClick={() => controller.resetForm()}
@@ -122,7 +122,7 @@ export const SelectFieldComponent = (
               The second select field is created with a functional select
               component.
             </div>
-          </>
+          </div>
         )}
       </FormController>
     </Template>

@@ -44,10 +44,10 @@ export const GeneralValidationUseCase1 = (
                 />
               </div>
             </Validation>
-            <div className="field-row">
+            <div className="field-row buttons">
               <Submit data-testid="submit" controller={controller}>
                 Submit
-              </Submit>{" "}
+              </Submit>
               <button
                 data-testid="reset"
                 onClick={() => controller.resetForm()}

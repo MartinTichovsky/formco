@@ -52,25 +52,27 @@ export const GeneralRequiredCommonMessage = (
       >
         {(controller) => (
           <>
-            <div data-testid="input-field-row-1" className="field-row">
-              <Input
-                controller={controller}
-                data-testid="input-1"
-                label="Given name"
-                name="givenName"
-                placeholder="Input a given name"
-                required
-              />
-            </div>
-            <div data-testid="input-field-row-2" className="field-row">
-              <Input
-                controller={controller}
-                data-testid="input-2"
-                label="Surname"
-                name="surname"
-                placeholder="Input a surname"
-                required
-              />
+            <div className="g-label-120">
+              <div data-testid="input-field-row-1" className="field-row">
+                <Input
+                  controller={controller}
+                  data-testid="input-1"
+                  label="Given name"
+                  name="givenName"
+                  placeholder="Input a given name"
+                  required
+                />
+              </div>
+              <div data-testid="input-field-row-2" className="field-row">
+                <Input
+                  controller={controller}
+                  data-testid="input-2"
+                  label="Surname"
+                  name="surname"
+                  placeholder="Input a surname"
+                  required
+                />
+              </div>
             </div>
             <Validation
               required
@@ -113,7 +115,10 @@ export const GeneralRequiredCommonMessage = (
                 />
               </div>
             </Validation>
-            <div data-testid="select-field-row" className="field-row">
+            <div
+              data-testid="select-field-row"
+              className="field-row g-label-120"
+            >
               <Select
                 controller={controller}
                 data-testid="select"
@@ -140,9 +145,10 @@ export const GeneralRequiredCommonMessage = (
                 requiredValidMessage={
                   <RequiredValidMessage className="valid-field" />
                 }
+                style={{ width: 339 }}
               />
             </div>
-            <div className="field-row">
+            <div className="field-row buttons">
               <Submit
                 controller={controller}
                 data-testid="submit"
@@ -150,7 +156,7 @@ export const GeneralRequiredCommonMessage = (
                 disableIfNotValid={props.disableIfNotValid || true}
               >
                 Submit
-              </Submit>{" "}
+              </Submit>
               <button
                 data-testid="reset"
                 onClick={() => controller.resetForm()}

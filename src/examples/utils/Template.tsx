@@ -4,8 +4,8 @@ export const Template = ({ children }: React.PropsWithChildren<{}>) => {
   const [counter, setCounter] = React.useState(0);
 
   return (
-    <>
-      <div>
+    <div className="form">
+      <div className="re-render">
         <button
           data-testid="re-render"
           type="button"
@@ -15,6 +15,6 @@ export const Template = ({ children }: React.PropsWithChildren<{}>) => {
         </button>
       </div>
       {children}
-    </>
+    </div>
   );
 };

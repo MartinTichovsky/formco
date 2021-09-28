@@ -26,25 +26,12 @@ export const Content = styled("div")({
           marginLeft: 5,
           verticalAlign: "top"
         }
-      },
-
-      ".info": {
-        fontFamily: "Arial",
-        fontSize: ".8em",
-        fontWeight: "bolder",
-        marginTop: 20,
-        maxWidth: 300
       }
     }
   }
 });
 
 export const ContentWithColoredInputs = styled("div")({
-  input: {
-    borderStyle: "solid",
-    borderWidth: 1
-  },
-
   "input.field-invalid, select.field-invalid, textarea.field-invalid": {
     borderColor: "#ff0000",
     outlineColor: "#c50303"

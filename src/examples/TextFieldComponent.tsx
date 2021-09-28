@@ -28,7 +28,7 @@ class ClassInputComponent extends React.Component<{
     } = this.props;
 
     return (
-      <span>
+      <div className="g-label-180">
         <label htmlFor="class-input" style={{ marginRight: 10 }}>
           {labelText}
         </label>
@@ -41,7 +41,7 @@ class ClassInputComponent extends React.Component<{
           onKeyDown={onKeyDown}
           placeholder={placeholder}
         />
-      </span>
+      </div>
     );
   }
 }
@@ -63,7 +63,7 @@ const FunctionalInputComponent = ({
   placeholder: string;
 }) => {
   return (
-    <span>
+    <div className="g-label-180">
       <label htmlFor="functional-input" style={{ marginRight: 10 }}>
         {labelText}
       </label>
@@ -76,7 +76,7 @@ const FunctionalInputComponent = ({
         onKeyDown={onKeyDown}
         placeholder={placeholder}
       />
-    </span>
+    </div>
   );
 };
 
@@ -117,10 +117,10 @@ export const TextFieldComponent = (
                 }
               />
             </div>
-            <div className="field-row">
+            <div className="field-row buttons">
               <Submit controller={controller} data-testid="submit">
                 Submit
-              </Submit>{" "}
+              </Submit>
               <button
                 data-testid="reset"
                 onClick={() => controller.resetForm()}

@@ -40,8 +40,12 @@ export const SubmitComponent = <
     [ButtonComponent]
   );
 
-  const handleClick = async () => {
+  const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
     await controller.submit();
+
+    if (rest.onClick) {
+      rest.onClick(event);
+    }
 
     if (onSubmit) {
       onSubmit(controller.fields, controller);

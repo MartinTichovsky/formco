@@ -18,7 +18,7 @@ export const SelectFieldOptionHidden = (
         onSubmit={(fields) => console.log(fields)}
       >
         {(controller) => (
-          <>
+          <div className="g-label-80">
             <div className="field-row">
               <Select
                 controller={controller}
@@ -63,10 +63,10 @@ export const SelectFieldOptionHidden = (
                 <option value="option-2-3">Option 2-3</option>
               </Select>
             </div>
-            <div className="field-row">
+            <div className="field-row buttons">
               <Submit controller={controller} data-testid="submit">
                 Submit
-              </Submit>{" "}
+              </Submit>
               <button
                 data-testid="reset"
                 onClick={() => controller.resetForm()}
@@ -79,7 +79,7 @@ export const SelectFieldOptionHidden = (
               * Options in select 1 are shown based on selection in select 2.
               When all options are hidden, no validation is fired.
             </div>
-          </>
+          </div>
         )}
       </FormController>
     </Template>

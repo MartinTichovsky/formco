@@ -8,7 +8,7 @@ import {
   Validation
 } from "..";
 import { FormControllerComponentProps } from "../components/FormController/types";
-import { requiredStarClassName } from "../constants";
+import { cnRequiredStar } from "../constants";
 import { Template } from "./utils/Template";
 
 type MyForm = {
@@ -39,40 +39,42 @@ export const GeneralRequired = ({
       >
         {(controller) => (
           <>
-            <div className="field-row">
-              <Input
-                controller={controller}
-                data-testid="input-1"
-                label="Given name"
-                name="givenName"
-                placeholder="Input a given name"
-                required
-              />
-            </div>
-            <div className="field-row">
-              <Input
-                controller={controller}
-                data-testid="input-2"
-                label="Surname"
-                name="surname"
-                placeholder="Input a surname"
-                requiredComponent={
-                  <span
-                    className={requiredStarClassName}
-                    style={{ color: "blue", marginLeft: 5 }}
-                  >
-                    *
-                  </span>
-                }
-                required
-                validation={(value) =>
-                  value!.trim().length < 4 && (
-                    <span style={{ color: "red" }}>
-                      Surname must have at least 4 letters
+            <div className="g-label-120">
+              <div className="field-row">
+                <Input
+                  controller={controller}
+                  data-testid="input-1"
+                  label="Given name"
+                  name="givenName"
+                  placeholder="Input a given name"
+                  required
+                />
+              </div>
+              <div className="field-row">
+                <Input
+                  controller={controller}
+                  data-testid="input-2"
+                  label="Surname"
+                  name="surname"
+                  placeholder="Input a surname"
+                  requiredComponent={
+                    <span
+                      className={cnRequiredStar}
+                      style={{ color: "blue", marginLeft: 5 }}
+                    >
+                      *
                     </span>
-                  )
-                }
-              />
+                  }
+                  required
+                  validation={(value) =>
+                    value!.trim().length < 4 && (
+                      <span style={{ color: "red" }}>
+                        Surname must have at least 4 letters
+                      </span>
+                    )
+                  }
+                />
+              </div>
             </div>
             <Validation
               required
@@ -112,7 +114,7 @@ export const GeneralRequired = ({
                 />
               </div>
             </Validation>
-            <div className="field-row">
+            <div className="field-row g-label-120">
               <Select
                 controller={controller}
                 data-testid="select"
@@ -138,6 +140,7 @@ export const GeneralRequired = ({
                 name="description"
                 placeholder="Input a text"
                 required
+                style={{ width: 339 }}
               />
             </div>
             <div className="field-row">
@@ -167,7 +170,7 @@ export const GeneralRequired = ({
                 type="checkbox"
               />
             </div>
-            <div className="field-row">
+            <div className="field-row buttons">
               <Submit
                 controller={controller}
                 data-testid="submit"
@@ -175,7 +178,7 @@ export const GeneralRequired = ({
                 disableIfNotValid={disableIfNotValid}
               >
                 Submit
-              </Submit>{" "}
+              </Submit>
               <button
                 data-testid="reset"
                 onClick={() => controller.resetForm()}

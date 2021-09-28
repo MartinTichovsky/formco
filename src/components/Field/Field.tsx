@@ -1,12 +1,12 @@
 import React from "react";
 import {
-  invalidFieldClassName,
-  invalidMessageClassName,
-  messageClassName,
-  requiredClassName,
-  requiredStarClassName,
-  validFieldClassName,
-  validMessageClassName
+  cnInvalidField,
+  cnInvalidMessage,
+  cnMessage,
+  cnRequired,
+  cnRequiredStar,
+  cnValidField,
+  cnValidMessage
 } from "../../constants";
 import { FormFields, ValidationResult } from "../../controller.types";
 import { SelectProvider } from "../../providers";
@@ -447,15 +447,11 @@ export function Field<
         className={
           state.isValid === undefined
             ? rest.required
-              ? `${rest.className} ${requiredClassName}`
+              ? `${rest.className} ${cnRequired}`
               : rest.className
             : `${rest.className !== undefined ? `${rest.className} ` : ""}${
-                rest.required ? `${requiredClassName} ` : ""
-              }${
-                state.isValid === false
-                  ? invalidFieldClassName
-                  : validFieldClassName
-              }`
+                rest.required ? `${cnRequired} ` : ""
+              }${state.isValid === false ? cnInvalidField : cnValidField}`
         }
         disabled={state.isDisabled}
         key={key.current}
@@ -494,7 +490,7 @@ export function Field<
         (requiredComponent ? (
           requiredComponent
         ) : (
-          <span className={requiredStarClassName}>*</span>
+          <span className={cnRequiredStar}>*</span>
         ))}
       {((state.message && (state.message !== true || requiredInvalidMessage)) ||
         (state.isValid && requiredValidMessage)) &&
@@ -502,11 +498,9 @@ export function Field<
           <MessageElement
             className={
               state.isValid === undefined
-                ? messageClassName
-                : `${messageClassName} ${
-                    state.isValid === false
-                      ? invalidMessageClassName
-                      : validMessageClassName
+                ? cnMessage
+                : `${cnMessage} ${
+                    state.isValid === false ? cnInvalidMessage : cnValidMessage
                   }`
             }
           >

@@ -1,7 +1,7 @@
 import React from "react";
 import { FormController, Input, MessageFor, Submit, Validation } from "..";
 import { FormControllerComponentProps } from "../components/FormController/types";
-import { invalidMessageClassName } from "../constants";
+import { cnInvalidMessage } from "../constants";
 import { Template } from "./utils/Template";
 
 type MyForm = {
@@ -26,7 +26,7 @@ export const RadioFieldHiddenUseCase3 = (
                 <b>Radio Volume 1</b>
                 <MessageFor controller={controller} name="radioVolume1">
                   <span
-                    className={invalidMessageClassName}
+                    className={cnInvalidMessage}
                     style={{ color: "red", paddingLeft: 10 }}
                   >
                     Choose an option
@@ -70,7 +70,7 @@ export const RadioFieldHiddenUseCase3 = (
                 <b>Radio Volume 2</b>
                 <MessageFor controller={controller} name="radioVolume2">
                   <span
-                    className={invalidMessageClassName}
+                    className={cnInvalidMessage}
                     style={{ color: "red", paddingLeft: 10 }}
                   >
                     Choose an option
@@ -102,7 +102,7 @@ export const RadioFieldHiddenUseCase3 = (
                 <b>Radio Volume 3</b>
                 <MessageFor controller={controller} name="radioVolume3">
                   <span
-                    className={invalidMessageClassName}
+                    className={cnInvalidMessage}
                     style={{ color: "red", paddingLeft: 10 }}
                   >
                     Choose an option
@@ -142,10 +142,10 @@ export const RadioFieldHiddenUseCase3 = (
                 />
               </div>
             </Validation>
-            <div className="field-row">
+            <div className="field-row buttons">
               <Submit controller={controller} data-testid="submit">
                 Submit
-              </Submit>{" "}
+              </Submit>
               <button
                 data-testid="reset"
                 onClick={() => controller.resetForm()}

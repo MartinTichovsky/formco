@@ -19,13 +19,13 @@ export const SubmitDisabledOnSubmit = (
       >
         {(controller) => (
           <>
-            <div className="field-row">
+            <div className="field-row full-width">
               <Submit
                 controller={controller}
                 data-testid="submit-top"
                 disableIfNotValid
               >
-                Top Submit
+                Submit
               </Submit>
             </div>
             <div className="field-row">
@@ -50,14 +50,14 @@ export const SubmitDisabledOnSubmit = (
                 }
               />
             </div>
-            <div className="field-row">
+            <div className="field-row buttons">
               <Submit
                 controller={controller}
                 data-testid="submit-bottom"
                 disableIfNotValid
               >
-                Bottom Submit
-              </Submit>{" "}
+                Submit
+              </Submit>
               <button
                 data-testid="reset"
                 onClick={() => controller.resetForm()}

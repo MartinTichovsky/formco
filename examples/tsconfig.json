@@ -16,9 +16,8 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "rootDir": "src",
-    "outDir": "lib",
     "sourceMap": true
   },
-  "references": [{ "path": "../tsconfig.json" }],
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }
