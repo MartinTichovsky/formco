@@ -1,6 +1,7 @@
 import React from "react";
 import { FormController, Input, Submit } from "..";
 import { FormControllerComponentProps } from "../components/FormController/types";
+import { LogStore } from "./utils/store";
 import { Template } from "./utils/Template";
 
 type MyForm = {
@@ -11,12 +12,16 @@ type MyForm = {
 export const TextField = (
   props: Partial<FormControllerComponentProps<MyForm>>
 ) => {
+  const store = new LogStore();
+
   return (
-    <Template>
+    <Template store={store}>
       <FormController<MyForm>
         data-testid="form-controller"
         {...props}
-        onSubmit={(fields) => console.log(fields)}
+        onSubmit={(fields) => {
+          console.log(fields);
+        }}
       >
         {(controller) => (
           <>
@@ -43,12 +48,21 @@ export const TextField = (
               />
             </div>
             <div className="field-row buttons">
-              <Submit controller={controller} data-testid="submit">
+              <Submit
+                controller={controller}
+                data-testid="submit"
+                onSubmit={(fields, controller) =>
+                  store.onSubmit(fields, controller)
+                }
+              >
                 Submit
               </Submit>
               <button
                 data-testid="reset"
-                onClick={() => controller.resetForm()}
+                onClick={() => {
+                  controller.resetForm();
+                  store.reset();
+                }}
                 type="button"
               >
                 Reset

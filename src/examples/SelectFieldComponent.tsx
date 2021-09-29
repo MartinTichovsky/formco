@@ -1,6 +1,7 @@
 import React from "react";
 import { FormController, Select, Submit } from "..";
 import { FormControllerComponentProps } from "../components/FormController/types";
+import { LogStore } from "./utils/store";
 import { Template } from "./utils/Template";
 
 type MyForm = {
@@ -44,31 +45,31 @@ const FunctionalSelectComponent = React.forwardRef<
     labeltext: string;
     onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void; // required
   }>
->(({ children, defaultValue, disabled, labeltext, onChange, ...rest }, ref) => {
-  return (
-    <span>
-      <label htmlFor="functional-select" style={{ marginRight: 10 }}>
-        {labeltext}
-      </label>
-      <select
-        {...rest}
-        defaultValue={defaultValue}
-        disabled={disabled}
-        ref={ref}
-        id="functional-select"
-        onChange={onChange}
-      >
-        {children}
-      </select>
-    </span>
-  );
-});
+>(({ children, defaultValue, disabled, labeltext, onChange, ...rest }, ref) => (
+  <span>
+    <label htmlFor="functional-select" style={{ marginRight: 10 }}>
+      {labeltext}
+    </label>
+    <select
+      {...rest}
+      defaultValue={defaultValue}
+      disabled={disabled}
+      ref={ref}
+      id="functional-select"
+      onChange={onChange}
+    >
+      {children}
+    </select>
+  </span>
+));
 
 export const SelectFieldComponent = (
   props: Partial<FormControllerComponentProps<MyForm>>
 ) => {
+  const store = new LogStore();
+
   return (
-    <Template>
+    <Template store={store}>
       <FormController<MyForm>
         {...props}
         onSubmit={(fields) => console.log(fields)}
@@ -106,12 +107,21 @@ export const SelectFieldComponent = (
               </Select>
             </div>
             <div className="field-row buttons">
-              <Submit controller={controller} data-testid="submit">
+              <Submit
+                controller={controller}
+                data-testid="submit"
+                onSubmit={(fields, controller) =>
+                  store.onSubmit(fields, controller)
+                }
+              >
                 Submit
               </Submit>
               <button
                 data-testid="reset"
-                onClick={() => controller.resetForm()}
+                onClick={() => {
+                  controller.resetForm();
+                  store.reset();
+                }}
                 type="button"
               >
                 Reset

@@ -1,6 +1,11 @@
 import React from "react";
+import { Log } from "./Log";
+import { LogStore } from "./store";
 
-export const Template = ({ children }: React.PropsWithChildren<{}>) => {
+export const Template = ({
+  children,
+  store
+}: React.PropsWithChildren<{ store: LogStore }>) => {
   const [counter, setCounter] = React.useState(0);
 
   return (
@@ -15,6 +20,7 @@ export const Template = ({ children }: React.PropsWithChildren<{}>) => {
         </button>
       </div>
       {children}
+      <Log store={store} />
     </div>
   );
 };

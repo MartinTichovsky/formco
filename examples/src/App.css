@@ -61,6 +61,16 @@ button {
   color: #fff;
 }
 
+input[type="submit"][disabled],
+input[type="button"][disabled],
+button[disabled],
+input[type="submit"][disabled]:hover,
+input[type="button"][disabled]:hover,
+button[disabled]:hover {
+  background: #aaa;
+  cursor: default;
+}
+
 .re-render button {
   background: #c52c2c;
   width: 215px;
@@ -136,4 +146,18 @@ select option[disabled] {
 .g-label-180 label {
   display: inline-block;
   width: 180px;
+}
+
+.console-log {
+  margin-top: 15px;
+}
+
+.console-log h3 {
+  font-weight: 100;
+  font-size: 0.9em;
+  margin-bottom: 0;
+}
+
+.console-log pre {
+  margin-top: 5px;
 }

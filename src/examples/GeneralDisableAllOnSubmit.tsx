@@ -1,6 +1,7 @@
 import React from "react";
 import { FormController, Input, Submit } from "../";
 import { FormControllerComponentProps } from "../components/FormController/types";
+import { LogStore } from "./utils/store";
 import { Template } from "./utils/Template";
 
 type MyForm = {
@@ -12,8 +13,10 @@ type MyForm = {
 export const GeneralDisableAllOnSubmit = (
   props: Partial<FormControllerComponentProps<MyForm>>
 ) => {
+  const store = new LogStore();
+
   return (
-    <Template>
+    <Template store={store}>
       <FormController<MyForm> {...props}>
         {(controller) => (
           <>
@@ -62,13 +65,17 @@ export const GeneralDisableAllOnSubmit = (
                 onSubmit={(fields, controller) => {
                   console.log(fields);
                   controller.disableFields(true);
+                  store.onSubmit(fields, controller);
                 }}
               >
                 Submit
               </Submit>
               <button
                 data-testid="reset"
-                onClick={() => controller.resetForm()}
+                onClick={() => {
+                  controller.resetForm();
+                  store.reset();
+                }}
                 type="button"
               >
                 Reset

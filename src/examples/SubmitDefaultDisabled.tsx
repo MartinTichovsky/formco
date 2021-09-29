@@ -1,6 +1,7 @@
 import React from "react";
 import { FormControllerComponentProps } from "../components/FormController/types";
 import { FormController, Input, Submit } from "../index";
+import { LogStore } from "./utils/store";
 import { Template } from "./utils/Template";
 
 type MyForm = {
@@ -11,8 +12,10 @@ type MyForm = {
 export const SubmitDefaultDisabled = (
   props: Partial<FormControllerComponentProps<MyForm>>
 ) => {
+  const store = new LogStore();
+
   return (
-    <Template>
+    <Template store={store}>
       <FormController<MyForm>
         validateOnChange
         {...props}
@@ -26,6 +29,9 @@ export const SubmitDefaultDisabled = (
                 data-testid="submit-top"
                 disableIfNotValid
                 disabledByDefault
+                onSubmit={(fields, controller) =>
+                  store.onSubmit(fields, controller)
+                }
               >
                 Submit
               </Submit>
@@ -58,12 +64,18 @@ export const SubmitDefaultDisabled = (
                 data-testid="submit-bottom"
                 disableIfNotValid
                 disabledByDefault
+                onSubmit={(fields, controller) =>
+                  store.onSubmit(fields, controller)
+                }
               >
                 Submit
               </Submit>
               <button
                 data-testid="reset"
-                onClick={() => controller.resetForm()}
+                onClick={() => {
+                  controller.resetForm();
+                  store.reset();
+                }}
                 type="button"
               >
                 Reset

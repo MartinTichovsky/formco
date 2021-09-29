@@ -1,6 +1,7 @@
 import React from "react";
 import { FormController, Input, MessageFor, Submit } from "..";
 import { FormControllerComponentProps } from "../components/FormController/types";
+import { LogStore } from "./utils/store";
 import { Template } from "./utils/Template";
 
 type MyForm = {
@@ -14,8 +15,10 @@ export const surnameErrorText = "Provide a valid surname";
 export const GeneralMessageForUseCase1 = (
   props: Partial<FormControllerComponentProps<MyForm>>
 ) => {
+  const store = new LogStore();
+
   return (
-    <Template>
+    <Template store={store}>
       <FormController<MyForm>
         {...props}
         onSubmit={(fields) => console.log(fields)}
@@ -54,12 +57,21 @@ export const GeneralMessageForUseCase1 = (
               <MessageFor controller={controller} name="surname" />
             </div>
             <div className="field-row buttons">
-              <Submit controller={controller} data-testid="submit">
+              <Submit
+                controller={controller}
+                data-testid="submit"
+                onSubmit={(fields, controller) =>
+                  store.onSubmit(fields, controller)
+                }
+              >
                 Submit
               </Submit>
               <button
                 data-testid="reset"
-                onClick={() => controller.resetForm()}
+                onClick={() => {
+                  controller.resetForm();
+                  store.reset();
+                }}
                 type="button"
               >
                 Reset

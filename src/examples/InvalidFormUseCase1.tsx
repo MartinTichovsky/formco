@@ -1,6 +1,7 @@
 import React from "react";
 import { FormController, Input, Submit } from "..";
 import { FormControllerComponentProps } from "../components/FormController/types";
+import { LogStore } from "./utils/store";
 import { Template } from "./utils/Template";
 
 type MyForm = {
@@ -11,8 +12,10 @@ type MyForm = {
 export const InvalidFormUseCase1 = (
   props: Partial<FormControllerComponentProps<MyForm>>
 ) => {
+  const store = new LogStore();
+
   return (
-    <Template>
+    <Template store={store}>
       <FormController<MyForm> {...props}>
         {(controller) => (
           <>

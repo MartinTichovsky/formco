@@ -1,6 +1,7 @@
 import React from "react";
 import { FormController, Select, SelectOption, Submit } from "..";
 import { FormControllerComponentProps } from "../components/FormController/types";
+import { LogStore } from "./utils/store";
 import { Template } from "./utils/Template";
 
 type MyForm = {
@@ -11,8 +12,10 @@ type MyForm = {
 export const SelectFieldOptionDisabled = (
   props: Partial<FormControllerComponentProps<MyForm>>
 ) => {
+  const store = new LogStore();
+
   return (
-    <Template>
+    <Template store={store}>
       <FormController<MyForm>
         {...props}
         onSubmit={(fields) => console.log(fields)}
@@ -66,12 +69,21 @@ export const SelectFieldOptionDisabled = (
               </Select>
             </div>
             <div className="field-row buttons">
-              <Submit controller={controller} data-testid="submit">
+              <Submit
+                controller={controller}
+                data-testid="submit"
+                onSubmit={(fields, controller) =>
+                  store.onSubmit(fields, controller)
+                }
+              >
                 Submit
               </Submit>
               <button
                 data-testid="reset"
-                onClick={() => controller.resetForm()}
+                onClick={() => {
+                  controller.resetForm();
+                  store.reset();
+                }}
                 type="button"
               >
                 Reset

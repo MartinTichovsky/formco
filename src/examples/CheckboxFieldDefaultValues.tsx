@@ -1,6 +1,7 @@
 import React from "react";
 import { FormController, Input, Submit } from "..";
 import { FormControllerComponentProps } from "../components/FormController/types";
+import { LogStore } from "./utils/store";
 import { Template } from "./utils/Template";
 
 type MyForm = {
@@ -12,8 +13,10 @@ type MyForm = {
 export const CheckboxFieldDefaultValues = (
   props: Partial<FormControllerComponentProps<MyForm>>
 ) => {
+  const store = new LogStore();
+
   return (
-    <Template>
+    <Template store={store}>
       <FormController<MyForm>
         initialValues={{
           checkbox2: true
@@ -55,12 +58,21 @@ export const CheckboxFieldDefaultValues = (
             </div>
 
             <div className="field-row buttons">
-              <Submit controller={controller} data-testid="submit">
+              <Submit
+                controller={controller}
+                data-testid="submit"
+                onSubmit={(fields, controller) =>
+                  store.onSubmit(fields, controller)
+                }
+              >
                 Submit
               </Submit>
               <button
                 data-testid="reset"
-                onClick={() => controller.resetForm()}
+                onClick={() => {
+                  controller.resetForm();
+                  store.reset();
+                }}
                 type="button"
               >
                 Reset

@@ -1,6 +1,7 @@
 import React from "react";
 import { Controller, FormController, Input, Submit } from "../";
 import { FormControllerComponentProps } from "../components/FormController/types";
+import { LogStore } from "./utils/store";
 import { Template } from "./utils/Template";
 
 type MyForm = {
@@ -48,7 +49,7 @@ const FunctionalSubmitComponent = ({
 
   return (
     <button {...rest} disabled={disabled} onClick={handleClick}>
-      {pending ? "functional component pending..." : children}
+      {pending ? "pending..." : children}
     </button>
   );
 };
@@ -96,7 +97,7 @@ class ClassSubmitComponent extends React.Component<ClassSubmitComponentProps> {
 
     return (
       <button {...rest} disabled={disabled} onClick={this.handleClick}>
-        {this.state.pending ? "class component pending..." : children}
+        {this.state.pending ? "pending..." : children}
       </button>
     );
   }
@@ -105,8 +106,10 @@ class ClassSubmitComponent extends React.Component<ClassSubmitComponentProps> {
 export const SubmitComponent = (
   props: Partial<FormControllerComponentProps<MyForm>>
 ) => {
+  const store = new LogStore();
+
   return (
-    <Template>
+    <Template store={store}>
       <FormController<MyForm> {...props} validateOnChange>
         {(controller) => (
           <>
@@ -137,6 +140,9 @@ export const SubmitComponent = (
                 ButtonComponent={FunctionalSubmitComponent}
                 controller={controller}
                 data-testid="functional-submit"
+                onSubmit={(fields, controller) =>
+                  store.onSubmit(fields, controller)
+                }
               >
                 Functional Component Submit
               </Submit>
@@ -146,6 +152,9 @@ export const SubmitComponent = (
                 ButtonComponent={ClassSubmitComponent}
                 controller={controller}
                 data-testid="class-submit"
+                onSubmit={(fields, controller) =>
+                  store.onSubmit(fields, controller)
+                }
               >
                 Class Component Submit
               </Submit>
@@ -153,7 +162,10 @@ export const SubmitComponent = (
             <div className="field-row full-width">
               <button
                 data-testid="reset"
-                onClick={() => controller.resetForm()}
+                onClick={() => {
+                  controller.resetForm();
+                  store.reset();
+                }}
                 type="button"
               >
                 Reset

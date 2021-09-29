@@ -14,8 +14,7 @@ import { testInvalidMessage } from "../utils/selectors";
 console.error = jest.fn();
 console.log = jest.fn();
 
-const buttonClassPendingText = "class component pending...";
-const buttonFunctionalPendingText = "functional component pending...";
+const pendingText = "pending...";
 const input1TestId = "input-1";
 const input2TestId = "input-2";
 const resetTestId = "reset";
@@ -30,11 +29,11 @@ test("SubmitComponent", async () => {
 
   // the buttons must not have the pending text
   expect(screen.getByTestId(submitClassComponentTestId)).not.toHaveTextContent(
-    buttonClassPendingText
+    pendingText
   );
   expect(
     screen.getByTestId(submitFunctionalComponentTestId)
-  ).not.toHaveTextContent(buttonFunctionalPendingText);
+  ).not.toHaveTextContent(pendingText);
 
   // click on the class submit component
   await waitFor(async () => {
@@ -80,12 +79,12 @@ test("SubmitComponent", async () => {
   });
 
   expect(screen.getByTestId(submitClassComponentTestId)).toHaveTextContent(
-    buttonClassPendingText
+    pendingText
   );
 
   expect(
     screen.getByTestId(submitFunctionalComponentTestId)
-  ).not.toHaveTextContent(buttonFunctionalPendingText);
+  ).not.toHaveTextContent(pendingText);
 
   // check the onSubmit action
   expect(console.log).toHaveBeenCalledTimes(1);
@@ -101,11 +100,11 @@ test("SubmitComponent", async () => {
 
   // the functional component button must have the pending text
   expect(screen.getByTestId(submitClassComponentTestId)).toHaveTextContent(
-    buttonClassPendingText
+    pendingText
   );
 
   expect(screen.getByTestId(submitFunctionalComponentTestId)).toHaveTextContent(
-    buttonFunctionalPendingText
+    pendingText
   );
 
   // check the onSubmit action
@@ -122,11 +121,11 @@ test("SubmitComponent", async () => {
 
   // after timout the submit buttons must not have the pending text
   expect(screen.getByTestId(submitClassComponentTestId)).not.toHaveTextContent(
-    buttonClassPendingText
+    pendingText
   );
   expect(
     screen.getByTestId(submitFunctionalComponentTestId)
-  ).not.toHaveTextContent(buttonFunctionalPendingText);
+  ).not.toHaveTextContent(pendingText);
 
   await waitFor(async () => {
     // click on the buttons to cause pending again
@@ -147,9 +146,9 @@ test("SubmitComponent", async () => {
 
   // the submit buttons must not have the pending text
   expect(screen.getByTestId(submitClassComponentTestId)).not.toHaveTextContent(
-    buttonClassPendingText
+    pendingText
   );
   expect(
     screen.getByTestId(submitFunctionalComponentTestId)
-  ).not.toHaveTextContent(buttonFunctionalPendingText);
+  ).not.toHaveTextContent(pendingText);
 }, 10000);

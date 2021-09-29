@@ -1,6 +1,7 @@
 import React from "react";
 import { FormController, Input, Submit } from "../";
 import { FormControllerComponentProps } from "../components/FormController/types";
+import { LogStore } from "./utils/store";
 import { Template } from "./utils/Template";
 
 type MyForm = {
@@ -28,7 +29,7 @@ class ClassInputComponent extends React.Component<{
     } = this.props;
 
     return (
-      <div className="g-label-180">
+      <>
         <label htmlFor="class-input" style={{ marginRight: 10 }}>
           {labelText}
         </label>
@@ -41,7 +42,7 @@ class ClassInputComponent extends React.Component<{
           onKeyDown={onKeyDown}
           placeholder={placeholder}
         />
-      </div>
+      </>
     );
   }
 }
@@ -63,7 +64,7 @@ const FunctionalInputComponent = ({
   placeholder: string;
 }) => {
   return (
-    <div className="g-label-180">
+    <>
       <label htmlFor="functional-input" style={{ marginRight: 10 }}>
         {labelText}
       </label>
@@ -76,22 +77,24 @@ const FunctionalInputComponent = ({
         onKeyDown={onKeyDown}
         placeholder={placeholder}
       />
-    </div>
+    </>
   );
 };
 
 export const TextFieldComponent = (
   props: Partial<FormControllerComponentProps<MyForm>>
 ) => {
+  const store = new LogStore();
+
   return (
-    <Template>
+    <Template store={store}>
       <FormController<MyForm>
         {...props}
         onSubmit={(fields) => console.log(fields)}
       >
         {(controller) => (
           <>
-            <div className="field-row">
+            <div className="field-row g-label-180">
               <Input
                 controller={controller}
                 data-testid="input-1"
@@ -104,7 +107,7 @@ export const TextFieldComponent = (
                 }
               />
             </div>
-            <div className="field-row">
+            <div className="field-row g-label-180">
               <Input
                 controller={controller}
                 data-testid="input-2"
@@ -118,12 +121,21 @@ export const TextFieldComponent = (
               />
             </div>
             <div className="field-row buttons">
-              <Submit controller={controller} data-testid="submit">
+              <Submit
+                controller={controller}
+                data-testid="submit"
+                onSubmit={(fields, controller) =>
+                  store.onSubmit(fields, controller)
+                }
+              >
                 Submit
               </Submit>
               <button
                 data-testid="reset"
-                onClick={() => controller.resetForm()}
+                onClick={() => {
+                  controller.resetForm();
+                  store.reset();
+                }}
                 type="button"
               >
                 Reset

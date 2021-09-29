@@ -9,6 +9,7 @@ import {
 } from "..";
 import { FormControllerComponentProps } from "../components/FormController/types";
 import { cnRequiredStar } from "../constants";
+import { LogStore } from "./utils/store";
 import { Template } from "./utils/Template";
 
 type MyForm = {
@@ -30,8 +31,10 @@ export const GeneralRequired = ({
   disableIfNotValid?: boolean;
   disabledByDefault?: boolean;
 }) => {
+  const store = new LogStore();
+
   return (
-    <Template>
+    <Template store={store}>
       <FormController<MyForm>
         {...props}
         onSubmit={(fields) => console.log(fields)}
@@ -176,12 +179,18 @@ export const GeneralRequired = ({
                 data-testid="submit"
                 disabledByDefault={disabledByDefault}
                 disableIfNotValid={disableIfNotValid}
+                onSubmit={(fields, controller) =>
+                  store.onSubmit(fields, controller)
+                }
               >
                 Submit
               </Submit>
               <button
                 data-testid="reset"
-                onClick={() => controller.resetForm()}
+                onClick={() => {
+                  controller.resetForm();
+                  store.reset();
+                }}
                 type="button"
               >
                 Reset

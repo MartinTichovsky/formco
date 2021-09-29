@@ -1,6 +1,7 @@
 import React from "react";
 import { Controller, FormController, Input } from "../";
 import { FormControllerComponentProps } from "../components/FormController/types";
+import { LogStore } from "./utils/store";
 import { Template } from "./utils/Template";
 
 type MyForm = {
@@ -9,9 +10,11 @@ type MyForm = {
 };
 
 const CustomSubmitComponent = ({
-  controller
+  controller,
+  store
 }: {
   controller: Controller<MyForm>;
+  store: LogStore;
 }) => {
   const [pending, setPending] = React.useState(false);
   const isMounted = React.useRef(true);
@@ -24,6 +27,7 @@ const CustomSubmitComponent = ({
 
   const handleClick = () => {
     controller.submit();
+    store.onSubmit(controller.fields, controller);
 
     if (controller.isValid) {
       console.log(controller.fields);
@@ -49,8 +53,10 @@ const CustomSubmitComponent = ({
 export const SubmitCustom = (
   props: Partial<FormControllerComponentProps<MyForm>>
 ) => {
+  const store = new LogStore();
+
   return (
-    <Template>
+    <Template store={store}>
       <FormController<MyForm> validateOnChange {...props}>
         {(controller) => (
           <>
@@ -77,10 +83,13 @@ export const SubmitCustom = (
               />
             </div>
             <div className="field-row buttons">
-              <CustomSubmitComponent controller={controller} />
+              <CustomSubmitComponent controller={controller} store={store} />
               <button
                 data-testid="reset"
-                onClick={() => controller.resetForm()}
+                onClick={() => {
+                  controller.resetForm();
+                  store.reset();
+                }}
                 type="button"
               >
                 Reset
