@@ -1,5 +1,10 @@
 import { Controller } from "../controller";
-import { FormFields, OnSubmit, ValidationResult } from "../controller.types";
+import {
+  ControllerOptions,
+  FormFields,
+  OnSubmit,
+  ValidationResult
+} from "../controller.types";
 
 export type FormControllerComponentProps<T extends FormFields<T>> =
   FormControllerProps<T> &
@@ -16,6 +21,7 @@ export type FormControllerProps<T extends FormFields<T>> =
     };
     initialValidation?: boolean;
     initialValues?: Partial<T>;
+    options?: ControllerOptions;
     onSubmit?: OnSubmit<T>;
     requiredInvalidMessage?: string | JSX.Element;
     requiredValidMessage?: string | JSX.Element;

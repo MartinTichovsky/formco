@@ -9,6 +9,10 @@ export type AfterAll<T> = {
   visible: Map<keyof T, Action>;
 };
 
+export interface ControllerOptions {
+  trimValues?: boolean;
+}
+
 export interface ControllerProps<T extends FormFields<T>> {
   disableIf?: {
     [key in keyof T]?: (fields: Partial<T>) => boolean;
@@ -18,6 +22,7 @@ export interface ControllerProps<T extends FormFields<T>> {
   };
   initialValidation?: boolean;
   initialValues?: Partial<T>;
+  options?: ControllerOptions;
   onSubmit?: OnSubmit<T>;
   requiredInvalidMessage?: string | JSX.Element;
   requiredValidMessage?: string | JSX.Element;

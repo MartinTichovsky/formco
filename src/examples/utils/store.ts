@@ -16,9 +16,9 @@ export class LogStore {
     fields: unknown,
     controller: Controller<T>
   ) {
-    this.log = `> submitted: true
-> isValid: ${controller.isValid}
-> result: ${JSON.stringify(fields)}
+    this.log = `> submitted: true\n> isValid: ${
+      controller.isValid
+    }\n> result: ${JSON.stringify(fields)}
     `;
   }
 

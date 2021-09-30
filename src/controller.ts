@@ -2,6 +2,7 @@ import React from "react";
 import {
   Action,
   AfterAll,
+  ControllerOptions,
   ControllerProps,
   DefaultActiveRadioId,
   DefaultDisabledRadioId,
@@ -71,6 +72,7 @@ export class Controller<T extends FormFields<T>> {
   private onDisableListeners = new Set<OnDisable<T>>();
   private onDisableButtonListeners = new Set<OnDisableAction>();
   private onValidationListeners = new Set<OnValidation<T>>();
+  private options?: ControllerOptions;
   private registeredKeys: KeyType<T>[] = [];
   private validationDependencies: ValidationDependencies<T> = {};
   private validatorListeners = new Map<keyof T, Validator>();
@@ -83,6 +85,7 @@ export class Controller<T extends FormFields<T>> {
     hideIf,
     initialValidation,
     initialValues,
+    options,
     onSubmit,
     requiredInvalidMessage,
     requiredValidMessage,
@@ -105,6 +108,7 @@ export class Controller<T extends FormFields<T>> {
     this._validation = validation;
     this._validateOnChange = validateOnChange;
 
+    this.options = options;
     this.requiredInvalidMessage = requiredInvalidMessage;
     this.requiredValidMessage = requiredValidMessage;
 
@@ -116,7 +120,12 @@ export class Controller<T extends FormFields<T>> {
 
     for (let key in this._fields) {
       if (this._fields[key]!.isVisible) {
-        (result[key] as Value) = this._fields[key]?.value;
+        const value = this._fields[key]!.value;
+
+        (result[key] as Value) =
+          this.options?.trimValues && value && typeof value === "string"
+            ? value.trim()
+            : value;
       }
     }
 

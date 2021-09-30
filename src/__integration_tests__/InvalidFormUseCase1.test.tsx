@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
-import { InvalidFormUseCase1 } from "../InvalidFormUseCase1";
+import { InvalidFormUseCase1 } from "./InvalidFormUseCase1";
 
 console.warn = jest.fn();
 

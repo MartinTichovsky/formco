@@ -10,6 +10,7 @@
     "node_modules",
     "example",
     "**/examples",
+    "**/__integration_tests__",
     "**/__tests__",
     "**/*.test.ts",
     "**/*.test.tsx"
