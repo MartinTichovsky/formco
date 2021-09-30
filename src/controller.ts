@@ -128,7 +128,17 @@ export class Controller<T extends FormFields<T>> {
   }
 
   get isValid() {
-    return Object.keys(this._fields).every((key) => this._fields[key]?.isValid);
+    for (let key in this._fields) {
+      if (
+        !this._fields[key]!.isDisabled &&
+        this._fields[key]!.isVisible &&
+        !this._fields[key]!.isValid
+      ) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   get key() {

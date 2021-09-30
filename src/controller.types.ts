@@ -48,25 +48,27 @@ export interface FieldAdditionalProperties {
   validateOnChange?: boolean;
 }
 
+export interface Field extends FieldAdditionalProperties {
+  activeId?: string;
+  isDisabled: boolean;
+  isTouched?: boolean;
+  isValid: boolean;
+  isValidated: boolean;
+  isVisible: boolean;
+  options?: Map<
+    string,
+    {
+      isDisabled: boolean;
+      isVisible: boolean;
+    }
+  >;
+  validationInProgress: boolean;
+  validationContent: ValidationContentResult;
+  value: Value;
+}
+
 export type Fields<T> = {
-  [K in keyof T]?: FieldAdditionalProperties & {
-    activeId?: string;
-    isDisabled: boolean;
-    isTouched?: boolean;
-    isValid: boolean;
-    isValidated: boolean;
-    isVisible: boolean;
-    options?: Map<
-      string,
-      {
-        isDisabled: boolean;
-        isVisible: boolean;
-      }
-    >;
-    validationInProgress: boolean;
-    validationContent: ValidationContentResult;
-    value: Value;
-  };
+  [K in keyof T]?: Field;
 };
 
 export type FieldTypes =

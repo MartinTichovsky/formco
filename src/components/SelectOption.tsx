@@ -87,12 +87,7 @@ export const SelectOption = <T extends FormFields<T>>({
   ...rest
 }: SelectOptionProps<T>) => {
   const context = React.useContext(selectContext);
-  if (
-    !context ||
-    !context.name ||
-    !context.selectRef ||
-    !context.selectRef.current
-  ) {
+  if (!context || !context.name) {
     return null;
   }
 

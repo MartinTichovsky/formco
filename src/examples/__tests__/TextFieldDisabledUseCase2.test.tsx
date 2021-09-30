@@ -60,6 +60,25 @@ test("TextFieldDisabledUseCase2", async () => {
   // errors should not be shown
   testInvalidMessage(container, 0);
 
+  // input a valid text
+  fireEvent.change(screen.getByTestId(input2TestId), {
+    target: { value: " " }
+  });
+
+  // the first input and the submit button must be disabled
+  expect(screen.getByTestId(input1TestId)).toBeDisabled();
+  expect(screen.getByTestId(input2TestId)).not.toBeDisabled();
+  expect(screen.getByTestId(input3TestId)).toBeDisabled();
+  expect(screen.getByTestId(submitTestId)).not.toBeDisabled();
+
+  // errors should not be shown
+  testInvalidMessage(container, 0);
+
+  // input a valid text
+  fireEvent.change(screen.getByTestId(input2TestId), {
+    target: { value: "James" }
+  });
+
   // input an empty value should show an error
   fireEvent.change(screen.getByTestId(input3TestId), {
     target: { value: " " }
