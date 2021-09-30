@@ -3,8 +3,8 @@ import { render, screen } from "@testing-library/react";
 import React from "react";
 import { Controller } from "../../controller";
 import { getGeneratedValues } from "../../__tests__/utils/value-generator";
-import { Condition } from "../Condition/Condition";
-import { ConditionComponent } from "../Condition/ConditionComponent";
+import { Condition } from "../Condition";
+import { ConditionComponent } from "../ConditionComponent";
 
 type Form = {
   input: string;

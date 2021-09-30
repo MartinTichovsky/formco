@@ -3,8 +3,8 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
 import { Controller } from "../../controller";
 import { getGeneratedValues } from "../../__tests__/utils/value-generator";
-import { Submit } from "../Submit/Submit";
-import { SubmitComponent } from "../Submit/SubmitComponent";
+import { Submit } from "../Submit";
+import { SubmitComponent } from "../SubmitComponent";
 
 type Form = {
   input: string;

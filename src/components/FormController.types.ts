@@ -1,5 +1,5 @@
-import { Controller } from "../../controller";
-import { FormFields, OnSubmit, ValidationResult } from "../../controller.types";
+import { Controller } from "../controller";
+import { FormFields, OnSubmit, ValidationResult } from "../controller.types";
 
 export type FormControllerComponentProps<T extends FormFields<T>> =
   FormControllerProps<T> &

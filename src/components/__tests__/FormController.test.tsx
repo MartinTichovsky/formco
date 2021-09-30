@@ -2,8 +2,8 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
 import { Controller } from "../../controller";
 import { getGeneratedValues } from "../../__tests__/utils/value-generator";
-import { FormController } from "../FormController/FormController";
-import { FormControllerComponent } from "../FormController/FormControllerComponent";
+import { FormController } from "../FormController";
+import { FormControllerComponent } from "../FormControllerComponent";
 
 type Form = {
   input: string;

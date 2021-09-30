@@ -1,5 +1,8 @@
 import React from "react";
-import { ConditionComponentState, ConditionComponentType } from "./types";
+import {
+  ConditionComponentState,
+  ConditionComponentType
+} from "./Condition.types";
 
 export const ConditionComponent: ConditionComponentType = ({
   children,

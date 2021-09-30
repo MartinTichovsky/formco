@@ -7,7 +7,7 @@ import {
   Textarea,
   Validation
 } from "..";
-import { FormControllerComponentProps } from "../components/FormController/types";
+import { FormControllerComponentProps } from "../components/FormController.types";
 import { cnRequiredStar } from "../constants";
 import { LogStore } from "./utils/store";
 import { Template } from "./utils/Template";

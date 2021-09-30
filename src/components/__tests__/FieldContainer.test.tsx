@@ -4,13 +4,13 @@ import React from "react";
 import { Controller } from "../../controller";
 import { ValidationProvider } from "../../providers";
 import { getGeneratedValues } from "../../__tests__/utils/value-generator";
-import { FieldContainer } from "../Field/FieldContainer";
 import {
   FieldInternalProps,
   FieldPrivateInputProps,
   FieldType,
   InitialState
-} from "../Field/types";
+} from "../Field.types";
+import { FieldContainer } from "../FieldContainer";
 
 type Form = {
   input: string;
@@ -27,8 +27,8 @@ let passedValues: {
   validation?: Function;
 } = {};
 
-jest.mock("../Field/Field", () => {
-  const origin = jest.requireActual("../Field/Field");
+jest.mock("../Field", () => {
+  const origin = jest.requireActual("../Field");
 
   return {
     Field: function (...args: any[]) {

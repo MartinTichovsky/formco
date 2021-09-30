@@ -1,6 +1,6 @@
 import React from "react";
-import { Controller } from "../../controller";
-import { FormFields, ValidationResult } from "../../controller.types";
+import { Controller } from "../controller";
+import { FormFields, ValidationResult } from "../controller.types";
 
 export interface CommonFieldProps {
   hideMessage?: boolean;

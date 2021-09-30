@@ -1,5 +1,5 @@
-import { Controller } from "../../controller";
-import { FormFields } from "../../controller.types";
+import { Controller } from "../controller";
+import { FormFields } from "../controller.types";
 
 export type ConditionComponentType = <T extends FormFields<T>>({
   children,

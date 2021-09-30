@@ -1,5 +1,5 @@
 import React from "react";
-import { FormControllerComponentProps } from "../components/FormController/types";
+import { FormControllerComponentProps } from "../components/FormController.types";
 import { FormController, Input, Submit } from "../index";
 import { LogStore } from "./utils/store";
 import { Template } from "./utils/Template";

@@ -2,13 +2,12 @@ import "@testing-library/jest-dom";
 import { render } from "@testing-library/react";
 import React from "react";
 import { Controller } from "../../controller";
-import { Field } from "../Field/Field";
+import { Field } from "../Field";
 
 type Form = {
   input: string;
 };
 
-const testid = "test-id";
 let controller: Controller<Form>;
 
 console.error = jest.fn();

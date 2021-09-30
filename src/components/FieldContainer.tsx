@@ -1,12 +1,12 @@
 import React from "react";
-import { Controller } from "../../controller";
-import { FormFields } from "../../controller.types";
+import { Controller } from "../controller";
+import { FormFields } from "../controller.types";
 import {
   commonPropsContext,
   disableIfContext,
   hideIfContext,
   validationContext
-} from "../../providers";
+} from "../providers";
 import { Field } from "./Field";
 import {
   FieldInternalProps,
@@ -14,7 +14,7 @@ import {
   FieldPrivateProps,
   FieldType,
   InitialState
-} from "./types";
+} from "./Field.types";
 
 let idCounter = 0;
 

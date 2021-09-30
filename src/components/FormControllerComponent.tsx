@@ -1,7 +1,7 @@
 import React from "react";
-import { Controller } from "../../controller";
-import { FormFields } from "../../controller.types";
-import { FormControllerComponentProps } from "./types";
+import { Controller } from "../controller";
+import { FormFields } from "../controller.types";
+import { FormControllerComponentProps } from "./FormController.types";
 
 export const FormControllerComponent = <T extends FormFields<T>>({
   children,

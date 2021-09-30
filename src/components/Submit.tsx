@@ -1,8 +1,8 @@
 import React from "react";
-import { Controller } from "../../controller";
-import { FormFields } from "../../controller.types";
+import { Controller } from "../controller";
+import { FormFields } from "../controller.types";
+import { SubmitComponentType, SubmitPrivateProps } from "./Submit.types";
 import { SubmitComponent } from "./SubmitComponent";
-import { SubmitComponentType, SubmitPrivateProps } from "./types";
 
 export const Submit = <
   T extends FormFields<T>,

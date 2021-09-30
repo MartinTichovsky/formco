@@ -7,9 +7,9 @@ import {
   cnRequiredStar,
   cnValidField,
   cnValidMessage
-} from "../../constants";
-import { FormFields, ValidationResult } from "../../controller.types";
-import { SelectProvider } from "../../providers";
+} from "../constants";
+import { FormFields, ValidationResult } from "../controller.types";
+import { SelectProvider } from "../providers";
 import {
   FieldInitialProps,
   FieldInternalProps,
@@ -17,7 +17,7 @@ import {
   FieldPrivateProps,
   FieldState,
   FieldType
-} from "./types";
+} from "./Field.types";
 
 export function Field<
   T extends FormFields<T>,

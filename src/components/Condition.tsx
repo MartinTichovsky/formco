@@ -1,7 +1,7 @@
 import React from "react";
-import { Controller } from "../../controller";
+import { Controller } from "../controller";
+import { ConditionComponentType } from "./Condition.types";
 import { ConditionComponent } from "./ConditionComponent";
-import { ConditionComponentType } from "./types";
 
 export const Condition: ConditionComponentType = (props) => {
   if (!(props.controller instanceof Controller)) {

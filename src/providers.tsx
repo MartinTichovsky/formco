@@ -1,5 +1,5 @@
 import React from "react";
-import { CommonFieldProps } from "./components/Field/types";
+import { CommonFieldProps } from "./components/Field.types";
 import {
   OnChangeCondition,
   SelectProviderProps,

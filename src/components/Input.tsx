@@ -1,7 +1,7 @@
 import React from "react";
 import { FormFields } from "../controller.types";
-import { FieldContainer } from "./Field/FieldContainer";
-import { FieldPrivateInputProps, FieldType } from "./Field/types";
+import { FieldPrivateInputProps, FieldType } from "./Field.types";
+import { FieldContainer } from "./FieldContainer";
 
 export function Input<
   T extends FormFields<T>,

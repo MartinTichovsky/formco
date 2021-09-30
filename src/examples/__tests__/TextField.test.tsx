@@ -1,9 +1,9 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
-import { Field } from "../../components/Field/Field";
-import { FormControllerComponent } from "../../components/FormController/FormControllerComponent";
-import { SubmitComponent } from "../../components/Submit/SubmitComponent";
+import { Field } from "../../components/Field";
+import { FormControllerComponent } from "../../components/FormControllerComponent";
+import { SubmitComponent } from "../../components/SubmitComponent";
 import { TextField } from "../TextField";
 import { testInvalidMessage } from "../utils/selectors";
 
