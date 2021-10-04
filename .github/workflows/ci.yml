@@ -28,5 +28,46 @@ jobs:
       - name: Test
         run: yarn test
 
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: TypeScript check
         run: yarn tsc
+
+  bump-version:
+    if: github.ref == 'refs/heads/main'
+    needs: [build-and-test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set creator
+        run: |
+          git config user.email "automated-version@users.noreply.github.com"
+          git config user.name "Automated Version"
+
+      - name: Increment version
+        env:
+          VERSION_TYPE: ${{ (startsWith(github.event.head_commit.message, 'BREAKING CHANGE:') || contains(toJSON(github.event.head_commit.message), '\n\nBREAKING CHANGE:')) && 'major' || (startsWith(github.event.head_commit.message, 'fix:') || contains(toJSON(github.event.head_commit.message), '\n\nfix:')) && 'patch' || 'minor' }}
+        run: |
+          npm version $VERSION_TYPE -m "v%s"
+          VERSION=$(node -p "require('./package.json').version")
+
+      # - name: Create tag
+      #   run: |
+      #     git tag ${VERSION}
+
+      - name: Push changes
+        # run: |
+        #   git push "https://$GITHUB_ACTOR:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY.git" --follow-tags
+        #   git push "https://$GITHUB_ACTOR:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY.git" --tags
+        run: |
+          git push "https://$GITHUB_ACTOR:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY.git"
+
+      # - name: Publish package
+      #   run: |
+      #     npm config set "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}"
+      #     npm publish
