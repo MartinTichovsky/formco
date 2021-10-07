@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
-import { Field } from "../../components/Field";
+import { FieldComponent } from "../../components/FieldComponent";
 import { FormControllerComponent } from "../../components/FormControllerComponent";
 import { SubmitComponent } from "../../components/SubmitComponent";
 import { TextField } from "../TextField";
@@ -33,12 +33,12 @@ test("TextField", async () => {
   );
 
   // render count check
-  expect(collector.getCallCount(Field.name, { dataTestId: input1TestId })).toBe(
-    1
-  );
-  expect(collector.getCallCount(Field.name, { dataTestId: input2TestId })).toBe(
-    1
-  );
+  expect(
+    collector.getCallCount(FieldComponent.name, { dataTestId: input1TestId })
+  ).toBe(1);
+  expect(
+    collector.getCallCount(FieldComponent.name, { dataTestId: input2TestId })
+  ).toBe(1);
   expect(
     collector.getCallCount(SubmitComponent.name, { dataTestId: submitTestId })
   ).toBe(1);
@@ -54,12 +54,12 @@ test("TextField", async () => {
   // two errors should be shown
   testInvalidMessage(container, 2);
 
-  expect(collector.getCallCount(Field.name, { dataTestId: input1TestId })).toBe(
-    2
-  );
-  expect(collector.getCallCount(Field.name, { dataTestId: input2TestId })).toBe(
-    2
-  );
+  expect(
+    collector.getCallCount(FieldComponent.name, { dataTestId: input1TestId })
+  ).toBe(2);
+  expect(
+    collector.getCallCount(FieldComponent.name, { dataTestId: input2TestId })
+  ).toBe(2);
   expect(
     collector.getCallCount(SubmitComponent.name, { dataTestId: submitTestId })
   ).toBe(1);
@@ -69,12 +69,12 @@ test("TextField", async () => {
     fireEvent.click(screen.getByTestId(submitTestId));
   });
 
-  expect(collector.getCallCount(Field.name, { dataTestId: input1TestId })).toBe(
-    2
-  );
-  expect(collector.getCallCount(Field.name, { dataTestId: input2TestId })).toBe(
-    2
-  );
+  expect(
+    collector.getCallCount(FieldComponent.name, { dataTestId: input1TestId })
+  ).toBe(2);
+  expect(
+    collector.getCallCount(FieldComponent.name, { dataTestId: input2TestId })
+  ).toBe(2);
   expect(
     collector.getCallCount(SubmitComponent.name, { dataTestId: submitTestId })
   ).toBe(1);
@@ -127,10 +127,10 @@ describe("Re-render", () => {
       })
     ).toBe(2); // beacause the form controller creates a controller `useEffect` and set it with `setController`
     expect(
-      collector.getCallCount(Field.name, { dataTestId: input1TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: input1TestId })
     ).toBe(1);
     expect(
-      collector.getCallCount(Field.name, { dataTestId: input2TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: input2TestId })
     ).toBe(1);
     expect(
       collector.getCallCount(SubmitComponent.name, { dataTestId: submitTestId })
@@ -145,10 +145,10 @@ describe("Re-render", () => {
       })
     ).toBe(2);
     expect(
-      collector.getCallCount(Field.name, { dataTestId: input1TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: input1TestId })
     ).toBe(1);
     expect(
-      collector.getCallCount(Field.name, { dataTestId: input2TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: input2TestId })
     ).toBe(1);
     expect(
       collector.getCallCount(SubmitComponent.name, { dataTestId: submitTestId })
@@ -161,10 +161,10 @@ describe("Re-render", () => {
       })
     ).toBe(2);
     expect(
-      collector.getCallCount(Field.name, { dataTestId: input1TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: input1TestId })
     ).toBe(1);
     expect(
-      collector.getCallCount(Field.name, { dataTestId: input2TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: input2TestId })
     ).toBe(1);
     expect(
       collector.getCallCount(SubmitComponent.name, { dataTestId: submitTestId })
@@ -187,10 +187,10 @@ describe("Re-render", () => {
       })
     ).toBe(2);
     expect(
-      collector.getCallCount(Field.name, { dataTestId: input1TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: input1TestId })
     ).toBe(2); // because the second render is the submit event (validation)
     expect(
-      collector.getCallCount(Field.name, { dataTestId: input2TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: input2TestId })
     ).toBe(2);
     expect(
       collector.getCallCount(SubmitComponent.name, { dataTestId: submitTestId })
@@ -221,10 +221,10 @@ describe("Re-render", () => {
       })
     ).toBe(2);
     expect(
-      collector.getCallCount(Field.name, { dataTestId: input1TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: input1TestId })
     ).toBe(1);
     expect(
-      collector.getCallCount(Field.name, { dataTestId: input2TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: input2TestId })
     ).toBe(1);
     expect(
       collector.getCallCount(SubmitComponent.name, { dataTestId: submitTestId })
@@ -257,10 +257,10 @@ describe("Reset", () => {
       })
     ).toBe(3);
     expect(
-      collector.getCallCount(Field.name, { dataTestId: input1TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: input1TestId })
     ).toBe(2);
     expect(
-      collector.getCallCount(Field.name, { dataTestId: input2TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: input2TestId })
     ).toBe(2);
     expect(
       collector.getCallCount(SubmitComponent.name, { dataTestId: submitTestId })
@@ -275,10 +275,10 @@ describe("Reset", () => {
       })
     ).toBe(4);
     expect(
-      collector.getCallCount(Field.name, { dataTestId: input1TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: input1TestId })
     ).toBe(3);
     expect(
-      collector.getCallCount(Field.name, { dataTestId: input2TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: input2TestId })
     ).toBe(3);
     expect(
       collector.getCallCount(SubmitComponent.name, { dataTestId: submitTestId })
@@ -301,10 +301,10 @@ describe("Reset", () => {
       })
     ).toBe(3);
     expect(
-      collector.getCallCount(Field.name, { dataTestId: input1TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: input1TestId })
     ).toBe(3);
     expect(
-      collector.getCallCount(Field.name, { dataTestId: input2TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: input2TestId })
     ).toBe(3);
     expect(
       collector.getCallCount(SubmitComponent.name, { dataTestId: submitTestId })
@@ -334,10 +334,10 @@ describe("Reset", () => {
       })
     ).toBe(3);
     expect(
-      collector.getCallCount(Field.name, { dataTestId: input1TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: input1TestId })
     ).toBe(2);
     expect(
-      collector.getCallCount(Field.name, { dataTestId: input2TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: input2TestId })
     ).toBe(2);
     expect(
       collector.getCallCount(SubmitComponent.name, { dataTestId: submitTestId })

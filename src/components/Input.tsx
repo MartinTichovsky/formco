@@ -1,7 +1,7 @@
 import React from "react";
 import { FormFields } from "../controller.types";
+import { Field } from "./Field";
 import { FieldPrivateInputProps, FieldType } from "./Field.types";
-import { FieldContainer } from "./FieldContainer";
 
 export function Input<
   T extends FormFields<T>,
@@ -23,7 +23,7 @@ export function Input<
   >
 ) {
   return (
-    <FieldContainer<
+    <Field<
       T,
       K,
       IComponent,
