@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
-import { cnRequiredStar } from "../../constants";
+import { CN } from "../../constants";
 import { GeneralRequiredCommonMessage } from "../GeneralRequiredCommonMessage";
 import { testInvalidMessage } from "../utils/selectors";
 
@@ -13,7 +13,6 @@ const inputFieldRow1TestId = "input-field-row-1";
 const inputFieldRow2TestId = "input-field-row-2";
 const invalidFieldClassName = "invalid-field";
 const invalidGlobalClassName = "invalid-global";
-const invalidValidationClassName = "invalid-validation";
 const radioFieldRow1TestId = "radio-field-row-1";
 const radio2TestId = "radio-2";
 const resetTestId = "reset";
@@ -27,7 +26,7 @@ const validGlobalClassName = "valid-global";
 const validValidationClassName = "valid-validation";
 
 const checkStarCount = (container: HTMLElement) => {
-  expect(container.querySelectorAll(`.${cnRequiredStar}`).length).toBe(5);
+  expect(container.querySelectorAll(`.${CN.RequiredStar}`).length).toBe(5);
 };
 
 test("GeneralRequiredCommonMessage", async () => {

@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  cnInvalidField,
-  cnInvalidMessage,
-  cnMessage,
-  cnRequired,
-  cnRequiredStar,
-  cnValidField,
-  cnValidMessage
-} from "../constants";
+import { CN } from "../constants";
 import { FormFields, ValidationResult } from "../controller.types";
 import { SelectProvider } from "../providers";
 import {
@@ -447,11 +439,11 @@ export function Field<
         className={
           state.isValid === undefined
             ? rest.required
-              ? `${rest.className} ${cnRequired}`
+              ? `${rest.className} ${CN.Required}`
               : rest.className
             : `${rest.className !== undefined ? `${rest.className} ` : ""}${
-                rest.required ? `${cnRequired} ` : ""
-              }${state.isValid === false ? cnInvalidField : cnValidField}`
+                rest.required ? `${CN.Required} ` : ""
+              }${state.isValid === false ? CN.InvalidField : CN.ValidField}`
         }
         disabled={state.isDisabled}
         key={key.current}
@@ -490,7 +482,7 @@ export function Field<
         (requiredComponent ? (
           requiredComponent
         ) : (
-          <span className={cnRequiredStar}>*</span>
+          <span className={CN.RequiredStar}>*</span>
         ))}
       {((state.message && (state.message !== true || requiredInvalidMessage)) ||
         (state.isValid && requiredValidMessage)) &&
@@ -498,9 +490,11 @@ export function Field<
           <MessageElement
             className={
               state.isValid === undefined
-                ? cnMessage
-                : `${cnMessage} ${
-                    state.isValid === false ? cnInvalidMessage : cnValidMessage
+                ? CN.Message
+                : `${CN.Message} ${
+                    state.isValid === false
+                      ? CN.InvalidMessage
+                      : CN.ValidMessage
                   }`
             }
           >

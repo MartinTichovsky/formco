@@ -1,7 +1,7 @@
 import React from "react";
 import { FormController, Input, MessageFor, Submit, Validation } from "..";
 import { FormControllerComponentProps } from "../components/FormController.types";
-import { cnInvalidMessage } from "../constants";
+import { CN } from "../constants";
 import { LogStore } from "./utils/store";
 import { Template } from "./utils/Template";
 
@@ -29,7 +29,7 @@ export const RadioFieldHiddenUseCase3 = (
                 <b>Radio Volume 1</b>
                 <MessageFor controller={controller} name="radioVolume1">
                   <span
-                    className={cnInvalidMessage}
+                    className={CN.InvalidMessage}
                     style={{ color: "red", paddingLeft: 10 }}
                   >
                     Choose an option
@@ -73,7 +73,7 @@ export const RadioFieldHiddenUseCase3 = (
                 <b>Radio Volume 2</b>
                 <MessageFor controller={controller} name="radioVolume2">
                   <span
-                    className={cnInvalidMessage}
+                    className={CN.InvalidMessage}
                     style={{ color: "red", paddingLeft: 10 }}
                   >
                     Choose an option
@@ -105,7 +105,7 @@ export const RadioFieldHiddenUseCase3 = (
                 <b>Radio Volume 3</b>
                 <MessageFor controller={controller} name="radioVolume3">
                   <span
-                    className={cnInvalidMessage}
+                    className={CN.InvalidMessage}
                     style={{ color: "red", paddingLeft: 10 }}
                   >
                     Choose an option

@@ -8,7 +8,7 @@ import {
   Validation
 } from "..";
 import { FormControllerComponentProps } from "../components/FormController.types";
-import { cnRequiredStar } from "../constants";
+import { CN } from "../constants";
 import { LogStore } from "./utils/store";
 import { Template } from "./utils/Template";
 
@@ -62,7 +62,7 @@ export const GeneralRequired = ({
                   placeholder="Input a surname"
                   requiredComponent={
                     <span
-                      className={cnRequiredStar}
+                      className={CN.RequiredStar}
                       style={{ color: "blue", marginLeft: 5 }}
                     >
                       *
