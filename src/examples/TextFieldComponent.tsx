@@ -97,7 +97,7 @@ export const TextFieldComponent = (
             <div className="field-row g-label-180">
               <Input
                 controller={controller}
-                data-testid="input-1"
+                data-testid="givenName"
                 Component={ClassInputComponent}
                 labelText="Class component"
                 name="givenName"
@@ -110,7 +110,7 @@ export const TextFieldComponent = (
             <div className="field-row g-label-180">
               <Input
                 controller={controller}
-                data-testid="input-2"
+                data-testid="surname"
                 Component={FunctionalInputComponent}
                 labelText="Functional component"
                 name="surname"

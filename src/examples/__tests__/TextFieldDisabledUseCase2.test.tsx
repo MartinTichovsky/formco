@@ -6,19 +6,19 @@ import { testInvalidMessage } from "../utils/selectors";
 
 console.log = jest.fn();
 
-const input1TestId = "input-1";
-const input2TestId = "input-2";
-const input3TestId = "input-3";
+const givenNameTestId = "givenName";
 const resetTestId = "reset";
+const salutationTestId = "salutation";
 const submitTestId = "submit";
+const surnameTestId = "surname";
 
 test("TextFieldDisabledUseCase2", async () => {
   const { container } = render(<TextFieldDisabledUseCase2 />);
 
   // the first and the third input must be disabled
-  expect(screen.getByTestId(input1TestId)).toBeDisabled();
-  expect(screen.getByTestId(input2TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(input3TestId)).toBeDisabled();
+  expect(screen.getByTestId(salutationTestId)).toBeDisabled();
+  expect(screen.getByTestId(givenNameTestId)).not.toBeDisabled();
+  expect(screen.getByTestId(surnameTestId)).toBeDisabled();
   expect(screen.getByTestId(submitTestId)).not.toBeDisabled();
 
   // errors should not be shown
@@ -33,75 +33,75 @@ test("TextFieldDisabledUseCase2", async () => {
   expect(console.log).lastCalledWith({});
 
   // input an empty value should show an error
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: " " }
   });
 
   // the first and the third input must be disabled
-  expect(screen.getByTestId(input1TestId)).toBeDisabled();
-  expect(screen.getByTestId(input2TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(input3TestId)).toBeDisabled();
+  expect(screen.getByTestId(salutationTestId)).toBeDisabled();
+  expect(screen.getByTestId(givenNameTestId)).not.toBeDisabled();
+  expect(screen.getByTestId(surnameTestId)).toBeDisabled();
   expect(screen.getByTestId(submitTestId)).not.toBeDisabled();
 
   // errors should not be shown
   testInvalidMessage(container, 0);
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "James" }
   });
 
   // the first input and the submit button must be disabled
-  expect(screen.getByTestId(input1TestId)).toBeDisabled();
-  expect(screen.getByTestId(input2TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(input3TestId)).not.toBeDisabled();
+  expect(screen.getByTestId(salutationTestId)).toBeDisabled();
+  expect(screen.getByTestId(givenNameTestId)).not.toBeDisabled();
+  expect(screen.getByTestId(surnameTestId)).not.toBeDisabled();
   expect(screen.getByTestId(submitTestId)).toBeDisabled();
 
   // errors should not be shown
   testInvalidMessage(container, 0);
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: " " }
   });
 
   // the first input and the submit button must be disabled
-  expect(screen.getByTestId(input1TestId)).toBeDisabled();
-  expect(screen.getByTestId(input2TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(input3TestId)).toBeDisabled();
+  expect(screen.getByTestId(salutationTestId)).toBeDisabled();
+  expect(screen.getByTestId(givenNameTestId)).not.toBeDisabled();
+  expect(screen.getByTestId(surnameTestId)).toBeDisabled();
   expect(screen.getByTestId(submitTestId)).not.toBeDisabled();
 
   // errors should not be shown
   testInvalidMessage(container, 0);
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "James" }
   });
 
   // input an empty value should show an error
-  fireEvent.change(screen.getByTestId(input3TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: " " }
   });
 
   // the first input and the submit button must be disabled
-  expect(screen.getByTestId(input1TestId)).toBeDisabled();
-  expect(screen.getByTestId(input2TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(input3TestId)).not.toBeDisabled();
+  expect(screen.getByTestId(salutationTestId)).toBeDisabled();
+  expect(screen.getByTestId(givenNameTestId)).not.toBeDisabled();
+  expect(screen.getByTestId(surnameTestId)).not.toBeDisabled();
   expect(screen.getByTestId(submitTestId)).toBeDisabled();
 
   // one error should be shown
   testInvalidMessage(container, 1);
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input3TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: "Bond" }
   });
 
   // all fields must not be disabled
-  expect(screen.getByTestId(input1TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(input2TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(input3TestId)).not.toBeDisabled();
+  expect(screen.getByTestId(salutationTestId)).not.toBeDisabled();
+  expect(screen.getByTestId(givenNameTestId)).not.toBeDisabled();
+  expect(screen.getByTestId(surnameTestId)).not.toBeDisabled();
   expect(screen.getByTestId(submitTestId)).not.toBeDisabled();
 
   // errors should not be shown
@@ -119,14 +119,14 @@ test("TextFieldDisabledUseCase2", async () => {
   });
 
   // input an empty value should show an error
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(salutationTestId), {
     target: { value: " " }
   });
 
   // all fields must not be disabled
-  expect(screen.getByTestId(input1TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(input2TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(input3TestId)).not.toBeDisabled();
+  expect(screen.getByTestId(salutationTestId)).not.toBeDisabled();
+  expect(screen.getByTestId(givenNameTestId)).not.toBeDisabled();
+  expect(screen.getByTestId(surnameTestId)).not.toBeDisabled();
   expect(screen.getByTestId(submitTestId)).not.toBeDisabled();
 
   // errors should not be shown
@@ -148,7 +148,7 @@ test("TextFieldDisabledUseCase2", async () => {
   testInvalidMessage(container, 0);
 
   // input a text
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(salutationTestId), {
     target: { value: "Mr." }
   });
 

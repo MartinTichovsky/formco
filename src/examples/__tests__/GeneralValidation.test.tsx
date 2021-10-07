@@ -7,10 +7,10 @@ import { testInvalidMessage } from "../utils/selectors";
 
 console.log = jest.fn();
 
-const input1TestId = "input-1";
-const input2TestId = "input-2";
+const givenNameTestId = "givenName";
 const resetTestId = "reset";
 const submitTestId = "submit";
+const surnameTestId = "surname";
 
 const testWorkflow = async (container: HTMLElement) => {
   // errors should not be shown
@@ -30,7 +30,7 @@ const testWorkflow = async (container: HTMLElement) => {
   testInvalidMessage(container, 0);
 
   // input an empty value should show an error
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: " " }
   });
 
@@ -38,7 +38,7 @@ const testWorkflow = async (container: HTMLElement) => {
   testInvalidMessage(container, 1);
 
   // input an empty value should show an error
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: " " }
   });
 
@@ -46,7 +46,7 @@ const testWorkflow = async (container: HTMLElement) => {
   testInvalidMessage(container, 2);
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "James" }
   });
 
@@ -54,7 +54,7 @@ const testWorkflow = async (container: HTMLElement) => {
   testInvalidMessage(container, 1);
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: "Bond" }
   });
 

@@ -11,6 +11,7 @@ import { GeneralMessageForUseCase1 } from "formco/lib/examples/GeneralMessageFor
 import { GeneralMessageForUseCase2 } from "formco/lib/examples/GeneralMessageForUseCase2";
 import { GeneralRequired } from "formco/lib/examples/GeneralRequired";
 import { GeneralRequiredCommonMessage } from "formco/lib/examples/GeneralRequiredCommonMessage";
+import { GeneralScrollToError } from "formco/lib/examples/GeneralScrollToError";
 import { GeneralValidateOnChange } from "formco/lib/examples/GeneralValidateOnChange";
 import { GeneralValidationUseCase1 } from "formco/lib/examples/GeneralValidationUseCase1";
 import { GeneralValidationUseCase2 } from "formco/lib/examples/GeneralValidationUseCase2";
@@ -229,6 +230,10 @@ const menuItems: MenuItems = {
       render: () => <GeneralDisableAllOnSubmit />
     },
     {
+      label: "Label",
+      render: () => <GeneralLabel />
+    },
+    {
       label: "Required",
       render: () => (
         <ContentWithColoredInputs>
@@ -253,8 +258,8 @@ const menuItems: MenuItems = {
       render: () => <GeneralMessageForUseCase2 />
     },
     {
-      label: "Label",
-      render: () => <GeneralLabel />
+      label: "Scroll to error",
+      render: () => <GeneralScrollToError />
     },
     {
       label: "Validate on Change",

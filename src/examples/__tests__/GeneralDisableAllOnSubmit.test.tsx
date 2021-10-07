@@ -5,19 +5,19 @@ import { GeneralDisableAllOnSubmit } from "../GeneralDisableAllOnSubmit";
 
 console.log = jest.fn();
 
-const input1TestId = "input-1";
-const input2TestId = "input-2";
+const givenNameTestId = "givenName";
 const radio1TestId = "radio-1";
 const radio2TestId = "radio-2";
 const resetTestId = "reset";
 const submitTestId = "submit";
+const surnameTestId = "surname";
 
 test("GeneralDisableAllOnSubmit", async () => {
   render(<GeneralDisableAllOnSubmit />);
 
   // all fields must not be disabled
-  expect(screen.getByTestId(input1TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(input2TestId)).not.toBeDisabled();
+  expect(screen.getByTestId(givenNameTestId)).not.toBeDisabled();
+  expect(screen.getByTestId(surnameTestId)).not.toBeDisabled();
   expect(screen.getByTestId(radio1TestId)).not.toBeDisabled();
   expect(screen.getByTestId(radio2TestId)).not.toBeDisabled();
 
@@ -31,8 +31,8 @@ test("GeneralDisableAllOnSubmit", async () => {
   expect(console.log).lastCalledWith({});
 
   // all inputs must be disabled
-  expect(screen.getByTestId(input1TestId)).toBeDisabled();
-  expect(screen.getByTestId(input2TestId)).toBeDisabled();
+  expect(screen.getByTestId(givenNameTestId)).toBeDisabled();
+  expect(screen.getByTestId(surnameTestId)).toBeDisabled();
   expect(screen.getByTestId(radio1TestId)).toBeDisabled();
   expect(screen.getByTestId(radio2TestId)).toBeDisabled();
 
@@ -40,8 +40,8 @@ test("GeneralDisableAllOnSubmit", async () => {
   fireEvent.click(screen.getByTestId(resetTestId));
 
   // all inputs most not be disabled
-  expect(screen.getByTestId(input1TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(input2TestId)).not.toBeDisabled();
+  expect(screen.getByTestId(givenNameTestId)).not.toBeDisabled();
+  expect(screen.getByTestId(surnameTestId)).not.toBeDisabled();
   expect(screen.getByTestId(radio1TestId)).not.toBeDisabled();
   expect(screen.getByTestId(radio2TestId)).not.toBeDisabled();
 });

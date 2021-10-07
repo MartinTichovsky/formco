@@ -15,10 +15,10 @@ console.error = jest.fn();
 console.log = jest.fn();
 
 const buttonPendingText = "pending...";
-const input1TestId = "input-1";
-const input2TestId = "input-2";
+const givenNameTestId = "givenName";
 const resetTestId = "reset";
 const submitTestId = "submit";
+const surnameTestId = "surname";
 
 test("SubmitCustom", async () => {
   const { container } = render(<SubmitCustom />);
@@ -46,11 +46,11 @@ test("SubmitCustom", async () => {
   testInvalidMessage(container, 0);
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "James" }
   });
 
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: "Bond" }
   });
 

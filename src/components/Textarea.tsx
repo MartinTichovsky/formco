@@ -1,7 +1,7 @@
 import React from "react";
 import { FormFields } from "../controller.types";
+import { Field } from "./Field";
 import { FieldPrivateProps, FieldType } from "./Field.types";
-import { FieldContainer } from "./FieldContainer";
 
 export function Textarea<
   T extends FormFields<T>,
@@ -25,7 +25,7 @@ export function Textarea<
   >
 ) {
   return (
-    <FieldContainer<
+    <Field<
       T,
       K,
       IComponent,

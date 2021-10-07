@@ -1,23 +1,24 @@
 import React from "react";
+import { Controller } from "../controller";
+import { FormFields } from "../controller.types";
 import {
-  cnInvalidField,
-  cnInvalidMessage,
-  cnMessage,
-  cnRequired,
-  cnRequiredStar,
-  cnValidField,
-  cnValidMessage
-} from "../constants";
-import { FormFields, ValidationResult } from "../controller.types";
-import { SelectProvider } from "../providers";
+  commonPropsContext,
+  disableIfContext,
+  hideIfContext,
+  validationContext
+} from "../providers";
 import {
-  FieldInitialProps,
   FieldInternalProps,
   FieldPrivateInputProps,
   FieldPrivateProps,
-  FieldState,
-  FieldType
+  FieldType,
+  InitialState
 } from "./Field.types";
+import { FieldComponent } from "./FieldComponent";
+
+let idCounter = 0;
+
+const getRandomId = () => `form-field-${++idCounter}`;
 
 export function Field<
   T extends FormFields<T>,
@@ -31,486 +32,261 @@ export function Field<
   MComponent extends React.ElementType,
   ElementType,
   HTMLAttributesType
->({
-  children,
-  Component,
-  controller,
-  disableIf,
-  hideMessage,
-  hideIf,
-  hideRequiredStar,
-  initialValidation,
-  label,
-  MessageComponent,
-  name,
-  onFormChange,
-  requiredComponent,
-  requiredInvalidMessage,
-  requiredValidMessage,
-  validation,
-  validateOnChange,
-  validationDependencies,
-  value,
-  ...rest
-}: React.PropsWithChildren<
-  React.ComponentProps<
-    FieldType<T, K, IComponent, MComponent, ElementType, HTMLAttributesType>
-  > &
-    FieldInternalProps &
-    FieldInitialProps
->) {
-  const { initialState, fieldType, ...restProps } = rest;
-  const [state, setState] = React.useState<FieldState>({
-    ...initialState!,
-    isOnFirstPosition: controller.isOnFirstPosition(name, rest.id),
-    isSelected:
-      rest.type === "checkbox"
-        ? controller.getFieldValue(name) === true
-        : controller.getFieldValue(name) === value
-  });
-  const refState = React.useRef<FieldState>();
-  refState.current = state;
+>(
+  props: React.PropsWithChildren<
+    React.ComponentProps<
+      FieldType<T, K, IComponent, MComponent, ElementType, HTMLAttributesType>
+    > &
+      FieldInternalProps
+  >
+) {
+  const {
+    children,
+    Component,
+    controller,
+    disableIf,
+    hideMessage,
+    hideIf,
+    hideRequiredStar,
+    initialValidation,
+    label,
+    MessageComponent,
+    name,
+    onFormChange,
+    requiredComponent,
+    requiredInvalidMessage,
+    requiredValidMessage,
+    validation,
+    validateOnChange,
+    validationDependencies,
+    value,
+    ...rest
+  } = props;
 
-  const selectRef = React.useRef<HTMLSelectElement>();
-  const defaultValue = React.useRef(controller.getFieldValue(name) || "");
-  const key = React.useRef(0);
-
-  React.useEffect(
-    () => {
-      if (
-        rest.type === "radio" &&
-        rest.id &&
-        controller.getFieldValue(name) === value
-      ) {
-        controller.setDefaultActiveRadioId(name, rest.id);
-      }
-
-      if (
-        rest.type === "radio" &&
-        ((rest.required && !hideRequiredStar) || !hideMessage)
-      ) {
-        const action = () => {
-          const isOnFirstPosition = controller.isOnFirstPosition(name, rest.id);
-
-          if (
-            (!refState.current?.isOnFirstPosition && isOnFirstPosition) ||
-            (refState.current?.isOnFirstPosition && !isOnFirstPosition)
-          ) {
-            setState((prevState) => ({ ...prevState, isOnFirstPosition }));
-          }
-        };
-
-        controller.subscribeOnChange(action, name);
-
-        return () => {
-          controller.unsubscribeOnChange(action, name);
-          controller.deleteField(name, rest.id);
-        };
-      }
-
-      return () => {
-        controller.deleteField(name, rest.id);
-      };
-    }, // eslint-disable-next-line react-hooks/exhaustive-deps
-    [controller, refState]
-  );
-
-  if (validation) {
-    React.useEffect(
-      () => {
-        const action = (validationResult: ValidationResult) => {
-          if (hideMessage) {
-            return;
-          }
-
-          const field = controller.getField(name);
-          const isValid =
-            field === undefined ||
-            (field.validationInProgress ? undefined : field.isValid);
-
-          if (
-            validationResult &&
-            (refState.current!.message !== validationResult ||
-              refState.current!.isValid !== isValid)
-          ) {
-            setState((prevState) => ({
-              ...prevState,
-              isValid,
-              message: validationResult
-            }));
-          } else if (
-            !validationResult &&
-            (refState.current!.message !== undefined ||
-              refState.current?.isValid !== isValid)
-          ) {
-            setState((prevState) => ({
-              ...prevState,
-              isValid,
-              message: undefined
-            }));
-          }
-        };
-
-        controller.subscribeValidator({
-          action,
-          id: rest.id,
-          key: name,
-          type: rest.type,
-          validation: () => {
-            return validation(
-              controller.getFieldValue(name),
-              controller.getObservedFields(name),
-              rest
-            );
-          }
-        });
-
-        return () => {
-          controller.unsubscribeValidator(name, action);
-        };
-      }, // eslint-disable-next-line react-hooks/exhaustive-deps
-      [controller, hideMessage, name, setState, validation]
-    );
+  if (!(controller instanceof Controller)) {
+    throw new Error("Controller is not provided");
   }
 
-  React.useEffect(
-    () => {
-      const action = {
-        action: (disable: boolean) => {
-          if (disable !== refState.current!.isDisabled) {
-            setState((prevState) => ({
-              ...prevState,
-              isDisabled: disable
-            }));
-          }
-        },
-        key: name
-      };
-
-      controller.subscribeOnDisable(action);
-
-      return () => {
-        controller.unsubscribeOnDisable(action);
-      };
-    }, // eslint-disable-next-line react-hooks/exhaustive-deps
-    [controller, name, setState]
-  );
-
-  if (disableIf) {
-    React.useEffect(() => {
-      const action = () => {
-        const isDisabled = disableIf(controller.fields);
-
-        controller.setIsDisabled({
-          id: rest.id,
-          isDisabled,
-          key: name,
-          type: rest.type
-        });
-
-        if (isDisabled && !refState.current!.isDisabled) {
-          key.current++;
-
-          setState((prevState) => ({
-            ...prevState,
-            isDisabled: true,
-            isSelected:
-              (rest.type === "checkbox" &&
-                controller.getFieldValue(name) === true) ||
-              controller.getFieldValue(name) === value,
-            isValid: undefined,
-            message: undefined
-          }));
-        } else if (!isDisabled && refState.current!.isDisabled) {
-          setState((prevState) => ({
-            ...prevState,
-            isDisabled: false
-          }));
-        }
-      };
-
-      controller.subscribeOnChange(action);
-
-      return () => {
-        controller.unsubscribeOnChange(action);
-      };
-    }, [controller, disableIf, key, name, refState, setState]);
+  if (disableIf !== undefined && typeof disableIf !== "function") {
+    throw new Error("DisableIf is not a function");
   }
 
-  if (onFormChange) {
-    React.useEffect(
-      () => {
-        const action = () => {
-          onFormChange(name, rest);
-        };
-
-        controller.subscribeOnChange(action);
-
-        return () => {
-          controller.unsubscribeOnChange(action);
-        };
-      }, // eslint-disable-next-line react-hooks/exhaustive-deps
-      [controller, name, onFormChange]
-    );
+  if (!name || typeof name !== "string") {
+    throw new Error("Name must be a string");
   }
 
-  if (hideIf) {
-    React.useEffect(
-      () => {
-        const action = () => {
-          const isVisible = !hideIf(controller.fields);
-
-          controller.setIsVisible({
-            id: rest.id,
-            isVisible,
-            key: name,
-            type: rest.type
-          });
-
-          if (!isVisible && refState.current!.isVisible) {
-            setState((prevState) => ({
-              ...prevState,
-              isOnFirstPosition: controller.isOnFirstPosition(name, rest.id),
-              isVisible: false
-            }));
-          } else if (isVisible && !refState.current!.isVisible) {
-            key.current++;
-
-            setState((prevState) => ({
-              ...prevState,
-              isSelected:
-                (rest.type === "checkbox" &&
-                  controller.getFieldValue(name) === true) ||
-                controller.getFieldValue(name) === value,
-              isOnFirstPosition: controller.isOnFirstPosition(name, rest.id),
-              isVisible: true
-            }));
-          }
-        };
-
-        controller.subscribeOnChange(action);
-
-        return () => {
-          controller.unsubscribeOnChange(action);
-        };
-      }, // eslint-disable-next-line react-hooks/exhaustive-deps
-      [controller, hideIf, setState]
-    );
+  if (onFormChange !== undefined && typeof onFormChange !== "function") {
+    throw new Error("OnFormChange is not a function");
   }
 
-  if (rest.type === "radio" && rest.id) {
-    React.useEffect(
-      () => {
-        controller.subscribeIsSelected(rest.id!, () => {
-          key.current++;
-          const field = controller.getField(name);
-
-          setState((prevState) => ({
-            ...prevState,
-            isSelected: true,
-            isValid: field === undefined || field.isValid,
-            message:
-              prevState.message && validation
-                ? validation(
-                    field?.value as T[K],
-                    controller.getObservedFields(name),
-                    rest
-                  )
-                : undefined
-          }));
-        });
-
-        return () => {
-          controller.unsubscribeIsSelected(rest.id!);
-        };
-      }, // eslint-disable-next-line react-hooks/exhaustive-deps
-      [controller, setState]
-    );
+  if (validation !== undefined && typeof validation !== "function") {
+    throw new Error("Validation is not a function");
   }
 
-  if (fieldType === "select") {
-    React.useEffect(
-      () => {
-        let proceedValidation = true;
-
-        if (selectRef && selectRef.current && selectRef.current.options) {
-          proceedValidation =
-            Array.prototype.filter.call(
-              selectRef.current.options,
-              (option) => option.value && !option.disabled
-            ).length > 0;
-        }
-
-        controller.setFieldValue({
-          id: rest.id,
-          isValid: proceedValidation ? undefined : true,
-          key: name,
-          silent: true,
-          value: selectRef.current?.value
-        });
-      }, // eslint-disable-next-line react-hooks/exhaustive-deps
-      [controller, selectRef]
-    );
+  if (
+    validationDependencies !== undefined &&
+    !Array.isArray(validationDependencies)
+  ) {
+    throw new Error("ValidationDependencies must be an array");
   }
 
-  const ComponentElement = React.useCallback(
-    (props: React.ComponentProps<React.ElementType>) =>
-      fieldType === "select" ? (
-        Component ? (
-          <Component
-            {...restProps}
-            {...props}
-            controller={controller}
-            ref={selectRef}
-          >
-            <SelectProvider
-              id={rest.id}
-              name={name as string}
-              selectRef={selectRef}
-            >
-              {children}
-            </SelectProvider>
-          </Component>
-        ) : (
-          <select {...restProps} {...props} ref={selectRef}>
-            <SelectProvider
-              id={rest.id}
-              name={name as string}
-              selectRef={selectRef}
-            >
-              {children}
-            </SelectProvider>
-          </select>
-        )
-      ) : Component ? (
-        <Component {...restProps} {...props} controller={controller}>
-          {children}
-        </Component>
-      ) : fieldType === "textarea" ? (
-        <textarea {...restProps} {...props} />
-      ) : (
-        <input {...restProps} {...props} />
-      ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [Component, fieldType]
-  );
-
-  const MessageElement = React.useCallback(
-    ({
-      children,
-      ...props
-    }: React.PropsWithChildren<React.HTMLProps<HTMLElement>>) =>
-      MessageComponent ? (
-        <MessageComponent
-          {...({
-            ...restProps,
-            ...props,
-            controller
-          } as React.ComponentProps<React.ElementType>)}
-        >
-          {children}
-        </MessageComponent>
-      ) : (
-        <span {...props}>{children}</span>
-      ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [MessageComponent]
-  );
-
-  if (!state.isVisible) {
-    return null;
+  if (!controller.registerKey(name, rest.type || "text")) {
+    console.warn(`Key '${name}' is already registered in the form`);
   }
 
-  let props = {
-    defaultChecked: false,
-    defaultValue: value || (defaultValue.current as string)
+  if (validationDependencies) {
+    controller.registerValidationDependencies(name, validationDependencies);
+  }
+
+  const providedProps = {
+    disableIf,
+    hideIf,
+    hideRequiredStar,
+    hideMessage,
+    id: rest.id,
+    required: rest.required,
+    requiredComponent,
+    requiredInvalidMessage,
+    requiredValidMessage,
+    validation
   };
 
-  if ((rest.type === "checkbox" || rest.type === "radio") && state.isSelected) {
-    props.defaultChecked = true;
+  if (!providedProps.disableIf) {
+    providedProps.disableIf = React.useContext(disableIfContext);
   }
 
+  if (!providedProps.disableIf) {
+    providedProps.disableIf = controller.getDisableCondition(name);
+  }
+
+  if (!providedProps.hideIf) {
+    providedProps.hideIf = React.useContext(hideIfContext);
+  }
+
+  if (!providedProps.hideIf) {
+    providedProps.hideIf = controller.getHideCondition(name);
+  }
+
+  if (!providedProps.validation) {
+    providedProps.validation = React.useContext(validationContext);
+  }
+
+  if (!providedProps.validation) {
+    providedProps.validation = controller.getValidationCondition(name);
+  }
+
+  const commonProps = React.useContext(commonPropsContext);
+
+  for (let key in commonProps) {
+    if (providedProps[key] === undefined) {
+      providedProps[key] = commonProps[key];
+    }
+  }
+
+  if (providedProps.requiredInvalidMessage === undefined) {
+    providedProps.requiredInvalidMessage = controller.requiredInvalidMessage;
+  }
+
+  if (providedProps.requiredValidMessage === undefined) {
+    providedProps.requiredValidMessage = controller.requiredValidMessage;
+  }
+
+  let _validation = providedProps.validation;
+
+  if (providedProps.required && providedProps.validation) {
+    _validation = ((
+      value: T[K] | undefined,
+      fields: Partial<T>,
+      props: typeof rest
+    ) => {
+      if (
+        rest.type === "checkbox" ||
+        rest.type === "radio" ||
+        rest.fieldType === "select"
+      ) {
+        const validationResult = providedProps.validation!(
+          value,
+          fields,
+          props
+        );
+
+        return (
+          validationResult ||
+          (typeof value === "string"
+            ? !value.trim()
+            : rest.type === "checkbox"
+            ? !value
+            : value === undefined)
+        );
+      }
+
+      return (
+        typeof value === "string"
+          ? !value.trim()
+          : rest.type === "checkbox"
+          ? !value
+          : value === undefined
+      )
+        ? true
+        : providedProps.validation!(value, fields, props);
+    }) as typeof providedProps.validation;
+  } else if (providedProps.required) {
+    _validation = (value: T[K] | undefined) =>
+      typeof value === "string"
+        ? !value.trim()
+        : rest.type === "checkbox"
+        ? !value
+        : value === undefined;
+  }
+
+  if (initialValidation !== undefined || validateOnChange !== undefined) {
+    controller.setFieldProperties(name, {
+      initialValidation,
+      validateOnChange
+    });
+  }
+
+  providedProps.id = (
+    (label && !providedProps.id) || rest.type === "radio"
+      ? getRandomId()
+      : providedProps.id
+  ) as typeof rest.id;
+
+  if (rest.type === "radio") {
+    controller.registerOption(name, providedProps.id!);
+  }
+
+  let validationResult =
+    _validation &&
+    _validation(
+      controller.getFieldValue(name),
+      controller.getObservedFields(name),
+      rest
+    );
+
+  const initialState: InitialState = {
+    isDisabled: providedProps.disableIf
+      ? providedProps.disableIf(controller.fields)
+      : false,
+    isVisible: providedProps.hideIf
+      ? !providedProps.hideIf(controller.fields)
+      : true,
+    message: initialValidation
+      ? controller.getValidationResultContent(validationResult)
+      : undefined
+  };
+
+  if (initialState.isDisabled) {
+    controller.setDefaultIsDisabled({
+      id: providedProps.id,
+      isValidated:
+        rest.type !== "radio" && !!(initialValidation && _validation),
+      key: name,
+      type: rest.type,
+      validationResult: initialValidation ? validationResult : undefined
+    });
+  } else if (!initialState.isVisible) {
+    controller.setDefaultIsNotVisible({
+      id: providedProps.id,
+      isValidated:
+        rest.type !== "radio" && !!(initialValidation && _validation),
+      key: name,
+      type: rest.type,
+      validationResult: initialValidation ? validationResult : undefined,
+      value: value || children
+    });
+  } else if (_validation) {
+    controller.setDefaultIsValid({
+      initialValidation,
+      isValidated: rest.type !== "radio",
+      key: name,
+      type: rest.type,
+      validationResult
+    });
+  }
+
+  const field = controller.getField(name);
+  initialState.isValid = initialValidation
+    ? !validationResult && (field === undefined || field.isValid)
+    : undefined;
+
+  const fieldProps = {
+    ...props,
+    ...providedProps,
+    initialState,
+    validation: _validation
+  };
+
   return (
-    <>
-      {rest.type !== "checkbox" &&
-        rest.type !== "radio" &&
-        (typeof label === "string" ? (
-          <>
-            <label htmlFor={rest.id}>{label}</label>{" "}
-          </>
-        ) : (
-          label
-        ))}
-      <ComponentElement
-        {...restProps}
-        {...props}
-        className={
-          state.isValid === undefined
-            ? rest.required
-              ? `${rest.className} ${cnRequired}`
-              : rest.className
-            : `${rest.className !== undefined ? `${rest.className} ` : ""}${
-                rest.required ? `${cnRequired} ` : ""
-              }${state.isValid === false ? cnInvalidField : cnValidField}`
-        }
-        disabled={state.isDisabled}
-        key={key.current}
-        name={name as string}
-        onChange={(
-          event: React.ChangeEvent<{ checked: boolean; value: string }>
-        ) =>
-          controller.setFieldValue({
-            id: rest.id,
-            isTouched: true,
-            key: name,
-            value:
-              rest.type === "checkbox"
-                ? event.currentTarget.checked
-                : event.currentTarget.value
-          })
-        }
-        onKeyDown={(event: React.KeyboardEvent) => {
-          if (event.key === "Enter") {
-            controller.submit();
-          }
-        }}
-      />
-      {(rest.type === "checkbox" || rest.type === "radio") &&
-        (typeof label === "string" ? (
-          <>
-            {" "}
-            <label htmlFor={rest.id}>{label}</label>
-          </>
-        ) : (
-          label
-        ))}
-      {rest.required &&
-        !hideRequiredStar &&
-        state.isOnFirstPosition &&
-        (requiredComponent ? (
-          requiredComponent
-        ) : (
-          <span className={cnRequiredStar}>*</span>
-        ))}
-      {((state.message && (state.message !== true || requiredInvalidMessage)) ||
-        (state.isValid && requiredValidMessage)) &&
-        state.isOnFirstPosition && (
-          <MessageElement
-            className={
-              state.isValid === undefined
-                ? cnMessage
-                : `${cnMessage} ${
-                    state.isValid === false ? cnInvalidMessage : cnValidMessage
-                  }`
-            }
-          >
-            {state.message && state.message !== true
-              ? state.message
-              : state.isValid
-              ? requiredValidMessage
-              : requiredInvalidMessage}
-          </MessageElement>
-        )}
-    </>
+    <FieldComponent<
+      T,
+      K,
+      IComponent,
+      MComponent,
+      ElementType,
+      HTMLAttributesType
+    >
+      {...fieldProps}
+    />
   );
 }

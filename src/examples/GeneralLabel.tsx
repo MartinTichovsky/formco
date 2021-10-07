@@ -27,7 +27,7 @@ export const GeneralLabel = (
               <label htmlFor="salutation">Salutation</label>{" "}
               <Input
                 controller={controller}
-                data-testid="input-1"
+                data-testid="salutation"
                 id="salutation"
                 name="salutation"
                 placeholder="Input salutation"
@@ -36,7 +36,7 @@ export const GeneralLabel = (
             <div className="field-row">
               <Input
                 controller={controller}
-                data-testid="input-2"
+                data-testid="givenName"
                 label="Given name"
                 name="givenName"
                 placeholder="Input a given name"
@@ -45,7 +45,7 @@ export const GeneralLabel = (
             <div className="field-row">
               <Input
                 controller={controller}
-                data-testid="input-3"
+                data-testid="surname"
                 id="surname"
                 label={
                   <>

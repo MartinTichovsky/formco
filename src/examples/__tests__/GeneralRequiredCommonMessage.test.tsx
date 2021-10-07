@@ -1,25 +1,24 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
-import { cnRequiredStar } from "../../constants";
+import { CN } from "../../constants";
 import { GeneralRequiredCommonMessage } from "../GeneralRequiredCommonMessage";
 import { testInvalidMessage } from "../utils/selectors";
 
 console.log = jest.fn();
 
-const input1TestId = "input-1";
-const input2TestId = "input-2";
 const inputFieldRow1TestId = "input-field-row-1";
 const inputFieldRow2TestId = "input-field-row-2";
 const invalidFieldClassName = "invalid-field";
 const invalidGlobalClassName = "invalid-global";
-const invalidValidationClassName = "invalid-validation";
+const givenNameTestId = "givenName";
 const radioFieldRow1TestId = "radio-field-row-1";
 const radio2TestId = "radio-2";
 const resetTestId = "reset";
 const selectFieldRowTestId = "select-field-row";
 const selectTestId = "select";
 const submitTestId = "submit";
+const surnameTestId = "surname";
 const textareaFieldrowTestId = "textarea-field-row";
 const textareaTestId = "textarea";
 const validFieldClassName = "valid-field";
@@ -27,7 +26,7 @@ const validGlobalClassName = "valid-global";
 const validValidationClassName = "valid-validation";
 
 const checkStarCount = (container: HTMLElement) => {
-  expect(container.querySelectorAll(`.${cnRequiredStar}`).length).toBe(5);
+  expect(container.querySelectorAll(`.${CN.RequiredStar}`).length).toBe(5);
 };
 
 test("GeneralRequiredCommonMessage", async () => {
@@ -42,7 +41,7 @@ test("GeneralRequiredCommonMessage", async () => {
   checkStarCount(container);
 
   // input an empty value should show an error
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: " " }
   });
 
@@ -60,7 +59,7 @@ test("GeneralRequiredCommonMessage", async () => {
   ).toBeTruthy();
 
   // input an empty value should show an error
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "James" }
   });
 
@@ -78,7 +77,7 @@ test("GeneralRequiredCommonMessage", async () => {
   ).toBeTruthy();
 
   // input valid text
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: " " }
   });
 
@@ -96,7 +95,7 @@ test("GeneralRequiredCommonMessage", async () => {
   ).toBeTruthy();
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: "Bond" }
   });
 

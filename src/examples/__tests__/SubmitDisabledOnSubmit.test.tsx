@@ -6,11 +6,11 @@ import { testInvalidMessage } from "../utils/selectors";
 
 console.log = jest.fn();
 
-const input1TestId = "input-1";
-const input2TestId = "input-2";
+const givenNameTestId = "givenName";
 const resetTestId = "reset";
 const submitBottomTestId = "submit-bottom";
 const submitTopTestId = "submit-top";
+const surnameTestId = "surname";
 
 test("SubmitDisabledOnSubmit", async () => {
   const { container } = render(<SubmitDisabledOnSubmit />);
@@ -45,7 +45,7 @@ test("SubmitDisabledOnSubmit", async () => {
   expect(screen.getByTestId(submitTopTestId)).not.toBeDisabled();
 
   // input an empty value, the `validateOnChange` option is false, the empty value shouldn't cause an error
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: " " }
   });
 
@@ -57,7 +57,7 @@ test("SubmitDisabledOnSubmit", async () => {
   expect(screen.getByTestId(submitTopTestId)).not.toBeDisabled();
 
   // input an empty value, the `validateOnChange` option is false, the empty value shouldn't cause an error
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: " " }
   });
 
@@ -81,7 +81,7 @@ test("SubmitDisabledOnSubmit", async () => {
   testInvalidMessage(container, 2);
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "James" }
   });
 
@@ -93,7 +93,7 @@ test("SubmitDisabledOnSubmit", async () => {
   expect(screen.getByTestId(submitTopTestId)).toBeDisabled();
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: "Bond" }
   });
 

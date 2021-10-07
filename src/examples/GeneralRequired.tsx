@@ -8,7 +8,7 @@ import {
   Validation
 } from "..";
 import { FormControllerComponentProps } from "../components/FormController.types";
-import { cnRequiredStar } from "../constants";
+import { CN } from "../constants";
 import { LogStore } from "./utils/store";
 import { Template } from "./utils/Template";
 
@@ -46,7 +46,7 @@ export const GeneralRequired = ({
               <div className="field-row">
                 <Input
                   controller={controller}
-                  data-testid="input-1"
+                  data-testid="givenName"
                   label="Given name"
                   name="givenName"
                   placeholder="Input a given name"
@@ -56,13 +56,13 @@ export const GeneralRequired = ({
               <div className="field-row">
                 <Input
                   controller={controller}
-                  data-testid="input-2"
+                  data-testid="surname"
                   label="Surname"
                   name="surname"
                   placeholder="Input a surname"
                   requiredComponent={
                     <span
-                      className={cnRequiredStar}
+                      className={CN.RequiredStar}
                       style={{ color: "blue", marginLeft: 5 }}
                     >
                       *

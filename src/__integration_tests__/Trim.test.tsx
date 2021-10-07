@@ -4,19 +4,19 @@ import { Trim } from "./Trim";
 
 console.warn = jest.fn();
 
-const input1TestId = "input-1";
-const input2TestId = "input-2";
+const givenNameTestId = "givenName";
+const surnameTestId = "surname";
 const submitTestId = "submit";
 
 test("The values should be the same as entered", async () => {
   const onSubmit = jest.fn();
   render(<Trim onSubmit={(fields) => onSubmit(fields)} />);
 
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: " James " }
   });
 
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: " Bond " }
   });
 
@@ -38,11 +38,11 @@ test("The values should be trimmed", async () => {
     />
   );
 
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: " James " }
   });
 
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: " Bond " }
   });
 

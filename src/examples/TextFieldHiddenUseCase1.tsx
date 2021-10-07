@@ -27,7 +27,7 @@ export const TextFieldHiddenUseCase1 = (
             <div className="field-row">
               <Input
                 controller={controller}
-                data-testid="input-1"
+                data-testid="salutation"
                 hideIf={(fields) => !fields.surname?.trim()}
                 name="salutation"
                 placeholder="Input salutation"
@@ -39,7 +39,7 @@ export const TextFieldHiddenUseCase1 = (
             <div className="field-row">
               <Input
                 controller={controller}
-                data-testid="input-2"
+                data-testid="givenName"
                 name="givenName"
                 placeholder="Input a given name"
                 validation={(value) =>
@@ -50,7 +50,7 @@ export const TextFieldHiddenUseCase1 = (
             <div className="field-row">
               <Input
                 controller={controller}
-                data-testid="input-3"
+                data-testid="surname"
                 hideIf={(fields) => !fields.givenName?.trim()}
                 name="surname"
                 placeholder="Input a surname"
