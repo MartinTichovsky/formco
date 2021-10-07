@@ -15,11 +15,11 @@ console.error = jest.fn();
 console.log = jest.fn();
 
 const pendingText = "pending...";
-const input1TestId = "input-1";
-const input2TestId = "input-2";
+const givenNameTestId = "givenName";
 const resetTestId = "reset";
 const submitClassComponentTestId = "class-submit";
 const submitFunctionalComponentTestId = "functional-submit";
+const surnameTestId = "surname";
 
 test("SubmitComponent", async () => {
   const { container } = render(<SubmitComponent />);
@@ -58,7 +58,7 @@ test("SubmitComponent", async () => {
   testInvalidMessage(container, 2);
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "James" }
   });
 
@@ -66,7 +66,7 @@ test("SubmitComponent", async () => {
   testInvalidMessage(container, 1);
 
   // input valid text
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: "Bond" }
   });
 

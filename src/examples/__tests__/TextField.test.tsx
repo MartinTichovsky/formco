@@ -10,11 +10,11 @@ import { testInvalidMessage } from "../utils/selectors";
 console.log = jest.fn();
 
 const formControllerTestId = "form-controller";
-const input1TestId = "input-1";
-const input2TestId = "input-2";
+const givenNameTestId = "givenName";
 const reRenderTestId = "re-render";
 const resetTestId = "reset";
 const submitTestId = "submit";
+const surnameTestId = "surname";
 
 beforeEach(() => {
   collector.reset();
@@ -23,21 +23,21 @@ beforeEach(() => {
 test("TextField", async () => {
   const { container } = render(<TextField />);
 
-  expect(screen.getByTestId(input1TestId)).toHaveAttribute(
+  expect(screen.getByTestId(givenNameTestId)).toHaveAttribute(
     "placeholder",
     "Input a given name"
   );
-  expect(screen.getByTestId(input2TestId)).toHaveAttribute(
+  expect(screen.getByTestId(surnameTestId)).toHaveAttribute(
     "placeholder",
     "Input a surname"
   );
 
   // render count check
   expect(
-    collector.getCallCount(FieldComponent.name, { dataTestId: input1TestId })
+    collector.getCallCount(FieldComponent.name, { dataTestId: givenNameTestId })
   ).toBe(1);
   expect(
-    collector.getCallCount(FieldComponent.name, { dataTestId: input2TestId })
+    collector.getCallCount(FieldComponent.name, { dataTestId: surnameTestId })
   ).toBe(1);
   expect(
     collector.getCallCount(SubmitComponent.name, { dataTestId: submitTestId })
@@ -55,10 +55,10 @@ test("TextField", async () => {
   testInvalidMessage(container, 2);
 
   expect(
-    collector.getCallCount(FieldComponent.name, { dataTestId: input1TestId })
+    collector.getCallCount(FieldComponent.name, { dataTestId: givenNameTestId })
   ).toBe(2);
   expect(
-    collector.getCallCount(FieldComponent.name, { dataTestId: input2TestId })
+    collector.getCallCount(FieldComponent.name, { dataTestId: surnameTestId })
   ).toBe(2);
   expect(
     collector.getCallCount(SubmitComponent.name, { dataTestId: submitTestId })
@@ -70,17 +70,17 @@ test("TextField", async () => {
   });
 
   expect(
-    collector.getCallCount(FieldComponent.name, { dataTestId: input1TestId })
+    collector.getCallCount(FieldComponent.name, { dataTestId: givenNameTestId })
   ).toBe(2);
   expect(
-    collector.getCallCount(FieldComponent.name, { dataTestId: input2TestId })
+    collector.getCallCount(FieldComponent.name, { dataTestId: surnameTestId })
   ).toBe(2);
   expect(
     collector.getCallCount(SubmitComponent.name, { dataTestId: submitTestId })
   ).toBe(1);
 
   // input a text to the first input, after change or submit should be visible only one error message
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "James" }
   });
 
@@ -96,7 +96,7 @@ test("TextField", async () => {
   testInvalidMessage(container, 1);
 
   // input a text to the second input, after change should be visible no errors
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: "Bond" }
   });
 
@@ -127,10 +127,12 @@ describe("Re-render", () => {
       })
     ).toBe(2); // beacause the form controller creates a controller `useEffect` and set it with `setController`
     expect(
-      collector.getCallCount(FieldComponent.name, { dataTestId: input1TestId })
+      collector.getCallCount(FieldComponent.name, {
+        dataTestId: givenNameTestId
+      })
     ).toBe(1);
     expect(
-      collector.getCallCount(FieldComponent.name, { dataTestId: input2TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: surnameTestId })
     ).toBe(1);
     expect(
       collector.getCallCount(SubmitComponent.name, { dataTestId: submitTestId })
@@ -145,10 +147,12 @@ describe("Re-render", () => {
       })
     ).toBe(2);
     expect(
-      collector.getCallCount(FieldComponent.name, { dataTestId: input1TestId })
+      collector.getCallCount(FieldComponent.name, {
+        dataTestId: givenNameTestId
+      })
     ).toBe(1);
     expect(
-      collector.getCallCount(FieldComponent.name, { dataTestId: input2TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: surnameTestId })
     ).toBe(1);
     expect(
       collector.getCallCount(SubmitComponent.name, { dataTestId: submitTestId })
@@ -161,10 +165,12 @@ describe("Re-render", () => {
       })
     ).toBe(2);
     expect(
-      collector.getCallCount(FieldComponent.name, { dataTestId: input1TestId })
+      collector.getCallCount(FieldComponent.name, {
+        dataTestId: givenNameTestId
+      })
     ).toBe(1);
     expect(
-      collector.getCallCount(FieldComponent.name, { dataTestId: input2TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: surnameTestId })
     ).toBe(1);
     expect(
       collector.getCallCount(SubmitComponent.name, { dataTestId: submitTestId })
@@ -187,10 +193,12 @@ describe("Re-render", () => {
       })
     ).toBe(2);
     expect(
-      collector.getCallCount(FieldComponent.name, { dataTestId: input1TestId })
+      collector.getCallCount(FieldComponent.name, {
+        dataTestId: givenNameTestId
+      })
     ).toBe(2); // because the second render is the submit event (validation)
     expect(
-      collector.getCallCount(FieldComponent.name, { dataTestId: input2TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: surnameTestId })
     ).toBe(2);
     expect(
       collector.getCallCount(SubmitComponent.name, { dataTestId: submitTestId })
@@ -205,10 +213,10 @@ describe("Re-render", () => {
   test("With Values", () => {
     render(<TextField />);
 
-    fireEvent.change(screen.getByTestId(input1TestId), {
+    fireEvent.change(screen.getByTestId(givenNameTestId), {
       target: { value: "James" }
     });
-    fireEvent.change(screen.getByTestId(input2TestId), {
+    fireEvent.change(screen.getByTestId(surnameTestId), {
       target: { value: "Bond" }
     });
 
@@ -221,17 +229,19 @@ describe("Re-render", () => {
       })
     ).toBe(2);
     expect(
-      collector.getCallCount(FieldComponent.name, { dataTestId: input1TestId })
+      collector.getCallCount(FieldComponent.name, {
+        dataTestId: givenNameTestId
+      })
     ).toBe(1);
     expect(
-      collector.getCallCount(FieldComponent.name, { dataTestId: input2TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: surnameTestId })
     ).toBe(1);
     expect(
       collector.getCallCount(SubmitComponent.name, { dataTestId: submitTestId })
     ).toBe(1);
 
-    expect(screen.getByTestId(input1TestId)).toHaveValue("James");
-    expect(screen.getByTestId(input2TestId)).toHaveValue("Bond");
+    expect(screen.getByTestId(givenNameTestId)).toHaveValue("James");
+    expect(screen.getByTestId(surnameTestId)).toHaveValue("Bond");
   });
 });
 
@@ -241,11 +251,11 @@ describe("Reset", () => {
 
     fireEvent.click(screen.getByTestId(resetTestId));
 
-    expect(screen.getByTestId(input1TestId)).toHaveAttribute(
+    expect(screen.getByTestId(givenNameTestId)).toHaveAttribute(
       "placeholder",
       "Input a given name"
     );
-    expect(screen.getByTestId(input2TestId)).toHaveAttribute(
+    expect(screen.getByTestId(surnameTestId)).toHaveAttribute(
       "placeholder",
       "Input a surname"
     );
@@ -257,10 +267,12 @@ describe("Reset", () => {
       })
     ).toBe(3);
     expect(
-      collector.getCallCount(FieldComponent.name, { dataTestId: input1TestId })
+      collector.getCallCount(FieldComponent.name, {
+        dataTestId: givenNameTestId
+      })
     ).toBe(2);
     expect(
-      collector.getCallCount(FieldComponent.name, { dataTestId: input2TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: surnameTestId })
     ).toBe(2);
     expect(
       collector.getCallCount(SubmitComponent.name, { dataTestId: submitTestId })
@@ -275,10 +287,12 @@ describe("Reset", () => {
       })
     ).toBe(4);
     expect(
-      collector.getCallCount(FieldComponent.name, { dataTestId: input1TestId })
+      collector.getCallCount(FieldComponent.name, {
+        dataTestId: givenNameTestId
+      })
     ).toBe(3);
     expect(
-      collector.getCallCount(FieldComponent.name, { dataTestId: input2TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: surnameTestId })
     ).toBe(3);
     expect(
       collector.getCallCount(SubmitComponent.name, { dataTestId: submitTestId })
@@ -301,10 +315,12 @@ describe("Reset", () => {
       })
     ).toBe(3);
     expect(
-      collector.getCallCount(FieldComponent.name, { dataTestId: input1TestId })
+      collector.getCallCount(FieldComponent.name, {
+        dataTestId: givenNameTestId
+      })
     ).toBe(3);
     expect(
-      collector.getCallCount(FieldComponent.name, { dataTestId: input2TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: surnameTestId })
     ).toBe(3);
     expect(
       collector.getCallCount(SubmitComponent.name, { dataTestId: submitTestId })
@@ -317,10 +333,10 @@ describe("Reset", () => {
   test("With values", () => {
     render(<TextField />);
 
-    fireEvent.change(screen.getByTestId(input1TestId), {
+    fireEvent.change(screen.getByTestId(givenNameTestId), {
       target: { value: "James" }
     });
-    fireEvent.change(screen.getByTestId(input2TestId), {
+    fireEvent.change(screen.getByTestId(surnameTestId), {
       target: { value: "Bond" }
     });
 
@@ -334,16 +350,18 @@ describe("Reset", () => {
       })
     ).toBe(3);
     expect(
-      collector.getCallCount(FieldComponent.name, { dataTestId: input1TestId })
+      collector.getCallCount(FieldComponent.name, {
+        dataTestId: givenNameTestId
+      })
     ).toBe(2);
     expect(
-      collector.getCallCount(FieldComponent.name, { dataTestId: input2TestId })
+      collector.getCallCount(FieldComponent.name, { dataTestId: surnameTestId })
     ).toBe(2);
     expect(
       collector.getCallCount(SubmitComponent.name, { dataTestId: submitTestId })
     ).toBe(2);
 
-    expect(screen.getByTestId(input1TestId)).toHaveValue("");
-    expect(screen.getByTestId(input2TestId)).toHaveValue("");
+    expect(screen.getByTestId(givenNameTestId)).toHaveValue("");
+    expect(screen.getByTestId(surnameTestId)).toHaveValue("");
   });
 });

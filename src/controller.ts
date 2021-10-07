@@ -61,6 +61,7 @@ export class Controller<T extends FormFields<T>> {
   private _setController: React.Dispatch<
     React.SetStateAction<Controller<T> | undefined>
   >;
+  private _scrolledToElement: boolean = false;
   private _validateOnChange;
   private _validation?: Validation<T>;
   private _validationPromiseCounter: ValidationPromiseCounter<T> = {};
@@ -115,6 +116,15 @@ export class Controller<T extends FormFields<T>> {
     this.keyIndex = Controller.uniqueIndex++;
   }
 
+  get canScrollToElement() {
+    if (this._scrolledToElement) {
+      return false;
+    }
+
+    this._scrolledToElement = true;
+    return true;
+  }
+
   get fields(): Partial<T> {
     const result: Partial<T> = {};
 
@@ -152,6 +162,10 @@ export class Controller<T extends FormFields<T>> {
 
   get key() {
     return this.keyIndex;
+  }
+
+  get scrollToError() {
+    return this.options?.scrollToError;
   }
 
   private afterAll() {
@@ -498,6 +512,7 @@ export class Controller<T extends FormFields<T>> {
         hideIf: this._hideIf,
         initialValidation: this._initialValidation,
         initialValues: this._initialValues,
+        options: this.options,
         onSubmit: this._onSubmit,
         requiredInvalidMessage: this.requiredInvalidMessage,
         requiredValidMessage: this.requiredValidMessage,
@@ -948,6 +963,7 @@ export class Controller<T extends FormFields<T>> {
 
   public async submit() {
     this._isSubmitted = true;
+    this._scrolledToElement = false;
     this.validate();
 
     if (this.isValidationInProgress()) {
@@ -1096,11 +1112,11 @@ export class Controller<T extends FormFields<T>> {
       }
 
       if (this._fields[key]!.isValidated && !this._fields[key]!.isValid) {
-        this.validateActions(key, this._fields[key]!.validationContent);
+        this.validateActions(key, this._fields[key]!.validationContent, true);
       }
 
       if (this._fields[key]!.isValidated) {
-        this.validateActions(key, this._fields[key]!.validationContent);
+        this.validateActions(key, this._fields[key]!.validationContent, true);
         return;
       }
 
@@ -1118,7 +1134,7 @@ export class Controller<T extends FormFields<T>> {
         validationContent = validationResult.content;
 
         this.executePromise(key, validationResult.promise, (result) => {
-          this.validateActions(key, result.content);
+          this.validateActions(key, result.content, true);
         });
       } else if (
         typeof validationResult === "object" &&
@@ -1139,7 +1155,7 @@ export class Controller<T extends FormFields<T>> {
         isValidated: true
       };
 
-      this.validateActions(key, validationContent);
+      this.validateActions(key, validationContent, true);
     });
 
     this._afterAll.validate.push(() => {
@@ -1151,13 +1167,14 @@ export class Controller<T extends FormFields<T>> {
 
   private validateActions(
     key: keyof T,
-    validationContent: ValidationContentResult
+    validationContent: ValidationContentResult,
+    submitAction: boolean = false
   ) {
     const validator = this.validatorListeners.get(key);
     validator?.actions?.forEach((action) => {
-      action(validationContent);
+      action(validationContent, submitAction);
     });
-    validator?.action?.(validationContent);
+    validator?.action?.(validationContent, submitAction);
   }
 
   public validateAll(key: keyof T, silent?: boolean) {

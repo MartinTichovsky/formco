@@ -7,10 +7,10 @@ console.log = jest.fn();
 
 const dynamicContentTestId = "dynamic-content";
 const dynamicContextTestId = "dynamic-context";
-const input1TestId = "input-1";
-const input2TestId = "input-2";
+const givenNameTestId = "givenName";
 const resetTestId = "reset";
 const submitTestId = "submit";
+const surnameTestId = "surname";
 
 const getTestedGivenNameText = (name: string) =>
   `Your given name is: ${name}`.trim();
@@ -37,7 +37,7 @@ test("GeneralConditionDynamic", async () => {
   expect(console.log).lastCalledWith({});
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "J" }
   });
 
@@ -50,7 +50,7 @@ test("GeneralConditionDynamic", async () => {
   );
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "Ja" }
   });
 
@@ -63,7 +63,7 @@ test("GeneralConditionDynamic", async () => {
   );
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "James" }
   });
 
@@ -85,7 +85,7 @@ test("GeneralConditionDynamic", async () => {
   expect(console.log).lastCalledWith({ givenName: "James" });
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: "B" }
   });
 
@@ -98,7 +98,7 @@ test("GeneralConditionDynamic", async () => {
   );
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: "Bo" }
   });
 
@@ -111,7 +111,7 @@ test("GeneralConditionDynamic", async () => {
   );
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: "Bond" }
   });
 

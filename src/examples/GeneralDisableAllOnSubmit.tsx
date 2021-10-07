@@ -23,7 +23,7 @@ export const GeneralDisableAllOnSubmit = (
             <div className="field-row">
               <Input
                 controller={controller}
-                data-testid="input-1"
+                data-testid="givenName"
                 name="givenName"
                 placeholder="Input a given name"
               />
@@ -31,7 +31,7 @@ export const GeneralDisableAllOnSubmit = (
             <div className="field-row">
               <Input
                 controller={controller}
-                data-testid="input-2"
+                data-testid="surname"
                 name="surname"
                 placeholder="Input a surname"
               />

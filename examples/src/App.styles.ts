@@ -26,6 +26,10 @@ export const Content = styled("div")({
           marginLeft: 5,
           verticalAlign: "top"
         }
+      },
+
+      ".field-row.textarea .field-message": {
+        verticalAlign: "top"
       }
     }
   }

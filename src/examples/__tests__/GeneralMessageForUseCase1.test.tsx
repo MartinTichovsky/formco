@@ -10,10 +10,10 @@ import { testInvalidMessage } from "../utils/selectors";
 
 console.log = jest.fn();
 
-const input1TestId = "input-1";
-const input2TestId = "input-2";
+const givenNameTestId = "givenName";
 const resetTestId = "reset";
 const submitTestId = "submit";
+const surnameTestId = "surname";
 
 test("GeneralMessageForUseCase1", async () => {
   const { container } = render(<GeneralMessageForUseCase1 />);
@@ -26,11 +26,11 @@ test("GeneralMessageForUseCase1", async () => {
   expect(screen.queryByText(surnameErrorText)).not.toBeInTheDocument();
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: " " }
   });
   // input a valid text
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: " " }
   });
 
@@ -49,7 +49,7 @@ test("GeneralMessageForUseCase1", async () => {
   expect(screen.queryByText(surnameErrorText)).toBeInTheDocument();
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "James" }
   });
 
@@ -57,7 +57,7 @@ test("GeneralMessageForUseCase1", async () => {
   expect(screen.queryByText(surnameErrorText)).toBeInTheDocument();
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: "Bond" }
   });
 
@@ -74,10 +74,10 @@ test("GeneralMessageForUseCase1", async () => {
   expect(console.log).lastCalledWith({ givenName: "James", surname: "Bond" });
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: " " }
   });
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: " " }
   });
 

@@ -63,7 +63,7 @@ export function FieldComponent<
   const refState = React.useRef<FieldState>();
   refState.current = state;
 
-  const selectRef = React.useRef<HTMLSelectElement>();
+  const ref = React.useRef<HTMLSelectElement | HTMLInputElement>();
   const defaultValue = React.useRef(controller.getFieldValue(name) || "");
   const key = React.useRef(0);
 
@@ -110,7 +110,10 @@ export function FieldComponent<
   if (validation) {
     React.useEffect(
       () => {
-        const action = (validationResult: ValidationResult) => {
+        const action = (
+          validationResult: ValidationResult,
+          submitAction: boolean
+        ) => {
           if (hideMessage) {
             return;
           }
@@ -119,6 +122,17 @@ export function FieldComponent<
           const isValid =
             field === undefined ||
             (field.validationInProgress ? undefined : field.isValid);
+
+          if (
+            validationResult &&
+            submitAction &&
+            controller.scrollToError &&
+            ref.current &&
+            controller.canScrollToElement
+          ) {
+            ref.current.scrollTo();
+            ref.current.focus();
+          }
 
           if (
             validationResult &&
@@ -325,10 +339,12 @@ export function FieldComponent<
       () => {
         let proceedValidation = true;
 
-        if (selectRef && selectRef.current && selectRef.current.options) {
+        const _ref = ref as React.MutableRefObject<HTMLSelectElement>;
+
+        if (_ref && _ref.current && _ref.current.options) {
           proceedValidation =
             Array.prototype.filter.call(
-              selectRef.current.options,
+              _ref.current.options,
               (option) => option.value && !option.disabled
             ).length > 0;
         }
@@ -338,10 +354,10 @@ export function FieldComponent<
           isValid: proceedValidation ? undefined : true,
           key: name,
           silent: true,
-          value: selectRef.current?.value
+          value: _ref.current?.value
         });
       }, // eslint-disable-next-line react-hooks/exhaustive-deps
-      [controller, selectRef]
+      [controller, ref]
     );
   }
 
@@ -353,35 +369,48 @@ export function FieldComponent<
             {...restProps}
             {...props}
             controller={controller}
-            ref={selectRef}
+            ref={ref}
           >
             <SelectProvider
               id={rest.id}
               name={name as string}
-              selectRef={selectRef}
+              selectRef={ref as React.MutableRefObject<HTMLSelectElement>}
             >
               {children}
             </SelectProvider>
           </Component>
         ) : (
-          <select {...restProps} {...props} ref={selectRef}>
+          <select {...restProps} {...props} ref={ref}>
             <SelectProvider
               id={rest.id}
               name={name as string}
-              selectRef={selectRef}
+              selectRef={ref as React.MutableRefObject<HTMLSelectElement>}
             >
               {children}
             </SelectProvider>
           </select>
         )
       ) : Component ? (
-        <Component {...restProps} {...props} controller={controller}>
+        <Component
+          {...restProps}
+          {...props}
+          controller={controller}
+          {...(controller.scrollToError ? { ref } : {})}
+        >
           {children}
         </Component>
       ) : fieldType === "textarea" ? (
-        <textarea {...restProps} {...props} />
+        <textarea
+          {...restProps}
+          {...props}
+          {...(controller.scrollToError ? { ref } : {})}
+        />
       ) : (
-        <input {...restProps} {...props} />
+        <input
+          {...restProps}
+          {...props}
+          {...(controller.scrollToError ? { ref } : {})}
+        />
       ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [Component, fieldType]

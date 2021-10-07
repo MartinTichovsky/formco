@@ -10,10 +10,10 @@ import { testInvalidMessage } from "../utils/selectors";
 
 console.log = jest.fn();
 
-const input1TestId = "input-1";
-const input2TestId = "input-2";
+const givenNameTestId = "givenName";
 const resetTestId = "reset";
 const submitTestId = "submit";
+const surnameTestId = "surname";
 
 test("GeneralCondition", async () => {
   const { container } = render(<GeneralCondition />);
@@ -38,7 +38,7 @@ test("GeneralCondition", async () => {
   testInvalidMessage(container, 2);
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "James" }
   });
 
@@ -50,7 +50,7 @@ test("GeneralCondition", async () => {
   testInvalidMessage(container, 1);
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: "Bond" }
   });
 

@@ -8,10 +8,10 @@ console.log = jest.fn();
 
 const classInputId = "class-input";
 const functionalInputId = "functional-input";
-const input1TestId = "input-1";
-const input2TestId = "input-2";
+const givenNameTestId = "givenName";
 const resetTestId = "reset";
 const submitTestId = "submit";
+const surnameTestId = "surname";
 
 test("TextFieldComponent", async () => {
   const { container } = render(<TextFieldComponent />);
@@ -32,7 +32,7 @@ test("TextFieldComponent", async () => {
   testInvalidMessage(container, 2);
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "James" }
   });
 
@@ -40,7 +40,7 @@ test("TextFieldComponent", async () => {
   testInvalidMessage(container, 1);
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: "Bond" }
   });
 

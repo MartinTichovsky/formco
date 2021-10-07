@@ -7,10 +7,10 @@ console.log = jest.fn();
 
 const classComponentTestId = "class-component";
 const functionalComponentTestId = "functional-component";
-const input1TestId = "input-1";
-const input2TestId = "input-2";
+const givenNameTestId = "givenName";
 const resetTestId = "reset";
 const submitTestId = "submit";
+const surnameTestId = "surname";
 
 test("TextFieldMessageComponent", async () => {
   render(<TextFieldMessageComponent />);
@@ -36,7 +36,7 @@ test("TextFieldMessageComponent", async () => {
   expect(() => screen.getByTestId(functionalComponentTestId)).toThrowError();
 
   // input an empty text
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: " " }
   });
 
@@ -45,7 +45,7 @@ test("TextFieldMessageComponent", async () => {
   expect(screen.getByTestId(functionalComponentTestId)).toBeTruthy();
 
   // input an empty text
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: " " }
   });
 
@@ -54,10 +54,10 @@ test("TextFieldMessageComponent", async () => {
   expect(screen.getByTestId(functionalComponentTestId)).toBeTruthy();
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "James" }
   });
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: "Bond" }
   });
 

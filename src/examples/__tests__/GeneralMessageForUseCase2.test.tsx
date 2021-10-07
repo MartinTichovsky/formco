@@ -10,10 +10,10 @@ import { testInvalidMessage } from "../utils/selectors";
 
 console.log = jest.fn();
 
-const input1TestId = "input-1";
-const input2TestId = "input-2";
+const givenNameTestId = "givenName";
 const resetTestId = "reset";
 const submitTestId = "submit";
+const surnameTestId = "surname";
 
 test("GeneralMessageForUseCase2", async () => {
   const { container } = render(<GeneralMessageForUseCase2 />);
@@ -26,11 +26,11 @@ test("GeneralMessageForUseCase2", async () => {
   expect(screen.queryByText(surnameValidText)).not.toBeInTheDocument();
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "James" }
   });
   // input a valid text
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: "Bond" }
   });
 
@@ -51,7 +51,7 @@ test("GeneralMessageForUseCase2", async () => {
   expect(console.log).lastCalledWith({ givenName: "James", surname: "Bond" });
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "James Junior" }
   });
 
@@ -59,7 +59,7 @@ test("GeneralMessageForUseCase2", async () => {
   expect(screen.queryByText(surnameValidText)).toBeInTheDocument();
 
   // input an invalid text
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: " " }
   });
 
@@ -67,7 +67,7 @@ test("GeneralMessageForUseCase2", async () => {
   expect(screen.queryByText(surnameValidText)).toBeInTheDocument();
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: " " }
   });
 
@@ -83,10 +83,10 @@ test("GeneralMessageForUseCase2", async () => {
   expect(console.log).toBeCalledTimes(1);
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "James" }
   });
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: "Bond" }
   });
 

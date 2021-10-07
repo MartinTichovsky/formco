@@ -9,8 +9,7 @@ console.log = jest.fn();
 
 const checkbox1TestId = "checkbox-1";
 const checkbox2TestId = "checkbox-2";
-const input1TestId = "input-1";
-const input2TestId = "input-2";
+const givenNameTestId = "givenName";
 const radio1TestId = "radio-1";
 const radio2TestId = "radio-2";
 const radio3TestId = "radio-3";
@@ -20,11 +19,12 @@ const radioField3TestId = "radio-field-row-3";
 const resetTestId = "reset";
 const selectTestId = "select";
 const submitTestId = "submit";
+const surnameTestId = "surname";
 const textareaTestId = "textarea";
 
 const allFieldsMustHaveInvalidClassName = () => {
-  expect(screen.getByTestId(input1TestId)).toHaveClass(CN.InvalidField);
-  expect(screen.getByTestId(input2TestId)).toHaveClass(CN.InvalidField);
+  expect(screen.getByTestId(givenNameTestId)).toHaveClass(CN.InvalidField);
+  expect(screen.getByTestId(surnameTestId)).toHaveClass(CN.InvalidField);
   expect(() => screen.getByTestId(radio1TestId)).toThrowError();
   expect(screen.getByTestId(radio2TestId)).toHaveClass(CN.InvalidField);
   expect(screen.getByTestId(radio3TestId)).toHaveClass(CN.InvalidField);
@@ -54,8 +54,8 @@ const expectToBeValid = (testId: string) => {
 };
 
 const noInvalidClassNamesAreProvided = () => {
-  expect(screen.getByTestId(input1TestId)).not.toHaveClass(CN.InvalidField);
-  expect(screen.getByTestId(input2TestId)).not.toHaveClass(CN.InvalidField);
+  expect(screen.getByTestId(givenNameTestId)).not.toHaveClass(CN.InvalidField);
+  expect(screen.getByTestId(surnameTestId)).not.toHaveClass(CN.InvalidField);
   expect(() => screen.getByTestId(radio1TestId)).toThrowError();
   expect(screen.getByTestId(radio2TestId)).not.toHaveClass(CN.InvalidField);
   expect(screen.getByTestId(radio3TestId)).not.toHaveClass(CN.InvalidField);
@@ -66,8 +66,8 @@ const noInvalidClassNamesAreProvided = () => {
 };
 
 const noValidClassNamesAreProvided = () => {
-  expect(screen.getByTestId(input1TestId)).not.toHaveClass(CN.ValidField);
-  expect(screen.getByTestId(input2TestId)).not.toHaveClass(CN.ValidField);
+  expect(screen.getByTestId(givenNameTestId)).not.toHaveClass(CN.ValidField);
+  expect(screen.getByTestId(surnameTestId)).not.toHaveClass(CN.ValidField);
   expect(screen.getByTestId(radio2TestId)).not.toHaveClass(CN.ValidField);
   expect(screen.getByTestId(radio3TestId)).not.toHaveClass(CN.ValidField);
   expect(screen.getByTestId(selectTestId)).not.toHaveClass(CN.ValidField);
@@ -121,11 +121,11 @@ describe("GeneralRequired", () => {
     ).toBeNull();
 
     // input an empty values
-    fireEvent.change(screen.getByTestId(input1TestId), {
+    fireEvent.change(screen.getByTestId(givenNameTestId), {
       target: { value: " " }
     });
 
-    fireEvent.change(screen.getByTestId(input2TestId), {
+    fireEvent.change(screen.getByTestId(surnameTestId), {
       target: { value: " " }
     });
 
@@ -140,8 +140,8 @@ describe("GeneralRequired", () => {
     testInvalidMessage(container, 0);
 
     // check fields
-    expectToBeInvalid(input1TestId);
-    expectToBeInvalid(input2TestId);
+    expectToBeInvalid(givenNameTestId);
+    expectToBeInvalid(surnameTestId);
     expect(() => screen.getByTestId(radio1TestId)).toThrowError();
     expectNotTohaveClasses(radio2TestId);
     expectNotTohaveClasses(radio3TestId);
@@ -150,7 +150,7 @@ describe("GeneralRequired", () => {
     expectNotTohaveClasses(checkbox1TestId);
     expectNotTohaveClasses(checkbox2TestId);
 
-    fireEvent.change(screen.getByTestId(input2TestId), {
+    fireEvent.change(screen.getByTestId(surnameTestId), {
       target: { value: "Bon" }
     });
 
@@ -161,8 +161,8 @@ describe("GeneralRequired", () => {
     testInvalidMessage(container, 1);
 
     // check fields
-    expectToBeInvalid(input1TestId);
-    expectToBeInvalid(input2TestId);
+    expectToBeInvalid(givenNameTestId);
+    expectToBeInvalid(surnameTestId);
     expect(() => screen.getByTestId(radio1TestId)).toThrowError();
     expectNotTohaveClasses(radio2TestId);
     expectNotTohaveClasses(radio3TestId);
@@ -172,11 +172,11 @@ describe("GeneralRequired", () => {
     expectNotTohaveClasses(checkbox2TestId);
 
     // input  values
-    fireEvent.change(screen.getByTestId(input1TestId), {
+    fireEvent.change(screen.getByTestId(givenNameTestId), {
       target: { value: "James" }
     });
 
-    fireEvent.change(screen.getByTestId(input2TestId), {
+    fireEvent.change(screen.getByTestId(surnameTestId), {
       target: { value: "Bond" }
     });
 
@@ -191,8 +191,8 @@ describe("GeneralRequired", () => {
     testInvalidMessage(container, 0);
 
     // check fields
-    expectToBeValid(input1TestId);
-    expectToBeValid(input2TestId);
+    expectToBeValid(givenNameTestId);
+    expectToBeValid(surnameTestId);
     expectNotTohaveClasses(radio1TestId);
     expectNotTohaveClasses(radio2TestId);
     expectNotTohaveClasses(radio3TestId);
@@ -210,8 +210,8 @@ describe("GeneralRequired", () => {
     testInvalidMessage(container, 0);
 
     // check fields
-    expectToBeValid(input1TestId);
-    expectToBeValid(input2TestId);
+    expectToBeValid(givenNameTestId);
+    expectToBeValid(surnameTestId);
     expectToBeValid(radio1TestId);
     expectToBeValid(radio2TestId);
     expectToBeValid(radio3TestId);
@@ -232,8 +232,8 @@ describe("GeneralRequired", () => {
     testInvalidMessage(container, 0);
 
     // check fields
-    expectToBeValid(input1TestId);
-    expectToBeValid(input2TestId);
+    expectToBeValid(givenNameTestId);
+    expectToBeValid(surnameTestId);
     expectToBeValid(radio1TestId);
     expectToBeValid(radio2TestId);
     expectToBeValid(radio3TestId);
@@ -254,8 +254,8 @@ describe("GeneralRequired", () => {
     testInvalidMessage(container, 1);
 
     // check fields
-    expectToBeValid(input1TestId);
-    expectToBeValid(input2TestId);
+    expectToBeValid(givenNameTestId);
+    expectToBeValid(surnameTestId);
     expectToBeValid(radio1TestId);
     expectToBeValid(radio2TestId);
     expectToBeValid(radio3TestId);
@@ -276,8 +276,8 @@ describe("GeneralRequired", () => {
     testInvalidMessage(container, 0);
 
     // check fields
-    expectToBeValid(input1TestId);
-    expectToBeValid(input2TestId);
+    expectToBeValid(givenNameTestId);
+    expectToBeValid(surnameTestId);
     expectToBeValid(radio1TestId);
     expectToBeValid(radio2TestId);
     expectToBeValid(radio3TestId);
@@ -296,8 +296,8 @@ describe("GeneralRequired", () => {
     testInvalidMessage(container, 0);
 
     // check fields
-    expectToBeValid(input1TestId);
-    expectToBeValid(input2TestId);
+    expectToBeValid(givenNameTestId);
+    expectToBeValid(surnameTestId);
     expectToBeValid(radio1TestId);
     expectToBeValid(radio2TestId);
     expectToBeValid(radio3TestId);
@@ -316,8 +316,8 @@ describe("GeneralRequired", () => {
     testInvalidMessage(container, 1);
 
     // check fields
-    expectToBeValid(input1TestId);
-    expectToBeValid(input2TestId);
+    expectToBeValid(givenNameTestId);
+    expectToBeValid(surnameTestId);
     expectToBeValid(radio1TestId);
     expectToBeValid(radio2TestId);
     expectToBeValid(radio3TestId);
@@ -336,8 +336,8 @@ describe("GeneralRequired", () => {
     testInvalidMessage(container, 0);
 
     // check fields
-    expectToBeValid(input1TestId);
-    expectToBeValid(input2TestId);
+    expectToBeValid(givenNameTestId);
+    expectToBeValid(surnameTestId);
     expectToBeValid(radio1TestId);
     expectToBeValid(radio2TestId);
     expectToBeValid(radio3TestId);
@@ -356,8 +356,8 @@ describe("GeneralRequired", () => {
     testInvalidMessage(container, 0);
 
     // check fields
-    expectToBeValid(input1TestId);
-    expectToBeValid(input2TestId);
+    expectToBeValid(givenNameTestId);
+    expectToBeValid(surnameTestId);
     expectToBeValid(radio1TestId);
     expectToBeValid(radio2TestId);
     expectToBeValid(radio3TestId);
@@ -420,12 +420,12 @@ describe("GeneralRequired", () => {
     noValidClassNamesAreProvided();
 
     // input a value
-    fireEvent.change(screen.getByTestId(input1TestId), {
+    fireEvent.change(screen.getByTestId(givenNameTestId), {
       target: { value: " " }
     });
 
     // input a value
-    fireEvent.change(screen.getByTestId(input2TestId), {
+    fireEvent.change(screen.getByTestId(surnameTestId), {
       target: { value: " " }
     });
 
@@ -463,7 +463,7 @@ describe("GeneralRequired", () => {
     noValidClassNamesAreProvided();
 
     // input a value
-    fireEvent.change(screen.getByTestId(input1TestId), {
+    fireEvent.change(screen.getByTestId(givenNameTestId), {
       target: { value: "James" }
     });
 
@@ -471,8 +471,8 @@ describe("GeneralRequired", () => {
     testInvalidMessage(container, 3);
 
     // check fields
-    expectToBeValid(input1TestId);
-    expectToBeInvalid(input2TestId);
+    expectToBeValid(givenNameTestId);
+    expectToBeInvalid(surnameTestId);
     expectToBeInvalid(radio1TestId);
     expectToBeInvalid(radio2TestId);
     expectToBeInvalid(radio3TestId);
@@ -495,7 +495,7 @@ describe("GeneralRequired", () => {
     await submitInvalidForm();
 
     // input a value
-    fireEvent.change(screen.getByTestId(input2TestId), {
+    fireEvent.change(screen.getByTestId(surnameTestId), {
       target: { value: "Bon" }
     });
 
@@ -503,8 +503,8 @@ describe("GeneralRequired", () => {
     testInvalidMessage(container, 4);
 
     // check fields
-    expectToBeValid(input1TestId);
-    expectToBeInvalid(input2TestId);
+    expectToBeValid(givenNameTestId);
+    expectToBeInvalid(surnameTestId);
     expectToBeInvalid(radio1TestId);
     expectToBeInvalid(radio2TestId);
     expectToBeInvalid(radio3TestId);
@@ -516,7 +516,7 @@ describe("GeneralRequired", () => {
     await submitInvalidForm();
 
     // input a value
-    fireEvent.change(screen.getByTestId(input2TestId), {
+    fireEvent.change(screen.getByTestId(surnameTestId), {
       target: { value: "Bond" }
     });
 
@@ -524,8 +524,8 @@ describe("GeneralRequired", () => {
     testInvalidMessage(container, 3);
 
     // check fields
-    expectToBeValid(input1TestId);
-    expectToBeValid(input2TestId);
+    expectToBeValid(givenNameTestId);
+    expectToBeValid(surnameTestId);
     expectToBeInvalid(radio1TestId);
     expectToBeInvalid(radio2TestId);
     expectToBeInvalid(radio3TestId);
@@ -541,8 +541,8 @@ describe("GeneralRequired", () => {
     testInvalidMessage(container, 2);
 
     // check fields
-    expectToBeValid(input1TestId);
-    expectToBeValid(input2TestId);
+    expectToBeValid(givenNameTestId);
+    expectToBeValid(surnameTestId);
     expectToBeValid(radio1TestId);
     expectToBeValid(radio2TestId);
     expectToBeValid(radio3TestId);
@@ -562,8 +562,8 @@ describe("GeneralRequired", () => {
     testInvalidMessage(container, 1);
 
     // check fields
-    expectToBeValid(input1TestId);
-    expectToBeValid(input2TestId);
+    expectToBeValid(givenNameTestId);
+    expectToBeValid(surnameTestId);
     expectToBeValid(radio1TestId);
     expectToBeValid(radio2TestId);
     expectToBeValid(radio3TestId);
@@ -583,8 +583,8 @@ describe("GeneralRequired", () => {
     testInvalidMessage(container, 1);
 
     // check fields
-    expectToBeValid(input1TestId);
-    expectToBeValid(input2TestId);
+    expectToBeValid(givenNameTestId);
+    expectToBeValid(surnameTestId);
     expectToBeValid(radio1TestId);
     expectToBeValid(radio2TestId);
     expectToBeValid(radio3TestId);
@@ -600,8 +600,8 @@ describe("GeneralRequired", () => {
     testInvalidMessage(container, 0);
 
     // check fields
-    expectToBeValid(input1TestId);
-    expectToBeValid(input2TestId);
+    expectToBeValid(givenNameTestId);
+    expectToBeValid(surnameTestId);
     expectToBeValid(radio1TestId);
     expectToBeValid(radio2TestId);
     expectToBeValid(radio3TestId);
@@ -617,8 +617,8 @@ describe("GeneralRequired", () => {
     testInvalidMessage(container, 0);
 
     // check fields
-    expectToBeValid(input1TestId);
-    expectToBeValid(input2TestId);
+    expectToBeValid(givenNameTestId);
+    expectToBeValid(surnameTestId);
     expectToBeValid(radio1TestId);
     expectToBeValid(radio2TestId);
     expectToBeValid(radio3TestId);

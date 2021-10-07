@@ -11,11 +11,11 @@ const error1TestId = "error-1";
 const error2TestId = "error-2";
 const error3TestId = "error-3";
 
-const input1TestId = "input-1";
-const input2TestId = "input-2";
-const input3TestId = "input-3";
+const givenNameTestId = "givenName";
+const middleNameTestId = "middleName";
 const resetTestId = "reset";
 const submitTestId = "submit";
+const surnameTestId = "surname";
 
 const testSuite = async (
   container: HTMLElement,
@@ -48,7 +48,7 @@ const testSuite = async (
   }
 
   // input a text
-  fireEvent.change(screen.getByTestId(input3TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: "Bond" }
   });
 
@@ -69,7 +69,7 @@ const testSuite = async (
   expect(console.warn).not.toBeCalled();
 
   // input a text
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "James" }
   });
 
@@ -90,7 +90,7 @@ const testSuite = async (
   expect(console.warn).not.toBeCalled();
 
   // input a text
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(middleNameTestId), {
     target: { value: "Ronald" }
   });
 
@@ -142,7 +142,7 @@ const testSuite = async (
   }
 
   // input a text
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "James" }
   });
 
@@ -155,7 +155,7 @@ const testSuite = async (
   expect(() => screen.getByTestId(error3TestId)).toThrowError();
 
   // input a text
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(middleNameTestId), {
     target: { value: "Ronald" }
   });
 
@@ -168,7 +168,7 @@ const testSuite = async (
   expect(() => screen.getByTestId(error3TestId)).toThrowError();
 
   // input a text
-  fireEvent.change(screen.getByTestId(input3TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: "Bond" }
   });
 
@@ -191,7 +191,7 @@ const testSuite = async (
   }
 
   // input a text
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(middleNameTestId), {
     target: { value: "Ronald" }
   });
 
@@ -204,7 +204,7 @@ const testSuite = async (
   expect(screen.getByTestId(error3TestId)).toBeTruthy();
 
   // input a text
-  fireEvent.change(screen.getByTestId(input3TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: "Bond" }
   });
 
@@ -217,7 +217,7 @@ const testSuite = async (
   expect(screen.getByTestId(error3TestId)).toBeTruthy();
 
   // input a text
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "James" }
   });
 

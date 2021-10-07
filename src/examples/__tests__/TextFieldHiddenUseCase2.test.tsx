@@ -6,19 +6,19 @@ import { testInvalidMessage } from "../utils/selectors";
 
 console.log = jest.fn();
 
-const input1TestId = "input-1";
-const input2TestId = "input-2";
-const input3TestId = "input-3";
+const givenNameTestId = "givenName";
 const resetTestId = "reset";
+const salutationTestId = "salutation";
 const submitTestId = "submit";
+const surnameTestId = "surname";
 
 test("TextFieldHiddenUseCase2", async () => {
   const { container } = render(<TextFieldHiddenUseCase2 />);
 
   // the first and the third input must not be in the document
-  expect(() => screen.getByTestId(input1TestId)).toThrowError();
-  expect(screen.getByTestId(input2TestId)).toBeTruthy();
-  expect(() => screen.getByTestId(input3TestId)).toThrowError();
+  expect(() => screen.getByTestId(salutationTestId)).toThrowError();
+  expect(screen.getByTestId(givenNameTestId)).toBeTruthy();
+  expect(() => screen.getByTestId(surnameTestId)).toThrowError();
   expect(screen.getByTestId(submitTestId)).not.toBeDisabled();
 
   // errors should not be shown
@@ -33,56 +33,56 @@ test("TextFieldHiddenUseCase2", async () => {
   expect(console.log).lastCalledWith({});
 
   // input an empty value should show an error
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: " " }
   });
 
   // the first and the third input must not be in the document
-  expect(() => screen.getByTestId(input1TestId)).toThrowError();
-  expect(screen.getByTestId(input2TestId)).toBeTruthy();
-  expect(() => screen.getByTestId(input3TestId)).toThrowError();
+  expect(() => screen.getByTestId(salutationTestId)).toThrowError();
+  expect(screen.getByTestId(givenNameTestId)).toBeTruthy();
+  expect(() => screen.getByTestId(surnameTestId)).toThrowError();
   expect(screen.getByTestId(submitTestId)).not.toBeDisabled();
 
   // errors should not be shown
   testInvalidMessage(container, 0);
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "James" }
   });
 
   // the first input must not be in the document and the submit button must be disabled
-  expect(() => screen.getByTestId(input1TestId)).toThrowError();
-  expect(screen.getByTestId(input2TestId)).toBeTruthy();
-  expect(screen.getByTestId(input3TestId)).toBeTruthy();
+  expect(() => screen.getByTestId(salutationTestId)).toThrowError();
+  expect(screen.getByTestId(givenNameTestId)).toBeTruthy();
+  expect(screen.getByTestId(surnameTestId)).toBeTruthy();
   expect(screen.getByTestId(submitTestId)).toBeDisabled();
 
   // errors should not be shown
   testInvalidMessage(container, 0);
 
   // input an empty value should show an error
-  fireEvent.change(screen.getByTestId(input3TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: " " }
   });
 
   // the first input must not be in the document and the submit button must be disabled
-  expect(() => screen.getByTestId(input1TestId)).toThrowError();
-  expect(screen.getByTestId(input2TestId)).toBeTruthy();
-  expect(screen.getByTestId(input3TestId)).toBeTruthy();
+  expect(() => screen.getByTestId(salutationTestId)).toThrowError();
+  expect(screen.getByTestId(givenNameTestId)).toBeTruthy();
+  expect(screen.getByTestId(surnameTestId)).toBeTruthy();
   expect(screen.getByTestId(submitTestId)).toBeDisabled();
 
   // one error should be shown
   testInvalidMessage(container, 1);
 
   // input a valid text
-  fireEvent.change(screen.getByTestId(input3TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: "Bond" }
   });
 
   // all fields must be in the document
-  expect(screen.getByTestId(input1TestId)).toBeTruthy();
-  expect(screen.getByTestId(input2TestId)).toBeTruthy();
-  expect(screen.getByTestId(input3TestId)).toBeTruthy();
+  expect(screen.getByTestId(salutationTestId)).toBeTruthy();
+  expect(screen.getByTestId(givenNameTestId)).toBeTruthy();
+  expect(screen.getByTestId(surnameTestId)).toBeTruthy();
   expect(screen.getByTestId(submitTestId)).not.toBeDisabled();
 
   // errors should not be shown
@@ -100,14 +100,14 @@ test("TextFieldHiddenUseCase2", async () => {
   });
 
   // input an empty value should show an error
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(salutationTestId), {
     target: { value: " " }
   });
 
   // all fields must be in the document
-  expect(screen.getByTestId(input1TestId)).toBeTruthy();
-  expect(screen.getByTestId(input2TestId)).toBeTruthy();
-  expect(screen.getByTestId(input3TestId)).toBeTruthy();
+  expect(screen.getByTestId(salutationTestId)).toBeTruthy();
+  expect(screen.getByTestId(givenNameTestId)).toBeTruthy();
+  expect(screen.getByTestId(surnameTestId)).toBeTruthy();
   expect(screen.getByTestId(submitTestId)).not.toBeDisabled();
 
   // errors should not be shown
@@ -129,7 +129,7 @@ test("TextFieldHiddenUseCase2", async () => {
   testInvalidMessage(container, 0);
 
   // input a text
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(salutationTestId), {
     target: { value: "Mr." }
   });
 

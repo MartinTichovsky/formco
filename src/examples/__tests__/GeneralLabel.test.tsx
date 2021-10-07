@@ -6,11 +6,11 @@ import { GeneralLabel } from "../GeneralLabel";
 
 console.log = jest.fn();
 
-const input1TestId = "input-1";
-const input2TestId = "input-2";
-const input3TestId = "input-3";
+const givenNameTestId = "givenName";
 const resetTestId = "reset";
 const submitTestId = "submit";
+const salutationTestId = "salutation";
+const surnameTestId = "surname";
 
 test("GeneralLabel", async () => {
   const { container } = render(<GeneralLabel />);
@@ -21,15 +21,15 @@ test("GeneralLabel", async () => {
 
   // click on the first label
   userEvent.click(screen.getByText("Salutation"));
-  expect(screen.getByTestId(input1TestId)).toHaveFocus();
+  expect(screen.getByTestId(salutationTestId)).toHaveFocus();
 
   // click on the second label
   userEvent.click(screen.getByText("Given name"));
-  expect(screen.getByTestId(input2TestId)).toHaveFocus();
+  expect(screen.getByTestId(givenNameTestId)).toHaveFocus();
 
   // click on the third label
   userEvent.click(screen.getByText("Surname"));
-  expect(screen.getByTestId(input3TestId)).toHaveFocus();
+  expect(screen.getByTestId(surnameTestId)).toHaveFocus();
 
   // submit valid form
   await waitFor(async () => {

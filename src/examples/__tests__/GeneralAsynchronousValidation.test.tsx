@@ -7,11 +7,11 @@ import { testInvalidMessage, testValidMessage } from "../utils/selectors";
 
 console.log = jest.fn();
 
-const input1TestId = "input-1";
-const input2TestId = "input-2";
+const givenNameTestId = "givenName";
 const pendingText = "pending...";
 const resetTestId = "reset";
 const submitTestId = "submit";
+const surnameTestId = "surname";
 
 beforeEach(() => {
   jest.resetAllMocks();
@@ -52,7 +52,7 @@ describe("GeneralAsynchronousValidation", () => {
     const { container } = render(<GeneralAsynchronousValidation />);
 
     // input a valid text
-    fireEvent.change(screen.getByTestId(input1TestId), {
+    fireEvent.change(screen.getByTestId(givenNameTestId), {
       target: { value: "James" }
     });
 
@@ -74,7 +74,7 @@ describe("GeneralAsynchronousValidation", () => {
     expect(() => screen.getAllByText(pendingText).length).toThrowError();
 
     // input a valid text
-    fireEvent.change(screen.getByTestId(input2TestId), {
+    fireEvent.change(screen.getByTestId(surnameTestId), {
       target: { value: "Bond" }
     });
 
@@ -104,7 +104,7 @@ describe("GeneralAsynchronousValidation", () => {
     render(<GeneralAsynchronousValidation />);
 
     // input a valid text
-    fireEvent.change(screen.getByTestId(input1TestId), {
+    fireEvent.change(screen.getByTestId(givenNameTestId), {
       target: { value: "James" }
     });
 
@@ -134,12 +134,12 @@ describe("GeneralAsynchronousValidation", () => {
     fireEvent.click(screen.getByTestId(resetTestId));
 
     // input a valid text
-    fireEvent.change(screen.getByTestId(input1TestId), {
+    fireEvent.change(screen.getByTestId(givenNameTestId), {
       target: { value: "James" }
     });
 
     // input a valid text
-    fireEvent.change(screen.getByTestId(input2TestId), {
+    fireEvent.change(screen.getByTestId(surnameTestId), {
       target: { value: "Bond" }
     });
 
@@ -162,7 +162,7 @@ describe("GeneralAsynchronousValidation", () => {
     const { container } = render(<GeneralAsynchronousValidation />);
 
     // input a valid text
-    fireEvent.change(screen.getByTestId(input1TestId), {
+    fireEvent.change(screen.getByTestId(givenNameTestId), {
       target: { value: "J" }
     });
 
@@ -173,7 +173,7 @@ describe("GeneralAsynchronousValidation", () => {
     // a pending text should be shown
     expect(screen.getAllByText(pendingText).length).toBe(1);
 
-    fireEvent.change(screen.getByTestId(input1TestId), {
+    fireEvent.change(screen.getByTestId(givenNameTestId), {
       target: { value: "Ja" }
     });
 
@@ -184,7 +184,7 @@ describe("GeneralAsynchronousValidation", () => {
     // a pending text should be shown
     expect(screen.getAllByText(pendingText).length).toBe(1);
 
-    fireEvent.change(screen.getByTestId(input1TestId), {
+    fireEvent.change(screen.getByTestId(givenNameTestId), {
       target: { value: "Jam" }
     });
 
@@ -195,7 +195,7 @@ describe("GeneralAsynchronousValidation", () => {
     // a pending text should be shown
     expect(screen.getAllByText(pendingText).length).toBe(1);
 
-    fireEvent.change(screen.getByTestId(input1TestId), {
+    fireEvent.change(screen.getByTestId(givenNameTestId), {
       target: { value: "" }
     });
 

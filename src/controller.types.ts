@@ -10,6 +10,7 @@ export type AfterAll<T> = {
 };
 
 export interface ControllerOptions {
+  scrollToError?: boolean;
   trimValues?: boolean;
 }
 
@@ -231,7 +232,8 @@ export interface Validator {
 export type ValidatorAction = () => ValidationResult;
 
 export type ValidatorResultAction = (
-  validationResult: ValidationResult
+  validationResult: ValidationResult,
+  submitAction: boolean
 ) => void;
 
 export type Value = string | boolean | undefined;

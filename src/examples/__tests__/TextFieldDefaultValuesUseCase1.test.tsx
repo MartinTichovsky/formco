@@ -6,17 +6,17 @@ import { testInvalidMessage } from "../utils/selectors";
 
 console.log = jest.fn();
 
-const input1TestId = "input-1";
-const input2TestId = "input-2";
+const givenNameTestId = "givenName";
 const resetTestId = "reset";
 const submitTestId = "submit";
+const surnameTestId = "surname";
 
 test("TextFieldDefaultValuesUseCase1", async () => {
   const { container } = render(<TextFieldDefaultValuesUseCase1 />);
 
   // the inputs must have default values
-  expect(screen.getByTestId(input1TestId)).toHaveValue("James");
-  expect(screen.getByTestId(input2TestId)).toHaveValue("Bond");
+  expect(screen.getByTestId(givenNameTestId)).toHaveValue("James");
+  expect(screen.getByTestId(surnameTestId)).toHaveValue("Bond");
 
   // errors should not be shown
   testInvalidMessage(container, 0);
@@ -34,7 +34,7 @@ test("TextFieldDefaultValuesUseCase1", async () => {
   });
 
   // input an empty value should show an error
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "" }
   });
 
@@ -42,7 +42,7 @@ test("TextFieldDefaultValuesUseCase1", async () => {
   testInvalidMessage(container, 1);
 
   // input an empty value should show an error
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: "" }
   });
 
@@ -60,6 +60,6 @@ test("TextFieldDefaultValuesUseCase1", async () => {
   fireEvent.click(screen.getByTestId(resetTestId));
 
   // the inputs must have default values
-  expect(screen.getByTestId(input1TestId)).toHaveValue("James");
-  expect(screen.getByTestId(input2TestId)).toHaveValue("Bond");
+  expect(screen.getByTestId(givenNameTestId)).toHaveValue("James");
+  expect(screen.getByTestId(surnameTestId)).toHaveValue("Bond");
 });

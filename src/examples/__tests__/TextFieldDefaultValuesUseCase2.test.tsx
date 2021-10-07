@@ -6,33 +6,33 @@ import { testInvalidMessage } from "../utils/selectors";
 
 console.log = jest.fn();
 
-const input1TestId = "input-1";
-const input2TestId = "input-2";
+const givenNameTestId = "givenName";
 const resetTestId = "reset";
 const submitTestId = "submit";
+const surnameTestId = "surname";
 
 test("TextFieldDefaultValuesUseCase2", async () => {
   const { container } = render(<TextFieldDefaultValuesUseCase2 />);
 
   // the first input must have default value
-  expect(screen.getByTestId(input1TestId)).toHaveValue("James");
-  expect(screen.getByTestId(input2TestId)).toHaveValue("");
+  expect(screen.getByTestId(givenNameTestId)).toHaveValue("James");
+  expect(screen.getByTestId(surnameTestId)).toHaveValue("");
 
   // first input should be disabled
-  expect(screen.getByTestId(input1TestId)).toBeDisabled();
-  expect(screen.getByTestId(input2TestId)).not.toBeDisabled();
+  expect(screen.getByTestId(givenNameTestId)).toBeDisabled();
+  expect(screen.getByTestId(surnameTestId)).not.toBeDisabled();
 
   // input a value
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: "Bond" }
   });
 
   // no input should be disabled
-  expect(screen.getByTestId(input1TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(input2TestId)).not.toBeDisabled();
+  expect(screen.getByTestId(givenNameTestId)).not.toBeDisabled();
+  expect(screen.getByTestId(surnameTestId)).not.toBeDisabled();
 
   // input a value
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "James Junior" }
   });
 
@@ -52,23 +52,23 @@ test("TextFieldDefaultValuesUseCase2", async () => {
   });
 
   // input an empty value should show an error and reset the first input
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: "" }
   });
 
   // the first input must have default value
-  expect(screen.getByTestId(input1TestId)).toHaveValue("James");
-  expect(screen.getByTestId(input2TestId)).toHaveValue("");
+  expect(screen.getByTestId(givenNameTestId)).toHaveValue("James");
+  expect(screen.getByTestId(surnameTestId)).toHaveValue("");
 
   // one error should be shown
   testInvalidMessage(container, 1);
 
   // first input should be disabled
-  expect(screen.getByTestId(input1TestId)).toBeDisabled();
-  expect(screen.getByTestId(input2TestId)).not.toBeDisabled();
+  expect(screen.getByTestId(givenNameTestId)).toBeDisabled();
+  expect(screen.getByTestId(surnameTestId)).not.toBeDisabled();
 
   // input a value
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: "Bond" }
   });
 
@@ -76,7 +76,7 @@ test("TextFieldDefaultValuesUseCase2", async () => {
   testInvalidMessage(container, 0);
 
   // input a value
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "" }
   });
 
@@ -84,7 +84,7 @@ test("TextFieldDefaultValuesUseCase2", async () => {
   testInvalidMessage(container, 1);
 
   // input a value
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "James" }
   });
 
@@ -104,31 +104,31 @@ test("TextFieldDefaultValuesUseCase2", async () => {
   });
 
   // input a value
-  fireEvent.change(screen.getByTestId(input1TestId), {
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: "James Junior" }
   });
 
   // input a value
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: "Bond" }
   });
 
   // no input should be disabled
-  expect(screen.getByTestId(input1TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(input2TestId)).not.toBeDisabled();
+  expect(screen.getByTestId(givenNameTestId)).not.toBeDisabled();
+  expect(screen.getByTestId(surnameTestId)).not.toBeDisabled();
 
   fireEvent.click(screen.getByTestId(resetTestId));
 
   // the first input must have default value
-  expect(screen.getByTestId(input1TestId)).toHaveValue("James");
-  expect(screen.getByTestId(input2TestId)).toHaveValue("");
+  expect(screen.getByTestId(givenNameTestId)).toHaveValue("James");
+  expect(screen.getByTestId(surnameTestId)).toHaveValue("");
 
   // first input should be disabled
-  expect(screen.getByTestId(input1TestId)).toBeDisabled();
-  expect(screen.getByTestId(input2TestId)).not.toBeDisabled();
+  expect(screen.getByTestId(givenNameTestId)).toBeDisabled();
+  expect(screen.getByTestId(surnameTestId)).not.toBeDisabled();
 
   // input a value
-  fireEvent.change(screen.getByTestId(input2TestId), {
+  fireEvent.change(screen.getByTestId(surnameTestId), {
     target: { value: "Bond" }
   });
 
