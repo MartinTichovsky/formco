@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "composite": true,
     "experimentalDecorators": true,
     "module": "esnext",
@@ -14,12 +15,13 @@
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
     "allowSyntheticDefaultImports": true,
-    "outDir": "lib",
-    "rootDir": "src",
     "skipLibCheck": true,
     "stripInternal": true,
-    "sourceMap": true
+    "paths": {
+      "examples": ["packages/examples/src"],
+      "formco": ["packages/formco/src"]
+    }
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "examples"]
+  "include": ["packages/examples/src", "packages/formco/src"],
+  "exclude": ["node_modules"]
 }

@@ -1,19 +1,24 @@
 {
-  "name": "formco-repo",
+  "name": "formco",
   "version": "0.3.0",
   "description": "",
-  "author": "Martin Tichovsky",
-  "license": "MIT",
-  "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
-    "build": "lerna run build --parallel",
+    "build": "yarn clean && tsc --project tsconfig.build.json",
+    "build:watch": "yarn build:local --watch",
     "clean": "rimraf tsconfig*.tsbuildinfo lib",
-    "test": "jest --no-cache --silent --collect-coverage",
+    "postinstall": "node ../../scripts/create-symlinks.js",
+    "test": "jest --no-cache --silent",
     "tsc": "tsc --noEmit"
   },
+  "author": "Martin Tichovsky",
+  "license": "MIT",
+  "private": false,
+  "sideEffects": false,
+  "files": [
+    "lib"
+  ],
   "devDependencies": {
     "@testing-library/dom": "8.6.0",
     "@testing-library/jest-dom": "5.14.1",
@@ -24,10 +29,19 @@
     "@types/react-dom": "17.0.9",
     "jest": "27.2.3",
     "jest-collector": "1.0.0",
-    "lerna": "4.0.0",
+    "mobx": "6.3.3",
+    "mobx-react-lite": "3.2.1",
+    "npm-watch": "0.11.0",
+    "prettier": "2.4.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
     "rimraf": "3.0.2",
     "ts-jest": "27.0.5",
     "typescript": "4.4.3"
+  },
+  "peerDependencies": {
+    "react": "^16.x.x || ^17.x.x",
+    "react-dom": "^16.x.x || ^17.x.x"
   },
   "jest": {
     "globals": {
@@ -35,9 +49,6 @@
         "tsconfig": "tsconfig.test.json"
       },
       "collector": null
-    },
-    "moduleNameMapper": {
-      "^formco$": "<rootDir>/packages/formco/src"
     },
     "preset": "ts-jest",
     "setupFilesAfterEnv": [
@@ -48,8 +59,16 @@
       "**/?(*.)+(spec|test).ts?(x)"
     ],
     "roots": [
-      "<rootDir>/packages/examples/src",
-      "<rootDir>/packages/formco/src"
+      "<rootDir>/src"
     ]
+  },
+  "watch": {
+    "copy-files": {
+      "patterns": [
+        "src"
+      ],
+      "quiet": false,
+      "runOnChangeOnly": true
+    }
   }
 }

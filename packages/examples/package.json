@@ -1,17 +1,14 @@
 {
-  "name": "formco-repo",
+  "name": "examples",
   "version": "0.3.0",
-  "description": "",
-  "author": "Martin Tichovsky",
-  "license": "MIT",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
-    "build": "lerna run build --parallel",
+    "build": "tsc -b",
     "clean": "rimraf tsconfig*.tsbuildinfo lib",
-    "test": "jest --no-cache --silent --collect-coverage",
+    "postinstall": "node ../../scripts/create-symlinks.js",
+    "test": "jest --no-cache --silent",
     "tsc": "tsc --noEmit"
   },
   "devDependencies": {
@@ -24,7 +21,12 @@
     "@types/react-dom": "17.0.9",
     "jest": "27.2.3",
     "jest-collector": "1.0.0",
-    "lerna": "4.0.0",
+    "mobx": "6.3.3",
+    "mobx-react-lite": "3.2.1",
+    "npm-watch": "0.11.0",
+    "prettier": "2.4.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
     "rimraf": "3.0.2",
     "ts-jest": "27.0.5",
     "typescript": "4.4.3"
@@ -37,7 +39,7 @@
       "collector": null
     },
     "moduleNameMapper": {
-      "^formco$": "<rootDir>/packages/formco/src"
+      "^formco$": "<rootDir>../formco/src"
     },
     "preset": "ts-jest",
     "setupFilesAfterEnv": [
@@ -48,8 +50,16 @@
       "**/?(*.)+(spec|test).ts?(x)"
     ],
     "roots": [
-      "<rootDir>/packages/examples/src",
-      "<rootDir>/packages/formco/src"
+      "<rootDir>/src"
     ]
+  },
+  "watch": {
+    "copy-files": {
+      "patterns": [
+        "src"
+      ],
+      "quiet": false,
+      "runOnChangeOnly": true
+    }
   }
 }
