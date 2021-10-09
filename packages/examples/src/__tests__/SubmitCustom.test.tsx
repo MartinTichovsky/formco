@@ -25,7 +25,7 @@ beforeEach(() => {
 });
 
 test("SubmitCustom", async () => {
-  const { container } = render(<SubmitCustom />);
+  const { container, unmount } = render(<SubmitCustom />);
 
   // errors should not be shown
   testInvalidMessage(container, 0);
@@ -103,4 +103,6 @@ test("SubmitCustom", async () => {
   expect(screen.getByTestId(submitTestId)).not.toHaveTextContent(
     buttonPendingText
   );
+
+  unmount();
 }, 10000);

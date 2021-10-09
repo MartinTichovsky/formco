@@ -16,7 +16,7 @@ beforeEach(() => {
 });
 
 test("TextFieldDefaultValuesUseCase1", async () => {
-  const { container } = render(<TextFieldDefaultValuesUseCase1 />);
+  const { container, unmount } = render(<TextFieldDefaultValuesUseCase1 />);
 
   // the inputs must have default values
   expect(screen.getByTestId(givenNameTestId)).toHaveValue("James");
@@ -66,4 +66,6 @@ test("TextFieldDefaultValuesUseCase1", async () => {
   // the inputs must have default values
   expect(screen.getByTestId(givenNameTestId)).toHaveValue("James");
   expect(screen.getByTestId(surnameTestId)).toHaveValue("Bond");
+
+  unmount();
 });

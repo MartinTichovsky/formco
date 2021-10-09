@@ -17,7 +17,7 @@ beforeEach(() => {
 });
 
 test("SubmitDefaultDisabled", async () => {
-  const { container } = render(<SubmitDefaultDisabled />);
+  const { container, unmount } = render(<SubmitDefaultDisabled />);
 
   // errors should not be shown
   testInvalidMessage(container, 0);
@@ -115,4 +115,6 @@ test("SubmitDefaultDisabled", async () => {
   expect(console.log).lastCalledWith({ givenName: "James", surname: "Bond" });
 
   fireEvent.click(screen.getByTestId(resetTestId));
+
+  unmount();
 });

@@ -164,7 +164,7 @@ beforeEach(() => {
 });
 
 test("RadioFieldDisabledUseCase2", async () => {
-  const { container } = render(<RadioFieldDisabledUseCase2 />);
+  const { container, unmount } = render(<RadioFieldDisabledUseCase2 />);
 
   // errors should not be shown
   testInvalidMessage(container, 0);
@@ -177,4 +177,6 @@ test("RadioFieldDisabledUseCase2", async () => {
 
   // second test
   await testWorkflow(container);
+
+  unmount();
 });

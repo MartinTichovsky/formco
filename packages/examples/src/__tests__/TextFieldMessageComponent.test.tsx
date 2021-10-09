@@ -17,7 +17,7 @@ beforeEach(() => {
 });
 
 test("TextFieldMessageComponent", async () => {
-  render(<TextFieldMessageComponent />);
+  const { unmount } = render(<TextFieldMessageComponent />);
 
   // errors should not be shown
   expect(() => screen.getByTestId(classComponentTestId)).toThrowError();
@@ -80,4 +80,5 @@ test("TextFieldMessageComponent", async () => {
     givenName: "James",
     surname: "Bond"
   });
+  unmount();
 });

@@ -15,7 +15,7 @@ beforeEach(() => {
 });
 
 test("SelectField", async () => {
-  const { container } = render(<SelectField />);
+  const { container, unmount } = render(<SelectField />);
 
   // errors should not be shown
   testInvalidMessage(container, 0);
@@ -95,4 +95,6 @@ test("SelectField", async () => {
 
   // one error should be shown
   testInvalidMessage(container, 1);
+
+  unmount();
 });

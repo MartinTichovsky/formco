@@ -17,7 +17,7 @@ beforeEach(() => {
 });
 
 test("TextFieldDisabledUseCase1", async () => {
-  const { container } = render(<TextFieldDisabledUseCase1 />);
+  const { container, unmount } = render(<TextFieldDisabledUseCase1 />);
 
   // the first, the third input and the submit button must be disabled
   expect(screen.getByTestId(salutationTestId)).toBeDisabled();
@@ -143,4 +143,6 @@ test("TextFieldDisabledUseCase1", async () => {
   });
 
   fireEvent.click(screen.getByTestId(resetTestId));
+
+  unmount();
 });

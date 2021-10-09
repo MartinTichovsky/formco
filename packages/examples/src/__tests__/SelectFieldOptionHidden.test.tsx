@@ -16,7 +16,7 @@ beforeEach(() => {
 });
 
 test("SelectFieldOptionHidden", async () => {
-  const { container } = render(<SelectFieldOptionHidden />);
+  const { container, unmount } = render(<SelectFieldOptionHidden />);
 
   // errors should not be shown
   testInvalidMessage(container, 0);
@@ -171,4 +171,6 @@ test("SelectFieldOptionHidden", async () => {
 
   // errors should not be shown
   testInvalidMessage(container, 0);
+
+  unmount();
 });

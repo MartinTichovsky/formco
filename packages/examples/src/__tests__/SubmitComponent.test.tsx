@@ -26,7 +26,7 @@ beforeEach(() => {
 });
 
 test("SubmitComponent", async () => {
-  const { container } = render(<SubmitComponent />);
+  const { container, unmount } = render(<SubmitComponent />);
 
   // errors should not be shown
   testInvalidMessage(container, 0);
@@ -155,4 +155,6 @@ test("SubmitComponent", async () => {
   expect(
     screen.getByTestId(submitFunctionalComponentTestId)
   ).not.toHaveTextContent(pendingText);
+
+  unmount();
 }, 10000);

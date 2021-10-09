@@ -17,7 +17,7 @@ beforeEach(() => {
 });
 
 test("TextFieldHiddenUseCase1", async () => {
-  const { container } = render(<TextFieldHiddenUseCase1 />);
+  const { container, unmount } = render(<TextFieldHiddenUseCase1 />);
 
   // the first and the third input must not be in the document and the submit button must be disabled
   expect(() => screen.getByTestId(salutationTestId)).toThrowError();
@@ -143,4 +143,6 @@ test("TextFieldHiddenUseCase1", async () => {
   });
 
   fireEvent.click(screen.getByTestId(resetTestId));
+
+  unmount();
 });

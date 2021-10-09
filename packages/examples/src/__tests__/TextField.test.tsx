@@ -23,7 +23,7 @@ beforeEach(() => {
 });
 
 test("TextField", async () => {
-  const { container } = render(<TextField />);
+  const { container, unmount } = render(<TextField />);
 
   expect(screen.getByTestId(givenNameTestId)).toHaveAttribute(
     "placeholder",
@@ -116,11 +116,13 @@ test("TextField", async () => {
   // check the onSubmit action
   expect(console.log).toBeCalledTimes(1);
   expect(console.log).lastCalledWith({ givenName: "James", surname: "Bond" });
+
+  unmount();
 });
 
 describe("Re-render", () => {
   test("Without Values", () => {
-    render(<TextField />);
+    const { unmount } = render(<TextField />);
 
     // render count check
     expect(
@@ -177,10 +179,12 @@ describe("Re-render", () => {
     expect(
       collector.getCallCount(submitComponentName, { dataTestId: submitTestId })
     ).toBe(1);
+
+    unmount();
   });
 
   test("With Errors", async () => {
-    const { container } = render(<TextField />);
+    const { container, unmount } = render(<TextField />);
 
     await waitFor(async () => {
       fireEvent.click(screen.getByTestId(submitTestId));
@@ -210,10 +214,12 @@ describe("Re-render", () => {
     testInvalidMessage(container, 2);
 
     fireEvent.click(screen.getByTestId(reRenderTestId));
+
+    unmount();
   });
 
   test("With Values", () => {
-    render(<TextField />);
+    const { unmount } = render(<TextField />);
 
     fireEvent.change(screen.getByTestId(givenNameTestId), {
       target: { value: "James" }
@@ -244,12 +250,14 @@ describe("Re-render", () => {
 
     expect(screen.getByTestId(givenNameTestId)).toHaveValue("James");
     expect(screen.getByTestId(surnameTestId)).toHaveValue("Bond");
+
+    unmount();
   });
 });
 
 describe("Reset", () => {
   test("Without Values", () => {
-    render(<TextField />);
+    const { unmount } = render(<TextField />);
 
     fireEvent.click(screen.getByTestId(resetTestId));
 
@@ -299,10 +307,12 @@ describe("Reset", () => {
     expect(
       collector.getCallCount(submitComponentName, { dataTestId: submitTestId })
     ).toBe(3);
+
+    unmount();
   });
 
   test("With Errors", async () => {
-    const { container } = render(<TextField />);
+    const { container, unmount } = render(<TextField />);
 
     await waitFor(async () => {
       fireEvent.click(screen.getByTestId(submitTestId));
@@ -330,10 +340,12 @@ describe("Reset", () => {
 
     // no errors must be shown
     testInvalidMessage(container, 0);
+
+    unmount();
   });
 
   test("With values", () => {
-    render(<TextField />);
+    const { unmount } = render(<TextField />);
 
     fireEvent.change(screen.getByTestId(givenNameTestId), {
       target: { value: "James" }
@@ -365,5 +377,7 @@ describe("Reset", () => {
 
     expect(screen.getByTestId(givenNameTestId)).toHaveValue("");
     expect(screen.getByTestId(surnameTestId)).toHaveValue("");
+
+    unmount();
   });
 });

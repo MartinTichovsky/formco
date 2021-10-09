@@ -18,7 +18,7 @@ beforeEach(() => {
 });
 
 test("TextFieldComponent", async () => {
-  const { container } = render(<TextFieldComponent />);
+  const { container, unmount } = render(<TextFieldComponent />);
 
   // the inputs with this id must be in the document
   expect(container.querySelector(`#${classInputId}`)).toBeTruthy();
@@ -65,4 +65,6 @@ test("TextFieldComponent", async () => {
 
   // reset the form
   fireEvent.click(screen.getByTestId(resetTestId));
+
+  unmount();
 });

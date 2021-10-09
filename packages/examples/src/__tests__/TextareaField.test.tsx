@@ -18,7 +18,7 @@ beforeEach(() => {
 });
 
 test("TextareaField", async () => {
-  render(<TextareaField />);
+  const { unmount } = render(<TextareaField />);
 
   expect(screen.getByTestId(textareaTestId)).toHaveAttribute(
     "placeholder",
@@ -119,4 +119,6 @@ test("TextareaField", async () => {
   expect(console.log).lastCalledWith({
     description: "James Bond"
   });
+
+  unmount();
 });

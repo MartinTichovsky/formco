@@ -17,7 +17,7 @@ beforeEach(() => {
 });
 
 test("SubmitDisabledOnSubmit", async () => {
-  const { container } = render(<SubmitDisabledOnSubmit />);
+  const { container, unmount } = render(<SubmitDisabledOnSubmit />);
 
   // errors should not be shown
   testInvalidMessage(container, 0);
@@ -131,4 +131,6 @@ test("SubmitDisabledOnSubmit", async () => {
   // check the onSubmit action
   expect(console.log).toBeCalledTimes(2);
   expect(console.log).lastCalledWith({ givenName: "James", surname: "Bond" });
+
+  unmount();
 });

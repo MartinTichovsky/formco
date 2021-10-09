@@ -18,7 +18,7 @@ beforeEach(() => {
 });
 
 test("SelectFieldComponent", async () => {
-  const { container } = render(<SelectFieldComponent />);
+  const { container, unmount } = render(<SelectFieldComponent />);
 
   // the selects with this id must be in the document
   expect(container.querySelector(`#${classSelectId}`)).toBeTruthy();
@@ -136,4 +136,6 @@ test("SelectFieldComponent", async () => {
 
   // two errors should be shown
   testInvalidMessage(container, 2);
+
+  unmount();
 });

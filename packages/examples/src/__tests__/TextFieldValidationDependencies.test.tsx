@@ -237,15 +237,17 @@ beforeEach(() => {
 
 describe("TextFieldValidationDependencies", () => {
   test("Validation on submit", async () => {
-    const { container } = render(<TextFieldValidationDependencies />);
+    const { container, unmount } = render(<TextFieldValidationDependencies />);
     await testSuite(container);
+    unmount();
   });
 
   test("Validation on change", async () => {
-    const { container } = render(
+    const { container, unmount } = render(
       <TextFieldValidationDependencies validateOnChange />
     );
 
     await testSuite(container, false);
+    unmount();
   });
 });
