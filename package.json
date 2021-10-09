@@ -13,7 +13,7 @@
     "clean": "lerna run clean",
     "run:demo": "lerna run --scope demo start",
     "test": "jest --no-cache --silent --collect-coverage",
-    "tsc": "tsc --noEmit"
+    "tsc": "lerna run tsc"
   },
   "devDependencies": {
     "@testing-library/dom": "8.7.2",
