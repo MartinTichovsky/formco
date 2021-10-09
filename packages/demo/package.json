@@ -1,0 +1,38 @@
+{
+  "name": "demo",
+  "version": "0.3.0",
+  "private": true,
+  "scripts": {
+    "build": "yarn clean && webpack --mode=production",
+    "clean": "rimraf lib build",
+    "start": "webpack serve --mode=development"
+  },
+  "dependencies": {
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
+  },
+  "devDependencies": {
+    "@emotion/css": "11.1.3",
+    "@emotion/react": "11.4.1",
+    "@emotion/styled": "11.3.0",
+    "@pmmmwh/react-refresh-webpack-plugin": "0.5.1",
+    "@types/react": "17.0.27",
+    "@types/react-dom": "17.0.9",
+    "css-loader": "6.3.0",
+    "examples": "0.3.0",
+    "file-loader": "6.2.0",
+    "fs-extra": "10.0.0",
+    "html-webpack-plugin": "5.3.2",
+    "mini-css-extract-plugin": "2.4.2",
+    "rimraf": "3.0.2",
+    "react-dev-utils": "11.0.4",
+    "react-refresh": "0.10.0",
+    "source-map-loader": "3.0.0",
+    "style-loader": "3.3.0",
+    "ts-loader": "9.2.6",
+    "typescript": "4.4.3",
+    "webpack": "5.58.1",
+    "webpack-cli": "4.9.0",
+    "webpack-dev-server": "4.3.1"
+  }
+}

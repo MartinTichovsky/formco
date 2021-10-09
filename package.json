@@ -1,75 +1,31 @@
 {
-  "name": "formco",
+  "name": "formco-repo",
   "version": "0.3.0",
   "description": "",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
-  "scripts": {
-    "build": "yarn clean && tsc --project tsconfig.build.json",
-    "build:local": "yarn clean && tsc --project tsconfig.local.json",
-    "build:watch": "yarn build:local --watch",
-    "clean": "rimraf tsconfig*.tsbuildinfo lib",
-    "test": "jest --no-cache --silent --collect-coverage",
-    "test:examples": "jest --no-cache --collect-coverage src/examples",
-    "tsc": "tsc --noEmit"
-  },
   "author": "Martin Tichovsky",
   "license": "MIT",
-  "private": false,
-  "sideEffects": false,
-  "files": [
-    "lib"
+  "private": true,
+  "workspaces": [
+    "packages/*"
   ],
+  "scripts": {
+    "build": "lerna run build",
+    "clean": "lerna run clean",
+    "run:demo": "lerna run --scope demo start",
+    "test": "jest --collect-coverage --colors --verbose",
+    "tsc": "lerna run tsc"
+  },
   "devDependencies": {
-    "@testing-library/dom": "8.6.0",
+    "@testing-library/dom": "8.7.2",
     "@testing-library/jest-dom": "5.14.1",
-    "@testing-library/react": "12.1.1",
+    "@testing-library/react": "12.1.2",
     "@testing-library/user-event": "13.2.1",
-    "@types/jest": "27.0.2",
-    "@types/react": "17.0.24",
-    "@types/react-dom": "17.0.9",
-    "jest": "27.2.3",
+    "jest": "27.2.5",
     "jest-collector": "1.0.0",
-    "mobx": "6.3.3",
-    "mobx-react-lite": "3.2.1",
-    "npm-watch": "0.11.0",
+    "lerna": "4.0.0",
     "prettier": "2.4.1",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
     "rimraf": "3.0.2",
     "ts-jest": "27.0.5",
     "typescript": "4.4.3"
-  },
-  "peerDependencies": {
-    "react": "^16.x.x || ^17.x.x",
-    "react-dom": "^16.x.x || ^17.x.x"
-  },
-  "jest": {
-    "globals": {
-      "ts-jest": {
-        "tsconfig": "tsconfig.test.json"
-      },
-      "collector": null
-    },
-    "testMatch": [
-      "**/?(*.)+(spec|test).ts?(x)"
-    ],
-    "preset": "ts-jest",
-    "setupFilesAfterEnv": [
-      "./jest.setup.js"
-    ],
-    "testEnvironment": "jsdom",
-    "roots": [
-      "<rootDir>/src"
-    ]
-  },
-  "watch": {
-    "copy-files": {
-      "patterns": [
-        "src"
-      ],
-      "quiet": false,
-      "runOnChangeOnly": true
-    }
   }
 }

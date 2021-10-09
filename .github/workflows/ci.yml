@@ -5,7 +5,8 @@ on:
     branches:
       - main
     paths-ignore:
-      - package.json
+      - "**/package.json"
+      - lerna.json
     tags-ignore:
       - v*
   pull_request:
@@ -23,7 +24,17 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v2
         with:
-          node-version: 16.x
+          node-version: 16.3.0
+
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            /home/runner/.cache/Cypress
+            node_modules
+            **/node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}-${{ hashFiles('**/package.json') }}
+          restore-keys: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install
         run: yarn
@@ -52,6 +63,9 @@ jobs:
         with:
           token: ${{ secrets.TOKEN }}
 
+      - name: Install
+        run: yarn
+
       - name: Set creator
         run: |
           git config user.email "automated-version@users.noreply.github.com"
@@ -61,15 +75,14 @@ jobs:
         env:
           VERSION_TYPE: ${{ (startsWith(github.event.head_commit.message, 'BREAKING CHANGE:') || contains(toJSON(github.event.head_commit.message), '\n\nBREAKING CHANGE:')) && 'major' || (startsWith(github.event.head_commit.message, 'fix:') || contains(toJSON(github.event.head_commit.message), '\n\nfix:')) && 'patch' || 'minor' }}
         run: |
-          npm version $VERSION_TYPE -m "v%s"
-          VERSION=$(node -p "require('./package.json').version")
+          yarn lerna version $VERSION_TYPE --yes
 
-      - name: Push changes
-        run: |
-          git push --follow-tags
-          git push --tags
+      # - name: Build
+      #   working-directory: ./packages/formco
+      #   run: yarn build
 
       # - name: Publish package
+      #   working-directory: ./packages/formco
       #   run: |
       #     npm config set "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}"
       #     npm publish

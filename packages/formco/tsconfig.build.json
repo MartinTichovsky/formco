@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.build.json",
+  "compilerOptions": {
+    "declaration": true,
+    "module": "ES2015",
+    "outDir": "lib",
+    "rootDir": "src",
+    "target": "es5"
+  },
+  "include": ["src"],
+  "exclude": [
+    "node_modules",
+    "**/__integration_tests__",
+    "**/__tests__",
+    "**/*.test.ts",
+    "**/*.test.tsx"
+  ]
+}
