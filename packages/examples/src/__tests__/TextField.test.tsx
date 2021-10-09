@@ -1,4 +1,8 @@
 import "@testing-library/jest-dom";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import React from "react";
+import { TextField } from "../TextField";
+import { testInvalidMessage } from "../utils/selectors";
 
 console.log = jest.fn();
 console.error = jest.fn();
@@ -15,309 +19,309 @@ const formControllerComponentName = "FormControllerComponent";
 const submitComponentName = "SubmitComponent";
 
 beforeEach(() => {
-  //collector.reset();
+  collector.reset();
 });
 
 test("TextField", async () => {
-  //   const { container, unmount } = render(<TextField />);
-  //   expect(screen.getByTestId(givenNameTestId)).toHaveAttribute(
-  //     "placeholder",
-  //     "Input a given name"
-  //   );
-  //   expect(screen.getByTestId(surnameTestId)).toHaveAttribute(
-  //     "placeholder",
-  //     "Input a surname"
-  //   );
-  //   // render count check
-  //   expect(
-  //     collector.getCallCount(fieldComponentName, { dataTestId: givenNameTestId })
-  //   ).toBe(1);
-  //   expect(
-  //     collector.getCallCount(fieldComponentName, { dataTestId: surnameTestId })
-  //   ).toBe(1);
-  //   expect(
-  //     collector.getCallCount(submitComponentName, { dataTestId: submitTestId })
-  //   ).toBe(1);
-  //   // errors should not be shown
-  //   testInvalidMessage(container, 0);
-  //   // error messages should be visible after click
-  //   await waitFor(async () => {
-  //     fireEvent.click(screen.getByTestId(submitTestId));
-  //   });
-  //   // two errors should be shown
-  //   testInvalidMessage(container, 2);
-  //   expect(
-  //     collector.getCallCount(fieldComponentName, { dataTestId: givenNameTestId })
-  //   ).toBe(2);
-  //   expect(
-  //     collector.getCallCount(fieldComponentName, { dataTestId: surnameTestId })
-  //   ).toBe(2);
-  //   expect(
-  //     collector.getCallCount(submitComponentName, { dataTestId: submitTestId })
-  //   ).toBe(1);
-  //   // repeat submit should no more render the inputs
-  //   await waitFor(async () => {
-  //     fireEvent.click(screen.getByTestId(submitTestId));
-  //   });
-  //   expect(
-  //     collector.getCallCount(fieldComponentName, { dataTestId: givenNameTestId })
-  //   ).toBe(2);
-  //   expect(
-  //     collector.getCallCount(fieldComponentName, { dataTestId: surnameTestId })
-  //   ).toBe(2);
-  //   expect(
-  //     collector.getCallCount(submitComponentName, { dataTestId: submitTestId })
-  //   ).toBe(1);
-  //   // input a text to the first input, after change or submit should be visible only one error message
-  //   fireEvent.change(screen.getByTestId(givenNameTestId), {
-  //     target: { value: "James" }
-  //   });
-  //   // one error should be shown
-  //   testInvalidMessage(container, 1);
-  //   // submit the form
-  //   await waitFor(async () => {
-  //     fireEvent.click(screen.getByTestId(submitTestId));
-  //   });
-  //   // one error should be shown
-  //   testInvalidMessage(container, 1);
-  //   // input a text to the second input, after change should be visible no errors
-  //   fireEvent.change(screen.getByTestId(surnameTestId), {
-  //     target: { value: "Bond" }
-  //   });
-  //   // errors should not be shown
-  //   testInvalidMessage(container, 0);
-  //   // submit valid form
-  //   await waitFor(async () => {
-  //     fireEvent.click(screen.getByTestId(submitTestId));
-  //   });
-  //   // errors should not be shown
-  //   testInvalidMessage(container, 0);
-  //   // check the onSubmit action
-  //   expect(console.log).toBeCalledTimes(1);
-  //   expect(console.log).lastCalledWith({ givenName: "James", surname: "Bond" });
-  //   unmount();
-  // });
-  // describe("Re-render", () => {
-  //   test("Without Values", () => {
-  //     const { unmount } = render(<TextField />);
-  //     // render count check
-  //     expect(
-  //       collector.getCallCount(formControllerComponentName, {
-  //         dataTestId: formControllerTestId
-  //       })
-  //     ).toBe(2); // beacause the form controller creates a controller `useEffect` and set it with `setController`
-  //     expect(
-  //       collector.getCallCount(fieldComponentName, {
-  //         dataTestId: givenNameTestId
-  //       })
-  //     ).toBe(1);
-  //     expect(
-  //       collector.getCallCount(fieldComponentName, { dataTestId: surnameTestId })
-  //     ).toBe(1);
-  //     expect(
-  //       collector.getCallCount(submitComponentName, { dataTestId: submitTestId })
-  //     ).toBe(1);
-  //     fireEvent.click(screen.getByTestId(reRenderTestId));
-  //     // render count check
-  //     expect(
-  //       collector.getCallCount(formControllerComponentName, {
-  //         dataTestId: formControllerTestId
-  //       })
-  //     ).toBe(2);
-  //     expect(
-  //       collector.getCallCount(fieldComponentName, {
-  //         dataTestId: givenNameTestId
-  //       })
-  //     ).toBe(1);
-  //     expect(
-  //       collector.getCallCount(fieldComponentName, { dataTestId: surnameTestId })
-  //     ).toBe(1);
-  //     expect(
-  //       collector.getCallCount(submitComponentName, { dataTestId: submitTestId })
-  //     ).toBe(1);
-  //     // render count check
-  //     expect(
-  //       collector.getCallCount(formControllerComponentName, {
-  //         dataTestId: formControllerTestId
-  //       })
-  //     ).toBe(2);
-  //     expect(
-  //       collector.getCallCount(fieldComponentName, {
-  //         dataTestId: givenNameTestId
-  //       })
-  //     ).toBe(1);
-  //     expect(
-  //       collector.getCallCount(fieldComponentName, { dataTestId: surnameTestId })
-  //     ).toBe(1);
-  //     expect(
-  //       collector.getCallCount(submitComponentName, { dataTestId: submitTestId })
-  //     ).toBe(1);
-  //     unmount();
-  //   });
-  //   test("With Errors", async () => {
-  //     const { container, unmount } = render(<TextField />);
-  //     await waitFor(async () => {
-  //       fireEvent.click(screen.getByTestId(submitTestId));
-  //     });
-  //     fireEvent.click(screen.getByTestId(reRenderTestId));
-  //     // render count check
-  //     expect(
-  //       collector.getCallCount(formControllerComponentName, {
-  //         dataTestId: formControllerTestId
-  //       })
-  //     ).toBe(2);
-  //     expect(
-  //       collector.getCallCount(fieldComponentName, {
-  //         dataTestId: givenNameTestId
-  //       })
-  //     ).toBe(2); // because the second render is the submit event (validation)
-  //     expect(
-  //       collector.getCallCount(fieldComponentName, { dataTestId: surnameTestId })
-  //     ).toBe(2);
-  //     expect(
-  //       collector.getCallCount(submitComponentName, { dataTestId: submitTestId })
-  //     ).toBe(1);
-  //     // two errors should be shown
-  //     testInvalidMessage(container, 2);
-  //     fireEvent.click(screen.getByTestId(reRenderTestId));
-  //     unmount();
-  //   });
-  //   test("With Values", () => {
-  //     const { unmount } = render(<TextField />);
-  //     fireEvent.change(screen.getByTestId(givenNameTestId), {
-  //       target: { value: "James" }
-  //     });
-  //     fireEvent.change(screen.getByTestId(surnameTestId), {
-  //       target: { value: "Bond" }
-  //     });
-  //     fireEvent.click(screen.getByTestId(reRenderTestId));
-  //     // render count check
-  //     expect(
-  //       collector.getCallCount(formControllerComponentName, {
-  //         dataTestId: formControllerTestId
-  //       })
-  //     ).toBe(2);
-  //     expect(
-  //       collector.getCallCount(fieldComponentName, {
-  //         dataTestId: givenNameTestId
-  //       })
-  //     ).toBe(1);
-  //     expect(
-  //       collector.getCallCount(fieldComponentName, { dataTestId: surnameTestId })
-  //     ).toBe(1);
-  //     expect(
-  //       collector.getCallCount(submitComponentName, { dataTestId: submitTestId })
-  //     ).toBe(1);
-  //     expect(screen.getByTestId(givenNameTestId)).toHaveValue("James");
-  //     expect(screen.getByTestId(surnameTestId)).toHaveValue("Bond");
-  //     unmount();
-  //   });
-  // });
-  // describe("Reset", () => {
-  //   test("Without Values", () => {
-  //     const { unmount } = render(<TextField />);
-  //     fireEvent.click(screen.getByTestId(resetTestId));
-  //     expect(screen.getByTestId(givenNameTestId)).toHaveAttribute(
-  //       "placeholder",
-  //       "Input a given name"
-  //     );
-  //     expect(screen.getByTestId(surnameTestId)).toHaveAttribute(
-  //       "placeholder",
-  //       "Input a surname"
-  //     );
-  //     // render count check
-  //     expect(
-  //       collector.getCallCount(formControllerComponentName, {
-  //         dataTestId: formControllerTestId
-  //       })
-  //     ).toBe(3);
-  //     expect(
-  //       collector.getCallCount(fieldComponentName, {
-  //         dataTestId: givenNameTestId
-  //       })
-  //     ).toBe(2);
-  //     expect(
-  //       collector.getCallCount(fieldComponentName, { dataTestId: surnameTestId })
-  //     ).toBe(2);
-  //     expect(
-  //       collector.getCallCount(submitComponentName, { dataTestId: submitTestId })
-  //     ).toBe(2);
-  //     fireEvent.click(screen.getByTestId(resetTestId));
-  //     // render count check
-  //     expect(
-  //       collector.getCallCount(formControllerComponentName, {
-  //         dataTestId: formControllerTestId
-  //       })
-  //     ).toBe(4);
-  //     expect(
-  //       collector.getCallCount(fieldComponentName, {
-  //         dataTestId: givenNameTestId
-  //       })
-  //     ).toBe(3);
-  //     expect(
-  //       collector.getCallCount(fieldComponentName, { dataTestId: surnameTestId })
-  //     ).toBe(3);
-  //     expect(
-  //       collector.getCallCount(submitComponentName, { dataTestId: submitTestId })
-  //     ).toBe(3);
-  //     unmount();
-  //   });
-  //   test("With Errors", async () => {
-  //     const { container, unmount } = render(<TextField />);
-  //     await waitFor(async () => {
-  //       fireEvent.click(screen.getByTestId(submitTestId));
-  //     });
-  //     fireEvent.click(screen.getByTestId(resetTestId));
-  //     // render count check
-  //     expect(
-  //       collector.getCallCount(formControllerComponentName, {
-  //         dataTestId: formControllerTestId
-  //       })
-  //     ).toBe(3);
-  //     expect(
-  //       collector.getCallCount(fieldComponentName, {
-  //         dataTestId: givenNameTestId
-  //       })
-  //     ).toBe(3);
-  //     expect(
-  //       collector.getCallCount(fieldComponentName, { dataTestId: surnameTestId })
-  //     ).toBe(3);
-  //     expect(
-  //       collector.getCallCount(submitComponentName, { dataTestId: submitTestId })
-  //     ).toBe(2);
-  //     // no errors must be shown
-  //     testInvalidMessage(container, 0);
-  //     unmount();
-  //   });
-  //   test("With values", () => {
-  //     const { unmount } = render(<TextField />);
-  //     fireEvent.change(screen.getByTestId(givenNameTestId), {
-  //       target: { value: "James" }
-  //     });
-  //     fireEvent.change(screen.getByTestId(surnameTestId), {
-  //       target: { value: "Bond" }
-  //     });
-  //     const reset = screen.getByTestId(resetTestId);
-  //     fireEvent.click(reset);
-  //     // render count check
-  //     expect(
-  //       collector.getCallCount(formControllerComponentName, {
-  //         dataTestId: formControllerTestId
-  //       })
-  //     ).toBe(3);
-  //     expect(
-  //       collector.getCallCount(fieldComponentName, {
-  //         dataTestId: givenNameTestId
-  //       })
-  //     ).toBe(2);
-  //     expect(
-  //       collector.getCallCount(fieldComponentName, { dataTestId: surnameTestId })
-  //     ).toBe(2);
-  //     expect(
-  //       collector.getCallCount(submitComponentName, { dataTestId: submitTestId })
-  //     ).toBe(2);
-  //     expect(screen.getByTestId(givenNameTestId)).toHaveValue("");
-  //     expect(screen.getByTestId(surnameTestId)).toHaveValue("");
-  //     unmount();
-  //   });
+  const { container, unmount } = render(<TextField />);
+  expect(screen.getByTestId(givenNameTestId)).toHaveAttribute(
+    "placeholder",
+    "Input a given name"
+  );
+  expect(screen.getByTestId(surnameTestId)).toHaveAttribute(
+    "placeholder",
+    "Input a surname"
+  );
+  // render count check
+  expect(
+    collector.getCallCount(fieldComponentName, { dataTestId: givenNameTestId })
+  ).toBe(1);
+  expect(
+    collector.getCallCount(fieldComponentName, { dataTestId: surnameTestId })
+  ).toBe(1);
+  expect(
+    collector.getCallCount(submitComponentName, { dataTestId: submitTestId })
+  ).toBe(1);
+  // errors should not be shown
+  testInvalidMessage(container, 0);
+  // error messages should be visible after click
+  await waitFor(async () => {
+    fireEvent.click(screen.getByTestId(submitTestId));
+  });
+  // two errors should be shown
+  testInvalidMessage(container, 2);
+  expect(
+    collector.getCallCount(fieldComponentName, { dataTestId: givenNameTestId })
+  ).toBe(2);
+  expect(
+    collector.getCallCount(fieldComponentName, { dataTestId: surnameTestId })
+  ).toBe(2);
+  expect(
+    collector.getCallCount(submitComponentName, { dataTestId: submitTestId })
+  ).toBe(1);
+  // repeat submit should no more render the inputs
+  await waitFor(async () => {
+    fireEvent.click(screen.getByTestId(submitTestId));
+  });
+  expect(
+    collector.getCallCount(fieldComponentName, { dataTestId: givenNameTestId })
+  ).toBe(2);
+  expect(
+    collector.getCallCount(fieldComponentName, { dataTestId: surnameTestId })
+  ).toBe(2);
+  expect(
+    collector.getCallCount(submitComponentName, { dataTestId: submitTestId })
+  ).toBe(1);
+  // input a text to the first input, after change or submit should be visible only one error message
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
+    target: { value: "James" }
+  });
+  // one error should be shown
+  testInvalidMessage(container, 1);
+  // submit the form
+  await waitFor(async () => {
+    fireEvent.click(screen.getByTestId(submitTestId));
+  });
+  // one error should be shown
+  testInvalidMessage(container, 1);
+  // input a text to the second input, after change should be visible no errors
+  fireEvent.change(screen.getByTestId(surnameTestId), {
+    target: { value: "Bond" }
+  });
+  // errors should not be shown
+  testInvalidMessage(container, 0);
+  // submit valid form
+  await waitFor(async () => {
+    fireEvent.click(screen.getByTestId(submitTestId));
+  });
+  // errors should not be shown
+  testInvalidMessage(container, 0);
+  // check the onSubmit action
+  expect(console.log).toBeCalledTimes(1);
+  expect(console.log).lastCalledWith({ givenName: "James", surname: "Bond" });
+  unmount();
+});
+describe("Re-render", () => {
+  test("Without Values", () => {
+    const { unmount } = render(<TextField />);
+    // render count check
+    expect(
+      collector.getCallCount(formControllerComponentName, {
+        dataTestId: formControllerTestId
+      })
+    ).toBe(2); // beacause the form controller creates a controller `useEffect` and set it with `setController`
+    expect(
+      collector.getCallCount(fieldComponentName, {
+        dataTestId: givenNameTestId
+      })
+    ).toBe(1);
+    expect(
+      collector.getCallCount(fieldComponentName, { dataTestId: surnameTestId })
+    ).toBe(1);
+    expect(
+      collector.getCallCount(submitComponentName, { dataTestId: submitTestId })
+    ).toBe(1);
+    fireEvent.click(screen.getByTestId(reRenderTestId));
+    // render count check
+    expect(
+      collector.getCallCount(formControllerComponentName, {
+        dataTestId: formControllerTestId
+      })
+    ).toBe(2);
+    expect(
+      collector.getCallCount(fieldComponentName, {
+        dataTestId: givenNameTestId
+      })
+    ).toBe(1);
+    expect(
+      collector.getCallCount(fieldComponentName, { dataTestId: surnameTestId })
+    ).toBe(1);
+    expect(
+      collector.getCallCount(submitComponentName, { dataTestId: submitTestId })
+    ).toBe(1);
+    // render count check
+    expect(
+      collector.getCallCount(formControllerComponentName, {
+        dataTestId: formControllerTestId
+      })
+    ).toBe(2);
+    expect(
+      collector.getCallCount(fieldComponentName, {
+        dataTestId: givenNameTestId
+      })
+    ).toBe(1);
+    expect(
+      collector.getCallCount(fieldComponentName, { dataTestId: surnameTestId })
+    ).toBe(1);
+    expect(
+      collector.getCallCount(submitComponentName, { dataTestId: submitTestId })
+    ).toBe(1);
+    unmount();
+  });
+  test("With Errors", async () => {
+    const { container, unmount } = render(<TextField />);
+    await waitFor(async () => {
+      fireEvent.click(screen.getByTestId(submitTestId));
+    });
+    fireEvent.click(screen.getByTestId(reRenderTestId));
+    // render count check
+    expect(
+      collector.getCallCount(formControllerComponentName, {
+        dataTestId: formControllerTestId
+      })
+    ).toBe(2);
+    expect(
+      collector.getCallCount(fieldComponentName, {
+        dataTestId: givenNameTestId
+      })
+    ).toBe(2); // because the second render is the submit event (validation)
+    expect(
+      collector.getCallCount(fieldComponentName, { dataTestId: surnameTestId })
+    ).toBe(2);
+    expect(
+      collector.getCallCount(submitComponentName, { dataTestId: submitTestId })
+    ).toBe(1);
+    // two errors should be shown
+    testInvalidMessage(container, 2);
+    fireEvent.click(screen.getByTestId(reRenderTestId));
+    unmount();
+  });
+  test("With Values", () => {
+    const { unmount } = render(<TextField />);
+    fireEvent.change(screen.getByTestId(givenNameTestId), {
+      target: { value: "James" }
+    });
+    fireEvent.change(screen.getByTestId(surnameTestId), {
+      target: { value: "Bond" }
+    });
+    fireEvent.click(screen.getByTestId(reRenderTestId));
+    // render count check
+    expect(
+      collector.getCallCount(formControllerComponentName, {
+        dataTestId: formControllerTestId
+      })
+    ).toBe(2);
+    expect(
+      collector.getCallCount(fieldComponentName, {
+        dataTestId: givenNameTestId
+      })
+    ).toBe(1);
+    expect(
+      collector.getCallCount(fieldComponentName, { dataTestId: surnameTestId })
+    ).toBe(1);
+    expect(
+      collector.getCallCount(submitComponentName, { dataTestId: submitTestId })
+    ).toBe(1);
+    expect(screen.getByTestId(givenNameTestId)).toHaveValue("James");
+    expect(screen.getByTestId(surnameTestId)).toHaveValue("Bond");
+    unmount();
+  });
+});
+describe("Reset", () => {
+  test("Without Values", () => {
+    const { unmount } = render(<TextField />);
+    fireEvent.click(screen.getByTestId(resetTestId));
+    expect(screen.getByTestId(givenNameTestId)).toHaveAttribute(
+      "placeholder",
+      "Input a given name"
+    );
+    expect(screen.getByTestId(surnameTestId)).toHaveAttribute(
+      "placeholder",
+      "Input a surname"
+    );
+    // render count check
+    expect(
+      collector.getCallCount(formControllerComponentName, {
+        dataTestId: formControllerTestId
+      })
+    ).toBe(3);
+    expect(
+      collector.getCallCount(fieldComponentName, {
+        dataTestId: givenNameTestId
+      })
+    ).toBe(2);
+    expect(
+      collector.getCallCount(fieldComponentName, { dataTestId: surnameTestId })
+    ).toBe(2);
+    expect(
+      collector.getCallCount(submitComponentName, { dataTestId: submitTestId })
+    ).toBe(2);
+    fireEvent.click(screen.getByTestId(resetTestId));
+    // render count check
+    expect(
+      collector.getCallCount(formControllerComponentName, {
+        dataTestId: formControllerTestId
+      })
+    ).toBe(4);
+    expect(
+      collector.getCallCount(fieldComponentName, {
+        dataTestId: givenNameTestId
+      })
+    ).toBe(3);
+    expect(
+      collector.getCallCount(fieldComponentName, { dataTestId: surnameTestId })
+    ).toBe(3);
+    expect(
+      collector.getCallCount(submitComponentName, { dataTestId: submitTestId })
+    ).toBe(3);
+    unmount();
+  });
+  test("With Errors", async () => {
+    const { container, unmount } = render(<TextField />);
+    await waitFor(async () => {
+      fireEvent.click(screen.getByTestId(submitTestId));
+    });
+    fireEvent.click(screen.getByTestId(resetTestId));
+    // render count check
+    expect(
+      collector.getCallCount(formControllerComponentName, {
+        dataTestId: formControllerTestId
+      })
+    ).toBe(3);
+    expect(
+      collector.getCallCount(fieldComponentName, {
+        dataTestId: givenNameTestId
+      })
+    ).toBe(3);
+    expect(
+      collector.getCallCount(fieldComponentName, { dataTestId: surnameTestId })
+    ).toBe(3);
+    expect(
+      collector.getCallCount(submitComponentName, { dataTestId: submitTestId })
+    ).toBe(2);
+    // no errors must be shown
+    testInvalidMessage(container, 0);
+    unmount();
+  });
+  test("With values", () => {
+    const { unmount } = render(<TextField />);
+    fireEvent.change(screen.getByTestId(givenNameTestId), {
+      target: { value: "James" }
+    });
+    fireEvent.change(screen.getByTestId(surnameTestId), {
+      target: { value: "Bond" }
+    });
+    const reset = screen.getByTestId(resetTestId);
+    fireEvent.click(reset);
+    // render count check
+    expect(
+      collector.getCallCount(formControllerComponentName, {
+        dataTestId: formControllerTestId
+      })
+    ).toBe(3);
+    expect(
+      collector.getCallCount(fieldComponentName, {
+        dataTestId: givenNameTestId
+      })
+    ).toBe(2);
+    expect(
+      collector.getCallCount(fieldComponentName, { dataTestId: surnameTestId })
+    ).toBe(2);
+    expect(
+      collector.getCallCount(submitComponentName, { dataTestId: submitTestId })
+    ).toBe(2);
+    expect(screen.getByTestId(givenNameTestId)).toHaveValue("");
+    expect(screen.getByTestId(surnameTestId)).toHaveValue("");
+    unmount();
+  });
 });

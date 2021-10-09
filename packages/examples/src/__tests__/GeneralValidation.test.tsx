@@ -72,7 +72,7 @@ const testWorkflow = async (container: HTMLElement) => {
   expect(console.log).lastCalledWith({ givenName: "James", surname: "Bond" });
 };
 
-afterEach(() => {
+beforeEach(() => {
   jest.resetAllMocks();
 });
 
