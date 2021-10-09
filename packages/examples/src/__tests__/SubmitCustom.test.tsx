@@ -20,6 +20,10 @@ const resetTestId = "reset";
 const submitTestId = "submit";
 const surnameTestId = "surname";
 
+beforeEach(() => {
+  console.info(expect.getState().testPath);
+});
+
 test("SubmitCustom", async () => {
   const { container } = render(<SubmitCustom />);
 

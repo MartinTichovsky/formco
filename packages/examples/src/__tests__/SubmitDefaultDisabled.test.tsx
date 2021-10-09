@@ -12,6 +12,10 @@ const submitBottomTestId = "submit-bottom";
 const submitTopTestId = "submit-top";
 const surnameTestId = "surname";
 
+beforeEach(() => {
+  console.info(expect.getState().testPath);
+});
+
 test("SubmitDefaultDisabled", async () => {
   const { container } = render(<SubmitDefaultDisabled />);
 

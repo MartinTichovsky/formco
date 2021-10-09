@@ -88,6 +88,7 @@ const submitInvalidForm = async () => {
 
 beforeEach(() => {
   jest.resetAllMocks();
+  console.info(expect.getState().testPath);
 });
 
 describe("GeneralRequired", () => {

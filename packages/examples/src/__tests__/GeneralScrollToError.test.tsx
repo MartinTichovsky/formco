@@ -15,6 +15,10 @@ const selectTestId = "select";
 const submitTestId = "submit";
 const surnameTestId = "surname";
 
+beforeEach(() => {
+  console.info(expect.getState().testPath);
+});
+
 test("GeneralScrollToError", async () => {
   Element.prototype.scrollTo = jest.fn();
   const { unmount } = render(<GeneralScrollToError />);

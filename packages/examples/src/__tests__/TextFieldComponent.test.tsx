@@ -13,6 +13,10 @@ const resetTestId = "reset";
 const submitTestId = "submit";
 const surnameTestId = "surname";
 
+beforeEach(() => {
+  console.info(expect.getState().testPath);
+});
+
 test("TextFieldComponent", async () => {
   const { container } = render(<TextFieldComponent />);
 

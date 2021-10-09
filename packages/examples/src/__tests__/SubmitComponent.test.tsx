@@ -21,6 +21,10 @@ const submitClassComponentTestId = "class-submit";
 const submitFunctionalComponentTestId = "functional-submit";
 const surnameTestId = "surname";
 
+beforeEach(() => {
+  console.info(expect.getState().testPath);
+});
+
 test("SubmitComponent", async () => {
   const { container } = render(<SubmitComponent />);
 

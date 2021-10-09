@@ -10,6 +10,10 @@ const resetTestId = "reset";
 const selectTestId = "select";
 const submitTestId = "submit";
 
+beforeEach(() => {
+  console.info(expect.getState().testPath);
+});
+
 test("SelectField", async () => {
   const { container } = render(<SelectField />);
 

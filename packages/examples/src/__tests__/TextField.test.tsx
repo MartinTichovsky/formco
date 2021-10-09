@@ -19,6 +19,7 @@ const submitComponentName = "SubmitComponent";
 
 beforeEach(() => {
   collector.reset();
+  console.info(expect.getState().testPath);
 });
 
 test("TextField", async () => {

@@ -12,8 +12,12 @@ const resetTestId = "reset";
 const submitTestId = "submit";
 const surnameTestId = "surname";
 
+beforeEach(() => {
+  console.info(expect.getState().testPath);
+});
+
 test("GeneralDisableAllOnSubmit", async () => {
-  const {unmount} = render(<GeneralDisableAllOnSubmit />);
+  const { unmount } = render(<GeneralDisableAllOnSubmit />);
 
   // all fields must not be disabled
   expect(screen.getByTestId(givenNameTestId)).not.toBeDisabled();

@@ -12,6 +12,10 @@ const checkbox3TestId = "checkbox-3";
 const resetTestId = "reset";
 const submitTestId = "submit";
 
+beforeEach(() => {
+  console.info(expect.getState().testPath);
+});
+
 test("CheckboxField", async () => {
   const { container, unmount } = render(<CheckboxField />);
 

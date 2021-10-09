@@ -11,6 +11,10 @@ const resetTestId = "reset";
 const submitTestId = "submit";
 const surnameTestId = "surname";
 
+beforeEach(() => {
+  console.info(expect.getState().testPath);
+});
+
 test("TextFieldDefaultValuesUseCase2", async () => {
   const { container } = render(<TextFieldDefaultValuesUseCase2 />);
 

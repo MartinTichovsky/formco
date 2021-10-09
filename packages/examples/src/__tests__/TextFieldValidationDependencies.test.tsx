@@ -232,6 +232,7 @@ const testSuite = async (
 
 beforeEach(() => {
   jest.resetAllMocks();
+  console.info(expect.getState().testPath);
 });
 
 describe("TextFieldValidationDependencies", () => {

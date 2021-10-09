@@ -11,6 +11,10 @@ const resetTestId = "reset";
 const submitTestId = "submit";
 const surnameTestId = "surname";
 
+beforeEach(() => {
+  console.info(expect.getState().testPath);
+});
+
 test("GeneralValidateOnChange", async () => {
   const { container, unmount } = render(<GeneralValidateOnChange />);
 

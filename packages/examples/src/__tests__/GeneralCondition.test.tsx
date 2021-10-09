@@ -15,6 +15,10 @@ const resetTestId = "reset";
 const submitTestId = "submit";
 const surnameTestId = "surname";
 
+beforeEach(() => {
+  console.info(expect.getState().testPath);
+});
+
 test("GeneralCondition", async () => {
   const { container, unmount } = render(<GeneralCondition />);
 

@@ -73,6 +73,7 @@ const testWorkflow = async (container: HTMLElement) => {
 
 afterEach(() => {
   jest.resetAllMocks();
+  console.info(expect.getState().testPath);
 });
 
 test("GeneralValidationUseCase1", async () => {

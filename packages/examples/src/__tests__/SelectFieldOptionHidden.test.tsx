@@ -11,6 +11,10 @@ const select1TestId = "select-1";
 const select2TestId = "select-2";
 const submitTestId = "submit";
 
+beforeEach(() => {
+  console.info(expect.getState().testPath);
+});
+
 test("SelectFieldOptionHidden", async () => {
   const { container } = render(<SelectFieldOptionHidden />);
 
