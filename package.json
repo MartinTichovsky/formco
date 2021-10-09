@@ -9,7 +9,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "lerna run build --parallel",
+    "build": "lerna run build",
     "clean": "lerna run clean",
     "run:demo": "lerna run --scope demo start",
     "test": "jest --no-cache --silent --collect-coverage",

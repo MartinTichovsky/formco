@@ -3,7 +3,7 @@
   "version": "0.3.0",
   "private": true,
   "scripts": {
-    "build": "webpack --mode=production",
+    "build": "yarn clean && webpack --mode=production",
     "clean": "rimraf lib build",
     "start": "webpack serve --mode=development"
   },
@@ -19,6 +19,7 @@
     "@types/react": "17.0.27",
     "@types/react-dom": "17.0.9",
     "css-loader": "6.3.0",
+    "examples": "0.3.0",
     "file-loader": "6.2.0",
     "fs-extra": "10.0.0",
     "html-webpack-plugin": "5.3.2",
