@@ -281,7 +281,7 @@ const menuItems: MenuItems = {
 
 const transformText = (text: string) =>
   // eslint-disable-next-line
-  text.toLowerCase().replaceAll(" ", "-").replace(/(\-)+/, "-");
+  text.toLowerCase().replace(/ /g, "-").replace(/(\-)+/, "-");
 
 export const menuItemsWithKey: MenuItemsWithKey = {};
 
