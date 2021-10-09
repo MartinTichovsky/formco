@@ -4,9 +4,9 @@ import React from "react";
 import { TextFieldValidationDependencies } from "../TextFieldValidationDependencies";
 import { testInvalidMessage } from "../utils/selectors";
 
+console.error = jest.fn();
 console.log = jest.fn();
 console.warn = jest.fn();
-console.error = jest.fn();
 
 const error1TestId = "error-1";
 const error2TestId = "error-2";
