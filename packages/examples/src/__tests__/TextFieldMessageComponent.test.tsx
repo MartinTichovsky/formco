@@ -4,6 +4,7 @@ import React from "react";
 import { TextFieldMessageComponent } from "../TextFieldMessageComponent";
 
 console.log = jest.fn();
+console.error = jest.fn();
 
 const classComponentTestId = "class-component";
 const functionalComponentTestId = "functional-component";

@@ -5,6 +5,7 @@ import { TextFieldComponent } from "../TextFieldComponent";
 import { testInvalidMessage } from "../utils/selectors";
 
 console.log = jest.fn();
+console.error = jest.fn();
 
 const classInputId = "class-input";
 const functionalInputId = "functional-input";

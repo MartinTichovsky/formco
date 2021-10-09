@@ -5,6 +5,7 @@ import React from "react";
 import { GeneralLabel } from "../GeneralLabel";
 
 console.log = jest.fn();
+console.error = jest.fn();
 
 const givenNameTestId = "givenName";
 const resetTestId = "reset";

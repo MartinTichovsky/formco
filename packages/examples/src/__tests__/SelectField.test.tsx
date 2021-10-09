@@ -5,6 +5,7 @@ import { SelectField } from "../SelectField";
 import { testInvalidMessage } from "../utils/selectors";
 
 console.log = jest.fn();
+console.error = jest.fn();
 
 const resetTestId = "reset";
 const selectTestId = "select";

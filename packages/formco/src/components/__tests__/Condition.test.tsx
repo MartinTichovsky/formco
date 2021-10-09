@@ -6,6 +6,8 @@ import { getGeneratedValues } from "../../__tests__/utils/value-generator";
 import { Condition } from "../Condition";
 import { ConditionComponent } from "../ConditionComponent";
 
+console.error = jest.fn();
+
 type Form = {
   input: string;
 };

@@ -6,6 +6,7 @@ import { testInvalidMessage, testValidMessage } from "../utils/selectors";
 import { wait } from "../utils/utils";
 
 console.log = jest.fn();
+console.error = jest.fn();
 
 const givenNameTestId = "givenName";
 const pendingText = "pending...";

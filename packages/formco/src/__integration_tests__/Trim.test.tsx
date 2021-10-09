@@ -4,6 +4,8 @@ import { Trim } from "./Trim";
 
 console.warn = jest.fn();
 
+console.error = jest.fn();
+
 const givenNameTestId = "givenName";
 const surnameTestId = "surname";
 const submitTestId = "submit";

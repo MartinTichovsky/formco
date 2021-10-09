@@ -5,6 +5,7 @@ import { SelectFieldComponent } from "../SelectFieldComponent";
 import { testInvalidMessage } from "../utils/selectors";
 
 console.log = jest.fn();
+console.error = jest.fn();
 
 const classSelectId = "class-select";
 const functionalSelectId = "functional-select";

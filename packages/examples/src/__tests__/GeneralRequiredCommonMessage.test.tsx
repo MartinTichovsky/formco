@@ -6,6 +6,7 @@ import { GeneralRequiredCommonMessage } from "../GeneralRequiredCommonMessage";
 import { testInvalidMessage } from "../utils/selectors";
 
 console.log = jest.fn();
+console.error = jest.fn();
 
 const inputFieldRow1TestId = "input-field-row-1";
 const inputFieldRow2TestId = "input-field-row-2";

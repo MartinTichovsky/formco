@@ -12,6 +12,8 @@ import {
   InitialState
 } from "../Field.types";
 
+console.error = jest.fn();
+
 type Form = {
   input: string;
   name: string;

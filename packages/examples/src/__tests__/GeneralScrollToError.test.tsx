@@ -4,6 +4,7 @@ import React from "react";
 import { GeneralScrollToError } from "../GeneralScrollToError";
 
 console.log = jest.fn();
+console.error = jest.fn();
 
 const checkboxTestId = "checkbox";
 const givenNameTestId = "givenName";

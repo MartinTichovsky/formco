@@ -1,5 +1,7 @@
 import { getGeneratedValues, TestClass } from "./value-generator";
 
+console.error = jest.fn();
+
 const totalCount = 61;
 
 describe("Value Generator", () => {

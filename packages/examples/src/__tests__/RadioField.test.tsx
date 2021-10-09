@@ -5,6 +5,7 @@ import { RadioField } from "../RadioField";
 import { testInvalidMessage } from "../utils/selectors";
 
 console.log = jest.fn();
+console.error = jest.fn();
 
 const radio1TestId = "radio-1";
 const radio2TestId = "radio-2";

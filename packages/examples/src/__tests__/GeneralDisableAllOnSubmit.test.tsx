@@ -4,6 +4,7 @@ import React from "react";
 import { GeneralDisableAllOnSubmit } from "../GeneralDisableAllOnSubmit";
 
 console.log = jest.fn();
+console.error = jest.fn();
 
 const givenNameTestId = "givenName";
 const radio1TestId = "radio-1";

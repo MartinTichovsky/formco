@@ -6,6 +6,7 @@ import { testInvalidMessage } from "../utils/selectors";
 
 console.log = jest.fn();
 console.warn = jest.fn();
+console.error = jest.fn();
 
 const error1TestId = "error-1";
 const error2TestId = "error-2";

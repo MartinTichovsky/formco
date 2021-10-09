@@ -6,6 +6,7 @@ import { GeneralRequired } from "../GeneralRequired";
 import { testInvalidMessage } from "../utils/selectors";
 
 console.log = jest.fn();
+console.error = jest.fn();
 
 const checkbox1TestId = "checkbox-1";
 const checkbox2TestId = "checkbox-2";

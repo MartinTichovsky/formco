@@ -4,6 +4,7 @@ import React from "react";
 import { GeneralConditionDynamic } from "../GeneralConditionDynamic";
 
 console.log = jest.fn();
+console.error = jest.fn();
 
 const dynamicContentTestId = "dynamic-content";
 const dynamicContextTestId = "dynamic-context";

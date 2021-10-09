@@ -5,6 +5,7 @@ import { TextField } from "../TextField";
 import { testInvalidMessage } from "../utils/selectors";
 
 console.log = jest.fn();
+console.error = jest.fn();
 
 const formControllerTestId = "form-controller";
 const givenNameTestId = "givenName";

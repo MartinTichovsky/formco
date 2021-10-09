@@ -4,6 +4,8 @@ import { InvalidFormUseCase1 } from "./InvalidFormUseCase1";
 
 console.warn = jest.fn();
 
+console.error = jest.fn();
+
 const resetTestId = "reset";
 
 test("InvalidFormUseCase1", () => {

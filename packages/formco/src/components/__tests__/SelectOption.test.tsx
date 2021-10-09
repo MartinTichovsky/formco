@@ -5,6 +5,8 @@ import { Controller } from "../../controller";
 import { SelectProvider } from "../../providers";
 import { SelectOption } from "../SelectOption";
 
+console.error = jest.fn();
+
 type Form = {
   input: string;
   select: string;

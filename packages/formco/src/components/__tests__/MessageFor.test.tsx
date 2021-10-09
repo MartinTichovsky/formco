@@ -4,6 +4,8 @@ import React from "react";
 import { Controller } from "../../controller";
 import { MessageFor } from "../MessageFor";
 
+console.error = jest.fn();
+
 type Form = {
   input: string;
 };

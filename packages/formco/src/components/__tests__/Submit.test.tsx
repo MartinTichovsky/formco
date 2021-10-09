@@ -6,6 +6,8 @@ import { getGeneratedValues } from "../../__tests__/utils/value-generator";
 import { Submit } from "../Submit";
 import { SubmitComponent } from "../SubmitComponent";
 
+console.error = jest.fn();
+
 type Form = {
   input: string;
 };

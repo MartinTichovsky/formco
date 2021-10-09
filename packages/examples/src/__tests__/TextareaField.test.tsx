@@ -5,6 +5,7 @@ import { TextareaField } from "../TextareaField";
 
 console.log = jest.fn();
 console.warn = jest.fn();
+console.error = jest.fn();
 
 const errorTestId = "error";
 const invalidTestId = "invalid-text";

@@ -6,6 +6,7 @@ import { GeneralValidationUseCase2 } from "../GeneralValidationUseCase2";
 import { testInvalidMessage } from "../utils/selectors";
 
 console.log = jest.fn();
+console.error = jest.fn();
 
 const givenNameTestId = "givenName";
 const resetTestId = "reset";

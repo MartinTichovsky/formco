@@ -6,6 +6,7 @@ import { testInvalidMessage } from "../utils/selectors";
 import { wait } from "../utils/utils";
 
 console.log = jest.fn();
+console.error = jest.fn();
 
 const resetTestId = "reset";
 const select1TestId = "select-1";
