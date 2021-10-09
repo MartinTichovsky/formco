@@ -5,10 +5,10 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "yarn clean && tsc --project tsconfig.build.json",
+    "build": "tsc --project tsconfig.build.json",
     "clean": "rimraf tsconfig*.tsbuildinfo lib",
     "postinstall": "node ../../scripts/create-symlinks.js",
-    "test": "jest --no-cache --silent",
+    "test": "jest --colors --verbose",
     "tsc": "tsc --noEmit"
   },
   "author": "Martin Tichovsky",

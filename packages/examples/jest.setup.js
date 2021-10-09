@@ -1,3 +1,3 @@
 const { createCollector } = require("jest-collector");
 
-createCollector({ roots: ["src"] });
+createCollector({ include: ["**/*.c.test.(ts|tsx)"], roots: ["src"] });
