@@ -5172,10 +5172,10 @@ jest-cli@^27.2.5:
     prompts "^2.0.1"
     yargs "^16.2.0"
 
-jest-collector@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/jest-collector/-/jest-collector-1.0.0.tgz#b1e52b63063801b53be694f3c5a6914d20350b56"
-  integrity sha512-ULEIdfaJzDT/rEiv2EWm15IDD6zIaBwwWBx0khEBbwLlRZBEBkHtmGaDeuSzlYgkuZfvPFSYM/4+lWKX18ERGA==
+jest-collector@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/jest-collector/-/jest-collector-1.0.2.tgz#bc57812ef25f06ee0b133e23b565a9a6f3604407"
+  integrity sha512-XCGnF8Xb02Gzm34E6xsgs+2Y3fol4qsupQGh8O0wMkuV//i6jo127U326vO8GYh2w9HFDZ67qdED5nmWI8HxTQ==
 
 jest-config@^27.2.5:
   version "27.2.5"
