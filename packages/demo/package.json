@@ -3,12 +3,11 @@
   "version": "0.3.0",
   "private": true,
   "scripts": {
-    "start": "webpack serve --mode=development",
-    "build": "webpack --mode=production"
+    "build": "webpack --mode=production",
+    "clean": "rimraf lib build",
+    "start": "webpack serve --mode=development"
   },
   "dependencies": {
-    "mobx": "6.3.3",
-    "mobx-react-lite": "3.2.1",
     "react": "17.0.2",
     "react-dom": "17.0.2"
   },
@@ -24,6 +23,7 @@
     "fs-extra": "10.0.0",
     "html-webpack-plugin": "5.3.2",
     "mini-css-extract-plugin": "2.4.2",
+    "rimraf": "3.0.2",
     "react-dev-utils": "11.0.4",
     "react-refresh": "0.10.0",
     "source-map-loader": "3.0.0",

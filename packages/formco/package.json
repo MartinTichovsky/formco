@@ -6,7 +6,6 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "yarn clean && tsc --project tsconfig.build.json",
-    "build:watch": "yarn build:local --watch",
     "clean": "rimraf tsconfig*.tsbuildinfo lib",
     "postinstall": "node ../../scripts/create-symlinks.js",
     "test": "jest --no-cache --silent",
@@ -29,10 +28,6 @@
     "@types/react-dom": "17.0.9",
     "jest": "27.2.5",
     "jest-collector": "1.0.0",
-    "mobx": "6.3.3",
-    "mobx-react-lite": "3.2.1",
-    "npm-watch": "0.11.0",
-    "prettier": "2.4.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "rimraf": "3.0.2",
@@ -42,33 +37,5 @@
   "peerDependencies": {
     "react": "^16.x.x || ^17.x.x",
     "react-dom": "^16.x.x || ^17.x.x"
-  },
-  "jest": {
-    "globals": {
-      "ts-jest": {
-        "tsconfig": "tsconfig.test.json"
-      },
-      "collector": null
-    },
-    "preset": "ts-jest",
-    "setupFilesAfterEnv": [
-      "./jest.setup.js"
-    ],
-    "testEnvironment": "jsdom",
-    "testMatch": [
-      "**/?(*.)+(spec|test).ts?(x)"
-    ],
-    "roots": [
-      "<rootDir>/src"
-    ]
-  },
-  "watch": {
-    "copy-files": {
-      "patterns": [
-        "src"
-      ],
-      "quiet": false,
-      "runOnChangeOnly": true
-    }
   }
 }

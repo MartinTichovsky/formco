@@ -11,6 +11,10 @@
     "test": "jest --no-cache --silent",
     "tsc": "tsc --noEmit"
   },
+  "dependencies": {
+    "mobx": "6.3.3",
+    "mobx-react-lite": "3.2.1"
+  },
   "devDependencies": {
     "@testing-library/dom": "8.7.2",
     "@testing-library/jest-dom": "5.14.1",
@@ -21,45 +25,10 @@
     "@types/react-dom": "17.0.9",
     "jest": "27.2.5",
     "jest-collector": "1.0.0",
-    "mobx": "6.3.3",
-    "mobx-react-lite": "3.2.1",
-    "npm-watch": "0.11.0",
-    "prettier": "2.4.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "rimraf": "3.0.2",
     "ts-jest": "27.0.5",
     "typescript": "4.4.3"
-  },
-  "jest": {
-    "globals": {
-      "ts-jest": {
-        "tsconfig": "tsconfig.test.json"
-      },
-      "collector": null
-    },
-    "moduleNameMapper": {
-      "^formco$": "<rootDir>../formco/src"
-    },
-    "preset": "ts-jest",
-    "setupFilesAfterEnv": [
-      "./jest.setup.js"
-    ],
-    "testEnvironment": "jsdom",
-    "testMatch": [
-      "**/?(*.)+(spec|test).ts?(x)"
-    ],
-    "roots": [
-      "<rootDir>/src"
-    ]
-  },
-  "watch": {
-    "copy-files": {
-      "patterns": [
-        "src"
-      ],
-      "quiet": false,
-      "runOnChangeOnly": true
-    }
   }
 }
