@@ -30,7 +30,7 @@ const checkStarCount = (container: HTMLElement) => {
 };
 
 test("GeneralRequiredCommonMessage", async () => {
-  const { container } = render(<GeneralRequiredCommonMessage />);
+  const { container, unmount } = render(<GeneralRequiredCommonMessage />);
 
   // errors should not be shown
   testInvalidMessage(container, 0);
@@ -225,4 +225,6 @@ test("GeneralRequiredCommonMessage", async () => {
   expect(screen.getByTestId(submitTestId)).toBeDisabled();
 
   checkStarCount(container);
+
+  unmount();
 });

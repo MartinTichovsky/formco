@@ -13,7 +13,7 @@ const resetTestId = "reset";
 const submitTestId = "submit";
 
 test("CheckboxFieldHidden", async () => {
-  const { container } = render(<CheckboxFieldHidden />);
+  const { container, unmount } = render(<CheckboxFieldHidden />);
 
   // errors should not be shown
   testInvalidMessage(container, 0);
@@ -156,4 +156,6 @@ test("CheckboxFieldHidden", async () => {
   // check the onSubmit action
   expect(console.log).toBeCalledTimes(5);
   expect(console.log).lastCalledWith({ checkbox1: false });
+
+  unmount();
 });

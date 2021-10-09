@@ -16,7 +16,7 @@ const submitTestId = "submit";
 const surnameTestId = "surname";
 
 test("GeneralCondition", async () => {
-  const { container } = render(<GeneralCondition />);
+  const { container, unmount } = render(<GeneralCondition />);
 
   // errors should not be shown
   testInvalidMessage(container, 0);
@@ -76,4 +76,6 @@ test("GeneralCondition", async () => {
   // the condition text must not be in the document
   expect(screen.queryByText(formIsValidText)).not.toBeInTheDocument();
   expect(screen.queryByText(submitConditionText)).not.toBeInTheDocument();
+
+  unmount();
 });

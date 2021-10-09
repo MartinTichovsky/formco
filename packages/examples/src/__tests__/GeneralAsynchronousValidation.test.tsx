@@ -19,7 +19,7 @@ beforeEach(() => {
 
 describe("GeneralAsynchronousValidation", () => {
   test("Submit without touch the inputs", async () => {
-    const { container } = render(<GeneralAsynchronousValidation />);
+    const { container, unmount } = render(<GeneralAsynchronousValidation />);
 
     // errors should not be shown
     testInvalidMessage(container, 0);
@@ -46,10 +46,12 @@ describe("GeneralAsynchronousValidation", () => {
 
     // errors should not be shown
     testInvalidMessage(container, 0);
+
+    unmount();
   });
 
   test("Input values", async () => {
-    const { container } = render(<GeneralAsynchronousValidation />);
+    const { container, unmount } = render(<GeneralAsynchronousValidation />);
 
     // input a valid text
     fireEvent.change(screen.getByTestId(givenNameTestId), {
@@ -98,10 +100,12 @@ describe("GeneralAsynchronousValidation", () => {
     // check the onSubmit action
     expect(console.log).toBeCalledTimes(1);
     expect(console.log).lastCalledWith({ givenName: "James", surname: "Bond" });
+
+    unmount();
   }, 10000);
 
   test("Click on the submit during validation pending", async () => {
-    render(<GeneralAsynchronousValidation />);
+    const { unmount } = render(<GeneralAsynchronousValidation />);
 
     // input a valid text
     fireEvent.change(screen.getByTestId(givenNameTestId), {
@@ -156,10 +160,12 @@ describe("GeneralAsynchronousValidation", () => {
     // check the onSubmit action
     expect(console.log).toBeCalledTimes(1);
     expect(console.log).lastCalledWith({ givenName: "James", surname: "Bond" });
+
+    unmount();
   }, 10000);
 
   test("Multiple inputs", async () => {
-    const { container } = render(<GeneralAsynchronousValidation />);
+    const { container, unmount } = render(<GeneralAsynchronousValidation />);
 
     // input a valid text
     fireEvent.change(screen.getByTestId(givenNameTestId), {
@@ -212,5 +218,7 @@ describe("GeneralAsynchronousValidation", () => {
 
     // one error message should be shown
     testInvalidMessage(container, 1);
+
+    unmount();
   }, 10000);
 });

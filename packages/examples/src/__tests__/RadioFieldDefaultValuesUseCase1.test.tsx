@@ -19,7 +19,7 @@ const resetTestId = "reset";
 const submitTestId = "submit";
 
 test("RadioFieldDefaultValuesUseCase1", async () => {
-  const { container } = render(<RadioFieldDefaultValuesUseCase1 />);
+  const { container, unmount } = render(<RadioFieldDefaultValuesUseCase1 />);
 
   // errors should not be shown
   testInvalidMessage(container, 0);
@@ -337,4 +337,6 @@ test("RadioFieldDefaultValuesUseCase1", async () => {
 
   // one error should be shown
   testInvalidMessage(container, 1);
+
+  unmount();
 });

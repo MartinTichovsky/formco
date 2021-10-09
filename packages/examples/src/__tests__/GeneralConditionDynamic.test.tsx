@@ -17,7 +17,7 @@ const getTestedGivenNameText = (name: string) =>
 const getTesteSurnameText = (name: string) => `Your surname is: ${name}`.trim();
 
 test("GeneralConditionDynamic", async () => {
-  render(<GeneralConditionDynamic />);
+  const { unmount } = render(<GeneralConditionDynamic />);
 
   // the default text should be visible
   expect(screen.getByTestId(dynamicContentTestId)).toHaveTextContent(
@@ -133,4 +133,6 @@ test("GeneralConditionDynamic", async () => {
   expect(screen.getByTestId(dynamicContextTestId)).toHaveTextContent(
     getTesteSurnameText("")
   );
+
+  unmount();
 });

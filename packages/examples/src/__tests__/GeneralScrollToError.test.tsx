@@ -17,7 +17,7 @@ const surnameTestId = "surname";
 
 test("GeneralScrollToError", async () => {
   Element.prototype.scrollTo = jest.fn();
-  render(<GeneralScrollToError />);
+  const { unmount } = render(<GeneralScrollToError />);
 
   expect(Element.prototype.scrollTo).not.toBeCalled();
 
@@ -134,4 +134,6 @@ test("GeneralScrollToError", async () => {
   // givenName should have focus
   expect(Element.prototype.scrollTo).toBeCalledTimes(8);
   expect(screen.getByTestId(givenNameTestId)).toHaveFocus();
+
+  unmount();
 });

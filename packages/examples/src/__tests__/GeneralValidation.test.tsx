@@ -76,13 +76,17 @@ afterEach(() => {
 });
 
 test("GeneralValidationUseCase1", async () => {
-  const { container } = render(<GeneralValidationUseCase1 />);
+  const { container, unmount } = render(<GeneralValidationUseCase1 />);
 
   await testWorkflow(container);
+
+  unmount();
 });
 
 test("GeneralValidationUseCase2", async () => {
-  const { container } = render(<GeneralValidationUseCase2 />);
+  const { container, unmount } = render(<GeneralValidationUseCase2 />);
 
   await testWorkflow(container);
+
+  unmount();
 });

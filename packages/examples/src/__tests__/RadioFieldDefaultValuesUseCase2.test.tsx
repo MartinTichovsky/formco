@@ -18,7 +18,7 @@ const resetTestId = "reset";
 const submitTestId = "submit";
 
 test("RadioFieldDefaultValuesUseCase2", async () => {
-  const { container } = render(<RadioFieldDefaultValuesUseCase2 />);
+  const { container, unmount } = render(<RadioFieldDefaultValuesUseCase2 />);
 
   // errors should not be shown
   testInvalidMessage(container, 0);
@@ -231,4 +231,6 @@ test("RadioFieldDefaultValuesUseCase2", async () => {
 
   // check pre-selected options
   expect(screen.getByTestId(radio33TestId)).toBeChecked();
+
+  unmount();
 });

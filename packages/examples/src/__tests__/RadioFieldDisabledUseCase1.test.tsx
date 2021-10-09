@@ -16,7 +16,7 @@ const resetTestId = "reset";
 const submitTestId = "submit";
 
 test("RadioFieldDisabledUseCase1", async () => {
-  const { container } = render(<RadioFieldDisabledUseCase1 />);
+  const { container, unmount } = render(<RadioFieldDisabledUseCase1 />);
 
   // errors should not be shown
   testInvalidMessage(container, 0);
@@ -113,4 +113,6 @@ test("RadioFieldDisabledUseCase1", async () => {
   expect(screen.getByTestId(radio22TestId)).not.toBeDisabled();
   expect(screen.getByTestId(radio31TestId)).toBeDisabled();
   expect(screen.getByTestId(radio32TestId)).toBeDisabled();
+
+  unmount();
 });

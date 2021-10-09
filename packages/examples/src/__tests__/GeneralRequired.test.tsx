@@ -92,7 +92,7 @@ beforeEach(() => {
 
 describe("GeneralRequired", () => {
   test("Validate on change", async () => {
-    const { container } = render(<GeneralRequired />);
+    const { container, unmount } = render(<GeneralRequired />);
 
     // stars must be in the document
     checkStarCount(container);
@@ -396,10 +396,12 @@ describe("GeneralRequired", () => {
 
     // check valid class names
     noValidClassNamesAreProvided();
+
+    unmount();
   });
 
   test("Validate on submit", async () => {
-    const { container } = render(
+    const { container, unmount } = render(
       <GeneralRequired
         disabledByDefault={false}
         disableIfNotValid={false}
@@ -643,5 +645,7 @@ describe("GeneralRequired", () => {
       select: "Option 1",
       surname: "Bond"
     });
+
+    unmount();
   });
 });

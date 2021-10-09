@@ -13,7 +13,7 @@ const salutationTestId = "salutation";
 const surnameTestId = "surname";
 
 test("GeneralLabel", async () => {
-  const { container } = render(<GeneralLabel />);
+  const { container, unmount } = render(<GeneralLabel />);
 
   // three labels must exist
   const labels = container.querySelectorAll("label");
@@ -41,4 +41,6 @@ test("GeneralLabel", async () => {
   expect(console.log).lastCalledWith({});
 
   fireEvent.click(screen.getByTestId(resetTestId));
+
+  unmount();
 });

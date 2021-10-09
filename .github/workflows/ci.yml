@@ -3,7 +3,9 @@ name: CI
 on:
   push:
     branches:
-      - main
+      - "*"
+      - "*/*"
+      - "**"
     paths-ignore:
       - "**/package.json"
       - lerna.json
@@ -43,36 +45,36 @@ jobs:
       - name: TypeScript check
         run: yarn tsc
 
-  bump-version:
-    if: github.ref == 'refs/heads/main'
-    needs: [build-and-test]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.TOKEN }}
+  # bump-version:
+  #   if: github.ref == 'refs/heads/main'
+  #   needs: [build-and-test]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #       with:
+  #         token: ${{ secrets.TOKEN }}
 
-      - name: Install
-        run: yarn
+  #     - name: Install
+  #       run: yarn
 
-      - name: Set creator
-        run: |
-          git config user.email "automated-version@users.noreply.github.com"
-          git config user.name "Automated Version"
+  #     - name: Set creator
+  #       run: |
+  #         git config user.email "automated-version@users.noreply.github.com"
+  #         git config user.name "Automated Version"
 
-      - name: Increment version
-        env:
-          VERSION_TYPE: ${{ (startsWith(github.event.head_commit.message, 'BREAKING CHANGE:') || contains(toJSON(github.event.head_commit.message), '\n\nBREAKING CHANGE:')) && 'major' || (startsWith(github.event.head_commit.message, 'fix:') || contains(toJSON(github.event.head_commit.message), '\n\nfix:')) && 'patch' || 'minor' }}
-        run: |
-          yarn lerna version $VERSION_TYPE --yes
+  #     - name: Increment version
+  #       env:
+  #         VERSION_TYPE: ${{ (startsWith(github.event.head_commit.message, 'BREAKING CHANGE:') || contains(toJSON(github.event.head_commit.message), '\n\nBREAKING CHANGE:')) && 'major' || (startsWith(github.event.head_commit.message, 'fix:') || contains(toJSON(github.event.head_commit.message), '\n\nfix:')) && 'patch' || 'minor' }}
+  #       run: |
+  #         yarn lerna version $VERSION_TYPE --yes
 
-      # - name: Build
-      #   working-directory: ./packages/formco
-      #   run: yarn build
+  # - name: Build
+  #   working-directory: ./packages/formco
+  #   run: yarn build
 
-      # - name: Publish package
-      #   working-directory: ./packages/formco
-      #   run: |
-      #     npm config set "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}"
-      #     npm publish
+  # - name: Publish package
+  #   working-directory: ./packages/formco
+  #   run: |
+  #     npm config set "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}"
+  #     npm publish

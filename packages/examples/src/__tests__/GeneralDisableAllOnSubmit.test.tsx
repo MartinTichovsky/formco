@@ -13,7 +13,7 @@ const submitTestId = "submit";
 const surnameTestId = "surname";
 
 test("GeneralDisableAllOnSubmit", async () => {
-  render(<GeneralDisableAllOnSubmit />);
+  const {unmount} = render(<GeneralDisableAllOnSubmit />);
 
   // all fields must not be disabled
   expect(screen.getByTestId(givenNameTestId)).not.toBeDisabled();
@@ -44,4 +44,6 @@ test("GeneralDisableAllOnSubmit", async () => {
   expect(screen.getByTestId(surnameTestId)).not.toBeDisabled();
   expect(screen.getByTestId(radio1TestId)).not.toBeDisabled();
   expect(screen.getByTestId(radio2TestId)).not.toBeDisabled();
+
+  unmount();
 });

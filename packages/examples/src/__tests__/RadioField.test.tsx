@@ -13,7 +13,7 @@ const resetTestId = "reset";
 const submitTestId = "submit";
 
 test("RadioField", async () => {
-  const { container } = render(<RadioField />);
+  const { container, unmount } = render(<RadioField />);
 
   // errors should not be shown
   testInvalidMessage(container, 0);
@@ -78,4 +78,6 @@ test("RadioField", async () => {
   expect(screen.getByTestId(radio1TestId)).not.toBeChecked();
   expect(screen.getByTestId(radio2TestId)).not.toBeChecked();
   expect(screen.getByTestId(radio3TestId)).not.toBeChecked();
+
+  unmount();
 });

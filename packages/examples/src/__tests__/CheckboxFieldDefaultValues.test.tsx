@@ -13,7 +13,7 @@ const resetTestId = "reset";
 const submitTestId = "submit";
 
 test("CheckboxFieldDefaultValues", async () => {
-  const { container } = render(<CheckboxFieldDefaultValues />);
+  const { container, unmount } = render(<CheckboxFieldDefaultValues />);
 
   // errors should not be shown
   testInvalidMessage(container, 0);
@@ -65,4 +65,6 @@ test("CheckboxFieldDefaultValues", async () => {
   expect(screen.getByTestId(checkbox1TestId)).not.toBeChecked();
   expect(screen.getByTestId(checkbox2TestId)).toBeChecked();
   expect(screen.getByTestId(checkbox3TestId)).not.toBeChecked();
+
+  unmount();
 });

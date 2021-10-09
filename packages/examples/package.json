@@ -8,7 +8,7 @@
     "build": "yarn clean && tsc --project tsconfig.build.json",
     "clean": "rimraf tsconfig*.tsbuildinfo lib",
     "postinstall": "node ../../scripts/create-symlinks.js",
-    "test": "jest --no-cache --silent",
+    "test": "jest --ci",
     "tsc": "tsc --noEmit"
   },
   "dependencies": {

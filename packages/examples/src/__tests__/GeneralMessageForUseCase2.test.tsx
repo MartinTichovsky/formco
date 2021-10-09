@@ -16,7 +16,7 @@ const submitTestId = "submit";
 const surnameTestId = "surname";
 
 test("GeneralMessageForUseCase2", async () => {
-  const { container } = render(<GeneralMessageForUseCase2 />);
+  const { container, unmount } = render(<GeneralMessageForUseCase2 />);
 
   // errors should not be shown
   testInvalidMessage(container, 0);
@@ -98,4 +98,6 @@ test("GeneralMessageForUseCase2", async () => {
 
   expect(screen.queryByText(givenNameValidText)).not.toBeInTheDocument();
   expect(screen.queryByText(surnameValidText)).not.toBeInTheDocument();
+
+  unmount();
 });

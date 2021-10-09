@@ -12,7 +12,7 @@ const submitTestId = "submit";
 const surnameTestId = "surname";
 
 test("GeneralValidateOnChange", async () => {
-  const { container } = render(<GeneralValidateOnChange />);
+  const { container, unmount } = render(<GeneralValidateOnChange />);
 
   // errors should not be shown
   testInvalidMessage(container, 0);
@@ -59,4 +59,6 @@ test("GeneralValidateOnChange", async () => {
   expect(console.log).lastCalledWith({ givenName: "James", surname: "Bond" });
 
   fireEvent.click(screen.getByTestId(resetTestId));
+
+  unmount();
 });
