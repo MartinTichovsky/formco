@@ -159,10 +159,6 @@ const testWorkflow = async (container: HTMLElement) => {
   testInvalidMessage(container, 0);
 };
 
-beforeEach(() => {
-  console.info(expect.getState().testPath);
-});
-
 test("RadioFieldDisabledUseCase2", async () => {
   const { container, unmount } = render(<RadioFieldDisabledUseCase2 />);
 

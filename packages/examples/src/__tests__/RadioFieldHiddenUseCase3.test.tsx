@@ -17,10 +17,6 @@ const radio33TestId = "radio-3-3";
 const resetTestId = "reset";
 const submitTestId = "submit";
 
-beforeEach(() => {
-  console.info(expect.getState().testPath);
-});
-
 test("RadioFieldHiddenUseCase3", async () => {
   const { container, unmount } = render(<RadioFieldHiddenUseCase3 />);
 

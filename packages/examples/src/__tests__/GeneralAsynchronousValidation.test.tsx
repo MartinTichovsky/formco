@@ -15,7 +15,6 @@ const surnameTestId = "surname";
 
 beforeEach(() => {
   jest.resetAllMocks();
-  console.info(expect.getState().testPath);
 });
 
 describe("GeneralAsynchronousValidation", () => {

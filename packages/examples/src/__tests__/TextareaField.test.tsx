@@ -13,10 +13,6 @@ const submitTestId = "submit";
 const textareaTestId = "textarea";
 const validTestId = "valid-text";
 
-beforeEach(() => {
-  console.info(expect.getState().testPath);
-});
-
 test("TextareaField", async () => {
   const { unmount } = render(<TextareaField />);
 

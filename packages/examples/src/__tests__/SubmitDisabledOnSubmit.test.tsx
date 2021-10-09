@@ -12,10 +12,6 @@ const submitBottomTestId = "submit-bottom";
 const submitTopTestId = "submit-top";
 const surnameTestId = "surname";
 
-beforeEach(() => {
-  console.info(expect.getState().testPath);
-});
-
 test("SubmitDisabledOnSubmit", async () => {
   const { container, unmount } = render(<SubmitDisabledOnSubmit />);
 

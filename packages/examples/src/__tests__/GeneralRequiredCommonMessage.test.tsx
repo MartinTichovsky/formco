@@ -29,10 +29,6 @@ const checkStarCount = (container: HTMLElement) => {
   expect(container.querySelectorAll(`.${CN.RequiredStar}`).length).toBe(5);
 };
 
-beforeEach(() => {
-  console.info(expect.getState().testPath);
-});
-
 test("GeneralRequiredCommonMessage", async () => {
   const { container, unmount } = render(<GeneralRequiredCommonMessage />);
 

@@ -16,10 +16,6 @@ const getTestedGivenNameText = (name: string) =>
   `Your given name is: ${name}`.trim();
 const getTesteSurnameText = (name: string) => `Your surname is: ${name}`.trim();
 
-beforeEach(() => {
-  console.info(expect.getState().testPath);
-});
-
 test("GeneralConditionDynamic", async () => {
   const { unmount } = render(<GeneralConditionDynamic />);
 

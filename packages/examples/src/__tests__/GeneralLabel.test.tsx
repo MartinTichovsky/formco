@@ -12,10 +12,6 @@ const submitTestId = "submit";
 const salutationTestId = "salutation";
 const surnameTestId = "surname";
 
-beforeEach(() => {
-  console.info(expect.getState().testPath);
-});
-
 test("GeneralLabel", async () => {
   const { container, unmount } = render(<GeneralLabel />);
 

@@ -12,10 +12,6 @@ const salutationTestId = "salutation";
 const submitTestId = "submit";
 const surnameTestId = "surname";
 
-beforeEach(() => {
-  console.info(expect.getState().testPath);
-});
-
 test("TextFieldHiddenUseCase2", async () => {
   const { container, unmount } = render(<TextFieldHiddenUseCase2 />);
 
