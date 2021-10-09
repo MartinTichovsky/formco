@@ -12,7 +12,7 @@
     "build": "lerna run build",
     "clean": "lerna run clean",
     "run:demo": "lerna run --scope demo start",
-    "test": "jest --collect-coverage",
+    "test": "jest --collect-coverage --colors --runInBand",
     "tsc": "lerna run tsc"
   },
   "devDependencies": {
