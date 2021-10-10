@@ -7,6 +7,7 @@ import {
   DefaultActiveRadioId,
   DefaultDisabledRadioId,
   DisableIf,
+  ExecutePromise,
   FieldAdditionalProperties,
   Fields,
   FieldTypes,
@@ -18,6 +19,7 @@ import {
   OnDisableAction,
   OnSubmit,
   OnValidation,
+  PromiseQueue,
   SetDefaultIsDisabled,
   SetDefaultIsInvalid,
   SetDefaultIsNotVisible,
@@ -28,9 +30,7 @@ import {
   Validation,
   ValidationContentResult,
   ValidationDependencies,
-  ValidationPromise,
   ValidationPromiseCounter,
-  ValidationPromiseResult,
   ValidationResult,
   Validator,
   ValidatorResultAction,
@@ -251,18 +251,19 @@ export class Controller<T extends FormFields<T>> {
     return true;
   }
 
-  private executePromise(
-    key: keyof T,
-    promise: ValidationPromise,
-    onSuccess?: (result: ValidationPromiseResult) => void
-  ) {
-    this._fields[key]!.validationInProgress = true;
-
-    const queueId = this.registerQueueId(key);
+  private executePromise({
+    key,
+    onSuccess,
+    promise,
+    queueId
+  }: ExecutePromise<keyof T>) {
+    if (queueId !== this.getQueueId(key)) {
+      return;
+    }
 
     promise()
       .then((result) => {
-        if (queueId !== this.getQueueId(key)) {
+        if (queueId !== this.getQueueId(key) || !result) {
           return;
         }
 
@@ -440,6 +441,26 @@ export class Controller<T extends FormFields<T>> {
 
     this._onChangeCounter--;
     this.afterAll();
+  }
+
+  private promiseQueue({
+    key,
+    onSuccess,
+    promise,
+    wait
+  }: PromiseQueue<keyof T>) {
+    this._fields[key]!.validationInProgress = true;
+
+    const queueId = this.registerQueueId(key);
+
+    if (wait) {
+      setTimeout(
+        () => this.executePromise({ key, onSuccess, promise, queueId }),
+        wait
+      );
+    } else {
+      this.executePromise({ key, onSuccess, promise, queueId });
+    }
   }
 
   public registerKey(key: keyof T, type: FieldTypes) {
@@ -1101,7 +1122,7 @@ export class Controller<T extends FormFields<T>> {
     }
   }
 
-  public validate() {
+  public validate(force?: boolean) {
     this.validatorListeners.forEach((validator, key) => {
       if (
         this._fields[key] === undefined ||
@@ -1111,11 +1132,15 @@ export class Controller<T extends FormFields<T>> {
         return;
       }
 
-      if (this._fields[key]!.isValidated && !this._fields[key]!.isValid) {
+      if (
+        !force &&
+        this._fields[key]!.isValidated &&
+        !this._fields[key]!.isValid
+      ) {
         this.validateActions(key, this._fields[key]!.validationContent, true);
       }
 
-      if (this._fields[key]!.isValidated) {
+      if (!force && this._fields[key]!.isValidated) {
         this.validateActions(key, this._fields[key]!.validationContent, true);
         return;
       }
@@ -1133,8 +1158,14 @@ export class Controller<T extends FormFields<T>> {
         isValid = false;
         validationContent = validationResult.content;
 
-        this.executePromise(key, validationResult.promise, (result) => {
-          this.validateActions(key, result.content, true);
+        this.promiseQueue({
+          key,
+          onSuccess: (result) => {
+            this.onChange(key);
+            this.validateActions(key, result.content, true);
+          },
+          promise: validationResult.promise,
+          wait: validationResult.wait
         });
       } else if (
         typeof validationResult === "object" &&
@@ -1197,14 +1228,20 @@ export class Controller<T extends FormFields<T>> {
       isValid = false;
       validationContent = validationResult.content;
 
-      this.executePromise(key, validationResult.promise, (result) => {
-        if (
-          !silent &&
-          !this._fields[key]!.isDisabled &&
-          this._fields[key]!.isVisible
-        ) {
-          this.validateActions(key, result.content);
-        }
+      this.promiseQueue({
+        key,
+        onSuccess: (result) => {
+          if (
+            !silent &&
+            !this._fields[key]!.isDisabled &&
+            this._fields[key]!.isVisible
+          ) {
+            this.onChange(key);
+            this.validateActions(key, result.content);
+          }
+        },
+        promise: validationResult.promise,
+        wait: validationResult.wait
       });
     } else if (
       typeof validationResult === "object" &&

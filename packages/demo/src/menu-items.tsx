@@ -47,6 +47,7 @@ import {
 } from "examples";
 import React from "react";
 import { ContentWithColoredInputs } from "./App.styles";
+import { Register } from "./featured/Register";
 import { Info } from "./Info";
 
 interface MenuIitem {
@@ -71,6 +72,12 @@ const menuItems: MenuItems = {
     {
       label: "Info",
       render: () => <Info />
+    }
+  ],
+  "Featured Examples": [
+    {
+      label: "Register",
+      render: () => <Register />
     }
   ],
   "Checkbox Fields": [

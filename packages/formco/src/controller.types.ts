@@ -49,6 +49,13 @@ export type DisableIf<T> = {
   [key in keyof T]?: (fields: Partial<T>) => boolean;
 };
 
+export interface ExecutePromise<T> {
+  key: T;
+  onSuccess?: (result: ValidationPromiseResult) => void;
+  promise: ValidationPromise;
+  queueId: number;
+}
+
 export interface FieldAdditionalProperties {
   initialValidation?: boolean;
   validateOnChange?: boolean;
@@ -130,6 +137,13 @@ export type OnValidationAction = (
   validationResult: ValidationContentResult
 ) => void;
 
+export interface PromiseQueue<T> {
+  key: T;
+  promise: ValidationPromise;
+  onSuccess?: (result: ValidationPromiseResult) => void;
+  wait?: number;
+}
+
 export interface SetDefaultIsDisabled<T> {
   id?: string;
   isValidated: boolean;
@@ -203,7 +217,9 @@ export type ValidationContentResult =
 
 export type ValidationDependencies<T> = { [key in keyof T]?: Set<keyof T> };
 
-export type ValidationPromise = () => Promise<ValidationPromiseResult>;
+export type ValidationPromise = () => Promise<
+  ValidationPromiseResult | undefined | null
+>;
 
 export type ValidationPromiseCounter<T> = { [key in keyof T]?: number };
 
@@ -221,6 +237,7 @@ export type ValidationResult =
   | {
       content: string | JSX.Element;
       promise: ValidationPromise;
+      wait?: number;
     };
 
 export interface Validator {
