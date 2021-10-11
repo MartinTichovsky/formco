@@ -482,8 +482,8 @@ describe("Field", () => {
         isValid: false,
         isValidated: true,
         isVisible: true,
-        validationInProgress: false,
         validationContent: undefined,
+        validationInProgress: false,
         value: undefined
       };
 

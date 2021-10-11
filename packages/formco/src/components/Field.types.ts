@@ -33,6 +33,7 @@ export interface FieldPrivateInputProps<T> extends FieldPrivateProps<T> {
 export interface FieldPrivateProps<T> {
   defaultValue: string;
   disabled: boolean;
+  onBlur: (event: React.ChangeEvent<T>) => void;
   onChange: (event: React.ChangeEvent<T>) => void;
 }
 
@@ -43,6 +44,7 @@ export interface FieldPublicProps<T extends FormFields<T>, K extends keyof T> {
   id?: string;
   initialValidation?: boolean;
   name: K;
+  validateOnBlur?: boolean;
   validateOnChange?: boolean;
 }
 
@@ -81,6 +83,7 @@ export interface FieldType<
     requiredInvalidMessage,
     requiredValidMessage,
     validation,
+    validateOnBlur,
     validateOnChange,
     validationDependencies,
     value,
@@ -201,18 +204,19 @@ type RestProps<T> = Omit<
   | "label"
   | "MessageComponent"
   | "name"
-  | "onChange"
   | "onFormChange"
   | "requiredComponent"
   | "requiredInvalidMessage"
   | "requiredValidMessage"
   | "validation"
+  | "validateOnBlur"
   | "validateOnChange"
   | "validationDependencies"
   | "value"
   // private props
   | "defaultValue"
   | "disabled"
+  | "onBlur"
   | "onChange"
   | "onKeyDown"
 >;

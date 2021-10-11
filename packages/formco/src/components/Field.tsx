@@ -57,6 +57,7 @@ export function Field<
     requiredInvalidMessage,
     requiredValidMessage,
     validation,
+    validateOnBlur,
     validateOnChange,
     validationDependencies,
     value,
@@ -199,9 +200,14 @@ export function Field<
         : value === undefined;
   }
 
-  if (initialValidation !== undefined || validateOnChange !== undefined) {
+  if (
+    initialValidation !== undefined ||
+    validateOnBlur !== undefined ||
+    validateOnChange !== undefined
+  ) {
     controller.setFieldProperties(name, {
       initialValidation,
+      validateOnBlur,
       validateOnChange
     });
   }

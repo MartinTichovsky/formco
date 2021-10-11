@@ -5,25 +5,22 @@ import { Template } from "./utils/Template";
 
 type MyForm = {
   givenName: string;
+  middleName: string;
   surname: string;
 };
 
-export const GeneralValidateOnChange = (
-  props: Partial<
-    React.ComponentProps<typeof FormController> & {
-      inputValidateOnChange: boolean;
-    }
-  >
-) => {
+export const TextFieldValidationTimeout = ({
+  ...props
+}: Partial<React.ComponentProps<typeof FormController>>) => {
   const store = new LogStore();
-  const { inputValidateOnChange, ...rest } = props;
 
   return (
     <Template store={store}>
       <FormController<MyForm>
-        validateOnChange
-        {...rest}
+        options={{ validationTimeout: 2000 }}
+        {...props}
         onSubmit={(fields) => console.log(fields)}
+        validateOnChange
       >
         {(controller) => (
           <>
@@ -33,7 +30,6 @@ export const GeneralValidateOnChange = (
                 data-testid="givenName"
                 name="givenName"
                 placeholder="Input a given name"
-                validateOnChange={inputValidateOnChange}
                 validation={(value) =>
                   !value?.trim() && "Provide a valid given name"
                 }
@@ -42,10 +38,9 @@ export const GeneralValidateOnChange = (
             <div className="field-row">
               <Input
                 controller={controller}
-                data-testid="surname"
-                name="surname"
-                placeholder="Input a surname"
-                validateOnChange={inputValidateOnChange}
+                data-testid="middleName"
+                name="middleName"
+                placeholder="Input a middle name"
                 validation={(value) =>
                   !value?.trim() && "Provide a valid surname"
                 }
@@ -53,8 +48,8 @@ export const GeneralValidateOnChange = (
             </div>
             <div className="field-row buttons">
               <Submit
-                data-testid="submit"
                 controller={controller}
+                data-testid="submit"
                 onSubmit={(fields, controller) =>
                   store.onSubmit(fields, controller)
                 }
@@ -72,9 +67,7 @@ export const GeneralValidateOnChange = (
                 Reset
               </button>
             </div>
-            <div className="info">
-              * Validate on change, input an empty string to test it
-            </div>
+            <div className="info">*</div>
           </>
         )}
       </FormController>

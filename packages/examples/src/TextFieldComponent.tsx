@@ -12,6 +12,7 @@ class ClassInputComponent extends React.Component<{
   defaultValue: string; // required
   disabled: boolean; // required
   labelText: string;
+  onBlur: (event: React.ChangeEvent<HTMLInputElement>) => void; // required
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void; // required
   onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void; // required
   placeholder: string;
@@ -21,6 +22,7 @@ class ClassInputComponent extends React.Component<{
       defaultValue,
       disabled,
       labelText,
+      onBlur,
       onChange,
       onKeyDown,
       placeholder,
@@ -37,6 +39,7 @@ class ClassInputComponent extends React.Component<{
           defaultValue={defaultValue}
           disabled={disabled}
           id="class-input"
+          onBlur={onBlur}
           onChange={onChange}
           onKeyDown={onKeyDown}
           placeholder={placeholder}

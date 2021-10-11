@@ -12,6 +12,7 @@ export const FormControllerComponent = <T extends FormFields<T>>({
   onSubmit,
   requiredInvalidMessage,
   requiredValidMessage,
+  validateOnBlur = false,
   validateOnChange = false,
   validation,
   ...rest
@@ -29,6 +30,7 @@ export const FormControllerComponent = <T extends FormFields<T>>({
         requiredInvalidMessage,
         requiredValidMessage,
         setController,
+        validateOnBlur,
         validateOnChange,
         validation
       });

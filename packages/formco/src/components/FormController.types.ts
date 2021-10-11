@@ -25,6 +25,7 @@ export type FormControllerProps<T extends FormFields<T>> =
     onSubmit?: OnSubmit<T>;
     requiredInvalidMessage?: string | JSX.Element;
     requiredValidMessage?: string | JSX.Element;
+    validateOnBlur?: boolean;
     validateOnChange?: boolean;
     validation?: {
       [key in keyof T]?: (

@@ -8,20 +8,19 @@ type MyForm = {
   surname: string;
 };
 
-export const GeneralValidateOnChange = (
+export const GeneralValidateOnBlur = (
   props: Partial<
     React.ComponentProps<typeof FormController> & {
-      inputValidateOnChange: boolean;
+      inputValidateOnBlur: boolean;
     }
   >
 ) => {
   const store = new LogStore();
-  const { inputValidateOnChange, ...rest } = props;
-
+  const { inputValidateOnBlur, ...rest } = props;
   return (
     <Template store={store}>
       <FormController<MyForm>
-        validateOnChange
+        validateOnBlur
         {...rest}
         onSubmit={(fields) => console.log(fields)}
       >
@@ -33,7 +32,7 @@ export const GeneralValidateOnChange = (
                 data-testid="givenName"
                 name="givenName"
                 placeholder="Input a given name"
-                validateOnChange={inputValidateOnChange}
+                validateOnBlur={inputValidateOnBlur}
                 validation={(value) =>
                   !value?.trim() && "Provide a valid given name"
                 }
@@ -45,7 +44,7 @@ export const GeneralValidateOnChange = (
                 data-testid="surname"
                 name="surname"
                 placeholder="Input a surname"
-                validateOnChange={inputValidateOnChange}
+                validateOnBlur={inputValidateOnBlur}
                 validation={(value) =>
                   !value?.trim() && "Provide a valid surname"
                 }
@@ -72,9 +71,7 @@ export const GeneralValidateOnChange = (
                 Reset
               </button>
             </div>
-            <div className="info">
-              * Validate on change, input an empty string to test it
-            </div>
+            <div className="info">*</div>
           </>
         )}
       </FormController>

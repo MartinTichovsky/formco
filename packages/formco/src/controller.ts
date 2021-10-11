@@ -30,7 +30,7 @@ import {
   Validation,
   ValidationContentResult,
   ValidationDependencies,
-  ValidationPromiseCounter,
+  ValidationQueue,
   ValidationResult,
   Validator,
   ValidatorResultAction,
@@ -62,9 +62,10 @@ export class Controller<T extends FormFields<T>> {
     React.SetStateAction<Controller<T> | undefined>
   >;
   private _scrolledToElement: boolean = false;
+  private _validateOnBlur;
   private _validateOnChange;
   private _validation?: Validation<T>;
-  private _validationPromiseCounter: ValidationPromiseCounter<T> = {};
+  private _validationQueue: ValidationQueue<T> = {};
 
   private isSelectedListeners = new Map<string, Action>();
   private keyIndex: number;
@@ -91,6 +92,7 @@ export class Controller<T extends FormFields<T>> {
     requiredInvalidMessage,
     requiredValidMessage,
     setController,
+    validateOnBlur = false,
     validateOnChange = false,
     validation
   }: ControllerProps<T>) {
@@ -107,6 +109,7 @@ export class Controller<T extends FormFields<T>> {
     this._initialValidation = initialValidation;
     this._setController = setController;
     this._validation = validation;
+    this._validateOnBlur = validateOnBlur;
     this._validateOnChange = validateOnChange;
 
     this.options = options;
@@ -261,6 +264,8 @@ export class Controller<T extends FormFields<T>> {
       return;
     }
 
+    this._fields[key]!.validationInProgress = true;
+
     promise()
       .then((result) => {
         if (queueId !== this.getQueueId(key) || !result) {
@@ -347,9 +352,7 @@ export class Controller<T extends FormFields<T>> {
   }
 
   private getQueueId(key: keyof T) {
-    return key in this._validationPromiseCounter
-      ? this._validationPromiseCounter[key]
-      : 0;
+    return key in this._validationQueue ? this._validationQueue[key] : 0;
   }
 
   public getValidationCondition(key: keyof T) {
@@ -449,8 +452,6 @@ export class Controller<T extends FormFields<T>> {
     promise,
     wait
   }: PromiseQueue<keyof T>) {
-    this._fields[key]!.validationInProgress = true;
-
     const queueId = this.registerQueueId(key);
 
     if (wait) {
@@ -504,11 +505,11 @@ export class Controller<T extends FormFields<T>> {
   }
 
   private registerQueueId(key: keyof T) {
-    if (!(key in this._validationPromiseCounter)) {
-      this._validationPromiseCounter[key] = 0;
+    if (!(key in this._validationQueue)) {
+      this._validationQueue[key] = 0;
     }
 
-    return ++this._validationPromiseCounter[key]!;
+    return ++this._validationQueue[key]!;
   }
 
   public registerValidationDependencies(
@@ -538,6 +539,7 @@ export class Controller<T extends FormFields<T>> {
         requiredInvalidMessage: this.requiredInvalidMessage,
         requiredValidMessage: this.requiredValidMessage,
         setController: this._setController,
+        validateOnBlur: this._validateOnBlur,
         validateOnChange: this._validateOnChange,
         validation: this._validation
       })
@@ -773,11 +775,17 @@ export class Controller<T extends FormFields<T>> {
     }
 
     if (isValid !== undefined) {
-      this.validateActions(key, this._fields[key]?.validationContent);
-      this.validateAllDependencies(key, silent);
-      this.validationListeners(key);
-      this.onChange(key);
-      this.validationListeners(key);
+      this.validateQueue({
+        action: () => {
+          this.validateActions(key, this._fields[key]?.validationContent);
+          this.validateAllDependencies(key, silent);
+          this.validationListeners(key);
+          this.onChange(key);
+          this.validationListeners(key);
+        },
+        key,
+        silent
+      });
       return;
     }
 
@@ -786,15 +794,25 @@ export class Controller<T extends FormFields<T>> {
       !this._fields[key]!.isDisabled &&
       this._fields[key]!.isVisible
     ) {
-      this.validateAll(key, silent);
-      this.validateAllDependencies(key, silent);
+      this.validateQueue({
+        action: () => {
+          this.validateAll(key, silent);
+          this.validateAllDependencies(key, silent);
+          this.onChange(key);
+          this.validationListeners(key);
+        },
+        key,
+        silent
+      });
     } else if (!this._fields[key]!.isDisabled && this._fields[key]!.isVisible) {
       this.validateAll(key, true);
       this.validateAllDependencies(key, true);
+      this.onChange(key);
+      this.validationListeners(key);
+    } else {
+      this.onChange(key);
+      this.validationListeners(key);
     }
-
-    this.onChange(key);
-    this.validationListeners(key);
   }
 
   private setInitialValues(initialValues: Partial<T>) {
@@ -805,8 +823,8 @@ export class Controller<T extends FormFields<T>> {
         isValid: true,
         isValidated: false,
         isVisible: true,
-        validationInProgress: false,
         validationContent: undefined,
+        validationInProgress: false,
         value: initialValues[key]
       };
     }
@@ -1208,7 +1226,7 @@ export class Controller<T extends FormFields<T>> {
     validator?.action?.(validationContent, submitAction);
   }
 
-  public validateAll(key: keyof T, silent?: boolean) {
+  public validateAll(key: keyof T, silent?: boolean, blurAction?: boolean) {
     const validator = this.validatorListeners.get(key);
 
     if (!validator) {
@@ -1218,6 +1236,7 @@ export class Controller<T extends FormFields<T>> {
     const validationResult = validator.validation();
 
     let isValid: boolean;
+    let isValidated = true;
     let validationContent: ValidationContentResult;
 
     if (
@@ -1226,6 +1245,7 @@ export class Controller<T extends FormFields<T>> {
       "promise" in validationResult
     ) {
       isValid = false;
+      isValidated = false;
       validationContent = validationResult.content;
 
       this.promiseQueue({
@@ -1241,7 +1261,7 @@ export class Controller<T extends FormFields<T>> {
           }
         },
         promise: validationResult.promise,
-        wait: validationResult.wait
+        wait: blurAction ? undefined : validationResult.wait
       });
     } else if (
       typeof validationResult === "object" &&
@@ -1259,7 +1279,7 @@ export class Controller<T extends FormFields<T>> {
       ...this._fields[key],
       validationContent,
       isValid,
-      isValidated: true
+      isValidated
     };
 
     if (
@@ -1276,6 +1296,69 @@ export class Controller<T extends FormFields<T>> {
 
     for (let _key of dependencies) {
       this.validateAll(_key, silent);
+    }
+  }
+
+  public validateOnBlur(key: keyof T) {
+    if (!(key in this._fields)) {
+      return;
+    }
+
+    if (
+      !this._fields[key]!.isValidated &&
+      !this._fields[key]!.validationInProgress
+    ) {
+      this.registerQueueId(key);
+      this.validateAll(
+        key,
+        !(
+          this._validateOnBlur ||
+          this._fields[key]!.validateOnBlur ||
+          this.canFieldBeValidated(key)
+        ),
+        true
+      );
+    } else if (
+      this._fields[key]!.isValidated &&
+      (this._validateOnBlur || this._fields[key]!.validateOnBlur)
+    ) {
+      this.onChange(key);
+      this.validateActions(key, this._fields[key]!.validationContent);
+    }
+  }
+
+  private validateQueue({
+    action,
+    key,
+    queueId,
+    silent
+  }: {
+    action: () => void;
+    key: keyof T;
+    queueId?: number;
+    silent?: boolean;
+  }) {
+    if (silent) {
+      action();
+      return;
+    }
+
+    if (!queueId && this.options?.validationTimeout) {
+      this.validateActions(key, undefined);
+      queueId = this.registerQueueId(key);
+
+      setTimeout(
+        () =>
+          this.validateQueue({
+            action,
+            key,
+            queueId,
+            silent
+          }),
+        this.options?.validationTimeout
+      );
+    } else if (!queueId || queueId === this.getQueueId(key)) {
+      action();
     }
   }
 

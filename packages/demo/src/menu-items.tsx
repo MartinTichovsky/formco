@@ -13,6 +13,7 @@ import {
   GeneralRequired,
   GeneralRequiredCommonMessage,
   GeneralScrollToError,
+  GeneralValidateOnBlur,
   GeneralValidateOnChange,
   GeneralValidationUseCase1,
   GeneralValidationUseCase2,
@@ -43,7 +44,8 @@ import {
   TextFieldHiddenUseCase1,
   TextFieldHiddenUseCase2,
   TextFieldMessageComponent,
-  TextFieldValidationDependencies
+  TextFieldValidationDependencies,
+  TextFieldValidationTimeout
 } from "examples";
 import React from "react";
 import { ContentWithColoredInputs } from "./App.styles";
@@ -214,6 +216,10 @@ const menuItems: MenuItems = {
     {
       label: "Validation Dependencies",
       render: () => <TextFieldValidationDependencies />
+    },
+    {
+      label: "Validation Timeout",
+      render: () => <TextFieldValidationTimeout />
     }
   ],
   "Textarea Fields": [
@@ -270,6 +276,10 @@ const menuItems: MenuItems = {
     {
       label: "Scroll to error",
       render: () => <GeneralScrollToError />
+    },
+    {
+      label: "Validate on Blur",
+      render: () => <GeneralValidateOnBlur />
     },
     {
       label: "Validate on Change",
