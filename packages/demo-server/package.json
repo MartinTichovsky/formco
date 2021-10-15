@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
-    "clean": "rimraf lib build",
+    "clean": "rimraf tsconfig*.tsbuildinfo lib",
     "start": "nodemon",
     "tsc": "tsc --noEmit"
   },

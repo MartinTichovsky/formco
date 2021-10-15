@@ -13,7 +13,6 @@
   },
   "author": "Martin Tichovsky",
   "license": "MIT",
-  "private": false,
   "sideEffects": false,
   "files": [
     "lib"

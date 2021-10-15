@@ -3,7 +3,7 @@
   "version": "0.4.0",
   "private": true,
   "scripts": {
-    "build": "yarn clean && webpack --mode=production",
+    "build": "webpack --mode=production",
     "clean": "rimraf lib build",
     "start": "webpack serve --mode=development"
   },
