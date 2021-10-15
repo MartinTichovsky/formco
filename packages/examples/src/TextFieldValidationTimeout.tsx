@@ -38,9 +38,9 @@ export const TextFieldValidationTimeout = ({
             <div className="field-row">
               <Input
                 controller={controller}
-                data-testid="middleName"
-                name="middleName"
-                placeholder="Input a middle name"
+                data-testid="surname"
+                name="surname"
+                placeholder="Input a surname"
                 validation={(value) =>
                   !value?.trim() && "Provide a valid surname"
                 }

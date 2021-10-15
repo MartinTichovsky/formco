@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import { TextFieldValidationTimeout } from "../TextFieldValidationTimeout";
@@ -11,6 +11,7 @@ console.log = jest.fn();
 const givenNameTestId = "givenName";
 const resetTestId = "reset";
 const submitTestId = "submit";
+const surnameTestId = "surname";
 
 test("TextFieldValidationTimeout", async () => {
   const { container } = render(<TextFieldValidationTimeout />);
@@ -60,4 +61,27 @@ test("TextFieldValidationTimeout", async () => {
 
   // one error should not be shown immediately when onBlur event
   testInvalidMessage(container, 1);
+
+  fireEvent.change(screen.getByTestId(givenNameTestId), {
+    target: { value: "James" }
+  });
+
+  fireEvent.change(screen.getByTestId(surnameTestId), {
+    target: { value: "Bond" }
+  });
+
+  // errors should not be shown
+  testInvalidMessage(container, 0);
+
+  // submit valid form
+  await waitFor(async () => {
+    fireEvent.click(screen.getByTestId(submitTestId));
+  });
+
+  // check the onSubmit action
+  expect(console.log).toBeCalledTimes(1);
+  expect(console.log).lastCalledWith({
+    givenName: "James",
+    surname: "Bond"
+  });
 });

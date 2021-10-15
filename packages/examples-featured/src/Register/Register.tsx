@@ -3,28 +3,23 @@ import { FormController, Input, Submit } from "formco";
 import debounce from "lodash.debounce";
 import { ValidationPromiseResult } from "packages/formco/src/controller.types";
 import React from "react";
+import { emailRegex } from "../utils/utils";
 import { emailFetch, usernameFetch } from "./Register.api";
 import { Colored } from "./Register.styles";
 import { SubmitComponent } from "./Register.submit";
 import { RegisterForm } from "./Register.types";
 
-var validRegex =
-  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
 export const Register = () => {
-  const emailFetchController = React.useRef<AbortController | undefined>(
-    undefined
-  );
-
-  const usernameFetchController = React.useRef<AbortController | undefined>(
-    undefined
-  );
-
-  const debouncedUEmailFetch = React.useCallback(debounce(emailFetch, 500), []);
-
+  const debouncedEmailFetch = React.useCallback(debounce(emailFetch, 500), []);
   const debouncedUsernameFetch = React.useCallback(
     debounce(usernameFetch, 500),
     []
+  );
+  const emailFetchController = React.useRef<AbortController | undefined>(
+    undefined
+  );
+  const usernameFetchController = React.useRef<AbortController | undefined>(
+    undefined
   );
 
   return (
@@ -34,6 +29,7 @@ export const Register = () => {
           <div className="field-row">
             <Input
               controller={controller}
+              data-testid="username"
               name="username"
               placeholder="Username"
               required
@@ -51,7 +47,12 @@ export const Register = () => {
                       wait: 1500
                     }
                   : {
-                      content: <CircularProgress size={16} />,
+                      content: (
+                        <CircularProgress
+                          data-testid="username-loading"
+                          size={16}
+                        />
+                      ),
                       promise: () =>
                         new Promise<ValidationPromiseResult>((resolve) => {
                           if (usernameFetchController.current) {
@@ -79,7 +80,7 @@ export const Register = () => {
               validation={(value) => {
                 value = (value || "").trim();
 
-                return !value.match(validRegex)
+                return !value.match(emailRegex)
                   ? {
                       content: "",
                       promise: async () => ({
@@ -96,7 +97,7 @@ export const Register = () => {
                             emailFetchController.current.abort();
                           }
 
-                          debouncedUEmailFetch(
+                          debouncedEmailFetch(
                             emailFetchController,
                             value!,
                             resolve

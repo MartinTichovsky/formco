@@ -4,9 +4,9 @@ import React from "react";
 import { validColor } from "./Register.styles";
 
 const apiBaseUrl = "http://localhost:3000";
-const emailApiUrl = `${apiBaseUrl}/email`;
-const registerApiUrl = `${apiBaseUrl}/register`;
-const usernameApiUrl = `${apiBaseUrl}/username`;
+export const emailApiUrl = `${apiBaseUrl}/email`;
+export const registerApiUrl = `${apiBaseUrl}/register`;
+export const usernameApiUrl = `${apiBaseUrl}/username`;
 
 const getFetchInit = (body: Record<string, string>, signal?: AbortSignal) => ({
   body: JSON.stringify(body),
@@ -72,9 +72,12 @@ export const usernameFetch = async (
 
   resolve({
     content: isValid ? (
-      <CheckIcon sx={{ color: validColor, fontSize: 16 }} />
+      <CheckIcon
+        data-testid="username-valid"
+        sx={{ color: validColor, fontSize: 16 }}
+      />
     ) : (
-      "This username is taken"
+      <span data-testid="username-invalid">This username is taken</span>
     ),
     isValid
   });
