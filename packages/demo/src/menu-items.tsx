@@ -47,9 +47,9 @@ import {
   TextFieldValidationDependencies,
   TextFieldValidationTimeout
 } from "examples";
+import { Register } from "examples-featured";
 import React from "react";
 import { ContentWithColoredInputs } from "./App.styles";
-import { Register } from "./featured/Register";
 import { Info } from "./Info";
 
 interface MenuIitem {

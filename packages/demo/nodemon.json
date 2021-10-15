@@ -1,7 +1,0 @@
-{
-  "watch": [
-    "server.ts"
-  ],
-  "ext": "ts",
-  "exec": "ts-node --skip-project ./server.ts"
-}
