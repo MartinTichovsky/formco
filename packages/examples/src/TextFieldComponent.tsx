@@ -1,5 +1,6 @@
 import { FormController, Input, Submit } from "formco";
 import React from "react";
+import { RefObject } from "react-is/node_modules/@types/react";
 import { LogStore } from "./utils/store";
 import { Template } from "./utils/Template";
 
@@ -8,19 +9,40 @@ type MyForm = {
   surname: string;
 };
 
-class ClassInputComponent extends React.Component<{
+interface ClassComponentProps {
+  defaultValue: string; // required
+  disabled: boolean; // required
+  labelText: string;
+  onBlur: (event: React.ChangeEvent<HTMLInputElement>) => void; // required
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void; // required
+  onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void; // required
+  placeholder: string;
+  ref: React.RefObject<HTMLInputElement>;
+}
+
+interface FunctionalComponentProps {
   defaultValue: string; // required
   disabled: boolean; // required
   labelText: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void; // required
   onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void; // required
   placeholder: string;
-}> {
+}
+
+class ClassInputComponent extends React.Component<ClassComponentProps> {
+  ref: RefObject<HTMLInputElement>;
+
+  constructor(props: ClassComponentProps) {
+    super(props);
+    this.ref = React.createRef();
+  }
+
   render() {
     const {
       defaultValue,
       disabled,
       labelText,
+      onBlur,
       onChange,
       onKeyDown,
       placeholder,
@@ -37,48 +59,52 @@ class ClassInputComponent extends React.Component<{
           defaultValue={defaultValue}
           disabled={disabled}
           id="class-input"
+          onBlur={onBlur}
           onChange={onChange}
           onKeyDown={onKeyDown}
           placeholder={placeholder}
+          ref={this.ref}
         />
       </>
     );
   }
 }
 
-const FunctionalInputComponent = ({
-  defaultValue,
-  disabled,
-  labelText,
-  onChange,
-  onKeyDown,
-  placeholder,
-  ...rest
-}: {
-  defaultValue: string; // required
-  disabled: boolean; // required
-  labelText: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void; // required
-  onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void; // required
-  placeholder: string;
-}) => {
-  return (
-    <>
-      <label htmlFor="functional-input" style={{ marginRight: 10 }}>
-        {labelText}
-      </label>
-      <input
-        {...rest}
-        defaultValue={defaultValue}
-        disabled={disabled}
-        id="functional-input"
-        onChange={onChange}
-        onKeyDown={onKeyDown}
-        placeholder={placeholder}
-      />
-    </>
-  );
-};
+const FunctionalInputComponent = React.forwardRef<
+  HTMLInputElement,
+  FunctionalComponentProps
+>(
+  (
+    {
+      defaultValue,
+      disabled,
+      labelText,
+      onChange,
+      onKeyDown,
+      placeholder,
+      ...rest
+    },
+    ref
+  ) => {
+    return (
+      <>
+        <label htmlFor="functional-input" style={{ marginRight: 10 }}>
+          {labelText}
+        </label>
+        <input
+          {...rest}
+          defaultValue={defaultValue}
+          disabled={disabled}
+          id="functional-input"
+          onChange={onChange}
+          onKeyDown={onKeyDown}
+          placeholder={placeholder}
+          ref={ref}
+        />
+      </>
+    );
+  }
+);
 
 export const TextFieldComponent = (
   props: Partial<React.ComponentProps<typeof FormController>>

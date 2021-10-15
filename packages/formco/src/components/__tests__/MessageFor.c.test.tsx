@@ -22,8 +22,8 @@ beforeEach(() => {
     isValid: true,
     isValidated: true,
     isVisible: true,
-    validationInProgress: false,
     validationContent: undefined,
+    validationInProgress: false,
     value: undefined
   };
 });

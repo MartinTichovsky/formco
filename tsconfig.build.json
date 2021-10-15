@@ -19,6 +19,7 @@
     "paths": {
       "demo": ["packages/demo/src"],
       "examples": ["packages/examples/src"],
+      "examples-featured": ["packages/examples-featured/src"],
       "formco": ["packages/formco/src"]
     }
   },

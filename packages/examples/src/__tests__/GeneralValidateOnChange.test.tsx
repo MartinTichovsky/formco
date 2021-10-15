@@ -11,8 +11,12 @@ const resetTestId = "reset";
 const submitTestId = "submit";
 const surnameTestId = "surname";
 
-test("GeneralValidateOnChange", async () => {
-  const { container } = render(<GeneralValidateOnChange />);
+const testSuite = async (container: HTMLElement) => {
+  // errors should not be shown
+  testInvalidMessage(container, 0);
+
+  // blur on the input
+  fireEvent.blur(screen.getByTestId(givenNameTestId));
 
   // errors should not be shown
   testInvalidMessage(container, 0);
@@ -21,6 +25,12 @@ test("GeneralValidateOnChange", async () => {
   fireEvent.change(screen.getByTestId(givenNameTestId), {
     target: { value: " " }
   });
+
+  // one error should be shown
+  testInvalidMessage(container, 1);
+
+  // blur on the input
+  fireEvent.blur(screen.getByTestId(surnameTestId));
 
   // one error should be shown
   testInvalidMessage(container, 1);
@@ -59,4 +69,27 @@ test("GeneralValidateOnChange", async () => {
   expect(console.log).lastCalledWith({ givenName: "James", surname: "Bond" });
 
   fireEvent.click(screen.getByTestId(resetTestId));
+};
+
+beforeEach(() => {
+  jest.resetAllMocks();
+});
+
+describe("GeneralValidateOnChange", () => {
+  test("Field", async () => {
+    const { container } = render(
+      <GeneralValidateOnChange
+        inputValidateOnChange={true}
+        validateOnChange={false}
+      />
+    );
+
+    await testSuite(container);
+  });
+
+  test("FormController", async () => {
+    const { container } = render(<GeneralValidateOnChange />);
+
+    await testSuite(container);
+  });
 });

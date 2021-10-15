@@ -13,6 +13,7 @@ import {
   GeneralRequired,
   GeneralRequiredCommonMessage,
   GeneralScrollToError,
+  GeneralValidateOnBlur,
   GeneralValidateOnChange,
   GeneralValidationUseCase1,
   GeneralValidationUseCase2,
@@ -43,8 +44,10 @@ import {
   TextFieldHiddenUseCase1,
   TextFieldHiddenUseCase2,
   TextFieldMessageComponent,
-  TextFieldValidationDependencies
+  TextFieldValidationDependencies,
+  TextFieldValidationTimeout
 } from "examples";
+import { Register } from "examples-featured";
 import React from "react";
 import { ContentWithColoredInputs } from "./App.styles";
 import { Info } from "./Info";
@@ -71,6 +74,12 @@ const menuItems: MenuItems = {
     {
       label: "Info",
       render: () => <Info />
+    }
+  ],
+  "Featured Examples": [
+    {
+      label: "Register",
+      render: () => <Register />
     }
   ],
   "Checkbox Fields": [
@@ -207,6 +216,10 @@ const menuItems: MenuItems = {
     {
       label: "Validation Dependencies",
       render: () => <TextFieldValidationDependencies />
+    },
+    {
+      label: "Validation Timeout",
+      render: () => <TextFieldValidationTimeout />
     }
   ],
   "Textarea Fields": [
@@ -263,6 +276,10 @@ const menuItems: MenuItems = {
     {
       label: "Scroll to error",
       render: () => <GeneralScrollToError />
+    },
+    {
+      label: "Validate on Blur",
+      render: () => <GeneralValidateOnBlur />
     },
     {
       label: "Validate on Change",

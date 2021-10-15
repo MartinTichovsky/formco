@@ -40,6 +40,7 @@ export function FieldComponent<
   requiredInvalidMessage,
   requiredValidMessage,
   validation,
+  validateOnBlur,
   validateOnChange,
   validationDependencies,
   value,
@@ -66,6 +67,9 @@ export function FieldComponent<
   const ref = React.useRef<HTMLSelectElement | HTMLInputElement>();
   const defaultValue = React.useRef(controller.getFieldValue(name) || "");
   const key = React.useRef(0);
+  const onBlur = React.useRef<
+    React.FocusEventHandler<HTMLInputElement> | undefined
+  >(undefined);
 
   React.useEffect(
     () => {
@@ -106,6 +110,12 @@ export function FieldComponent<
     }, // eslint-disable-next-line react-hooks/exhaustive-deps
     [controller, refState]
   );
+
+  if (validation && !onBlur.current) {
+    onBlur.current = () => {
+      controller.validateOnBlur(name);
+    };
+  }
 
   if (validation) {
     React.useEffect(
@@ -369,6 +379,7 @@ export function FieldComponent<
             {...restProps}
             {...props}
             controller={controller}
+            onBlur={onBlur.current}
             ref={ref}
           >
             <SelectProvider
@@ -380,7 +391,7 @@ export function FieldComponent<
             </SelectProvider>
           </Component>
         ) : (
-          <select {...restProps} {...props} ref={ref}>
+          <select {...restProps} {...props} onBlur={onBlur.current} ref={ref}>
             <SelectProvider
               id={rest.id}
               name={name as string}
@@ -395,22 +406,15 @@ export function FieldComponent<
           {...restProps}
           {...props}
           controller={controller}
-          {...(controller.scrollToError ? { ref } : {})}
+          onBlur={onBlur.current}
+          ref={ref}
         >
           {children}
         </Component>
       ) : fieldType === "textarea" ? (
-        <textarea
-          {...restProps}
-          {...props}
-          {...(controller.scrollToError ? { ref } : {})}
-        />
+        <textarea {...restProps} {...props} onBlur={onBlur.current} ref={ref} />
       ) : (
-        <input
-          {...restProps}
-          {...props}
-          {...(controller.scrollToError ? { ref } : {})}
-        />
+        <input {...restProps} {...props} onBlur={onBlur.current} ref={ref} />
       ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [Component, fieldType]

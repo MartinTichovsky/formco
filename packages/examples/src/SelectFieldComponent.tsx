@@ -12,10 +12,12 @@ class ClassSelectComponent extends React.Component<{
   defaultValue: string; // required
   disabled: boolean; // required
   labelText: string;
+  onBlur: (event: React.ChangeEvent<HTMLSelectElement>) => void; // required
   onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void; // required
 }> {
   render() {
-    const { defaultValue, disabled, labelText, onChange, ...rest } = this.props;
+    const { defaultValue, disabled, labelText, onBlur, onChange, ...rest } =
+      this.props;
 
     return (
       <span>
@@ -27,6 +29,7 @@ class ClassSelectComponent extends React.Component<{
           defaultValue={defaultValue}
           disabled={disabled}
           id="class-select"
+          onBlur={onBlur}
           onChange={onChange}
         >
           {this.props.children}

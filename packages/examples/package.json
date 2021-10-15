@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "yarn clean && tsc --project tsconfig.build.json",
+    "build": "tsc --project tsconfig.build.json",
     "clean": "rimraf tsconfig*.tsbuildinfo lib",
     "postinstall": "node ../../scripts/create-symlinks.js",
     "test": "jest --colors --verbose",
@@ -25,7 +25,7 @@
     "@types/react-dom": "17.0.9",
     "formco": "^0.4.0",
     "jest": "27.2.5",
-    "jest-collector": "1.0.0",
+    "jest-collector": "1.0.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "rimraf": "3.0.2",

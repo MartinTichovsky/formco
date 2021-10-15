@@ -12,6 +12,7 @@ export type AfterAll<T> = {
 export interface ControllerOptions {
   scrollToError?: boolean;
   trimValues?: boolean;
+  validationTimeout?: number;
 }
 
 export interface ControllerProps<T extends FormFields<T>> {
@@ -30,6 +31,7 @@ export interface ControllerProps<T extends FormFields<T>> {
   setController: React.Dispatch<
     React.SetStateAction<Controller<T> | undefined>
   >;
+  validateOnBlur?: boolean;
   validateOnChange?: boolean;
   validation?:
     | {
@@ -49,8 +51,16 @@ export type DisableIf<T> = {
   [key in keyof T]?: (fields: Partial<T>) => boolean;
 };
 
+export interface ExecutePromise<T> {
+  key: T;
+  onSuccess?: (result: ValidationPromiseResult) => void;
+  promise: ValidationPromise;
+  queueId: number;
+}
+
 export interface FieldAdditionalProperties {
   initialValidation?: boolean;
+  validateOnBlur?: boolean;
   validateOnChange?: boolean;
 }
 
@@ -68,8 +78,8 @@ export interface Field extends FieldAdditionalProperties {
       isVisible: boolean;
     }
   >;
-  validationInProgress: boolean;
   validationContent: ValidationContentResult;
+  validationInProgress: boolean;
   value: Value;
 }
 
@@ -129,6 +139,13 @@ export type OnValidationAction = (
   fieldIsValid: boolean,
   validationResult: ValidationContentResult
 ) => void;
+
+export interface PromiseQueue<T> {
+  key: T;
+  onSuccess?: (result: ValidationPromiseResult) => void;
+  promise: ValidationPromise;
+  wait?: number;
+}
 
 export interface SetDefaultIsDisabled<T> {
   id?: string;
@@ -203,9 +220,11 @@ export type ValidationContentResult =
 
 export type ValidationDependencies<T> = { [key in keyof T]?: Set<keyof T> };
 
-export type ValidationPromise = () => Promise<ValidationPromiseResult>;
+export type ValidationPromise = () => Promise<
+  ValidationPromiseResult | undefined | null
+>;
 
-export type ValidationPromiseCounter<T> = { [key in keyof T]?: number };
+export type ValidationQueue<T> = { [key in keyof T]?: number };
 
 export interface ValidationPromiseResult {
   isValid: boolean;
@@ -221,6 +240,7 @@ export type ValidationResult =
   | {
       content: string | JSX.Element;
       promise: ValidationPromise;
+      wait?: number;
     };
 
 export interface Validator {

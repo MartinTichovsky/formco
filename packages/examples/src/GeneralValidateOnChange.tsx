@@ -9,15 +9,20 @@ type MyForm = {
 };
 
 export const GeneralValidateOnChange = (
-  props: Partial<React.ComponentProps<typeof FormController>>
+  props: Partial<
+    React.ComponentProps<typeof FormController> & {
+      inputValidateOnChange: boolean;
+    }
+  >
 ) => {
   const store = new LogStore();
+  const { inputValidateOnChange, ...rest } = props;
 
   return (
     <Template store={store}>
       <FormController<MyForm>
         validateOnChange
-        {...props}
+        {...rest}
         onSubmit={(fields) => console.log(fields)}
       >
         {(controller) => (
@@ -28,6 +33,7 @@ export const GeneralValidateOnChange = (
                 data-testid="givenName"
                 name="givenName"
                 placeholder="Input a given name"
+                validateOnChange={inputValidateOnChange}
                 validation={(value) =>
                   !value?.trim() && "Provide a valid given name"
                 }
@@ -39,6 +45,7 @@ export const GeneralValidateOnChange = (
                 data-testid="surname"
                 name="surname"
                 placeholder="Input a surname"
+                validateOnChange={inputValidateOnChange}
                 validation={(value) =>
                   !value?.trim() && "Provide a valid surname"
                 }
