@@ -1,8 +1,8 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
-import { TextFieldHiddenUseCase1 } from "../TextFieldHiddenUseCase1";
-import { testInvalidMessage } from "../utils/selectors";
+import { TextFieldHiddenUseCase1 } from "../components/TextFieldHiddenUseCase1";
+import { testInvalidMessage } from "./utils/selectors";
 
 console.log = jest.fn();
 

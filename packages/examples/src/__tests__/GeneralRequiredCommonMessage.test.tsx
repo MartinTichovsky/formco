@@ -2,8 +2,8 @@ import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { CN } from "formco";
 import React from "react";
-import { GeneralRequiredCommonMessage } from "../GeneralRequiredCommonMessage";
-import { testInvalidMessage } from "../utils/selectors";
+import { GeneralRequiredCommonMessage } from "../components/GeneralRequiredCommonMessage";
+import { testInvalidMessage } from "./utils/selectors";
 
 console.log = jest.fn();
 

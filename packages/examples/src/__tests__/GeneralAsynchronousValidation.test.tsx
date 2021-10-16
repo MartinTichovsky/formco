@@ -1,9 +1,9 @@
 import "@testing-library/jest-dom";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
-import { GeneralAsynchronousValidation } from "../GeneralAsynchronousValidation";
-import { testInvalidMessage, testValidMessage } from "../utils/selectors";
+import { GeneralAsynchronousValidation } from "../components/GeneralAsynchronousValidation";
 import { wait } from "../utils/utils";
+import { testInvalidMessage, testValidMessage } from "./utils/selectors";
 
 console.log = jest.fn();
 

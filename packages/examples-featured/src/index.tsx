@@ -1,1 +1,1 @@
-export { Register } from "./Register/Register";
+export { Register } from "./components/Register/Register";

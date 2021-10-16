@@ -1,10 +1,20 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor
+} from "@testing-library/react";
 import React from "react";
-import { act } from "react-dom/test-utils";
-import { Register } from "../Register/Register";
-import { testInvalidMessage } from "../utils/selectors";
+import { Register } from "../components/Register/Register";
 import { wait } from "../utils/utils";
+import { testInvalidMessage, testValidMessage } from "./utils/selectors";
 
+const emailTestId = "email";
+const messageTestId = "message";
+const pendingTestId = "pending";
+const submitTestId = "submit";
 const usernameInvalidTestId = "username-invalid";
 const usernameTestId = "username";
 const usernameLoadingTestId = "username-loading";
@@ -67,6 +77,53 @@ describe("Register", () => {
 
     // the fetch should be still called once
     expect(fetch).toBeCalledTimes(1);
+  });
+
+  test("Complete form", async () => {
+    const { container } = render(<Register />);
+
+    // mock the fetch response
+    mockResponse({ isValid: true });
+
+    // input a name
+    fireEvent.change(screen.getByTestId(usernameTestId), {
+      target: { value: "James" }
+    });
+
+    // input a name
+    fireEvent.change(screen.getByTestId(emailTestId), {
+      target: { value: "james.bond@gmail.com" }
+    });
+
+    // submit button should be disabled
+    expect(screen.getByTestId(submitTestId)).toBeDisabled();
+
+    await act(async () => {
+      await wait(500);
+    });
+
+    // no error should be shown
+    testInvalidMessage(container, 0);
+
+    // two valid messages should be visible
+    testValidMessage(container, 2);
+
+    // submit button should not be disabled
+    expect(screen.getByTestId(submitTestId)).not.toBeDisabled();
+
+    mockResponse({ ok: true }, 1000);
+
+    await waitFor(async () => {
+      fireEvent.click(screen.getByTestId(submitTestId));
+    });
+
+    expect(screen.getByTestId(pendingTestId)).toBeTruthy();
+
+    await act(async () => {
+      await wait(1500);
+    });
+
+    expect(screen.getByTestId(messageTestId)).toBeTruthy();
   });
 
   test("Fetch", async () => {

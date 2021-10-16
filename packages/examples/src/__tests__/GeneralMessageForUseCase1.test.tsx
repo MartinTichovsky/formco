@@ -5,8 +5,8 @@ import {
   GeneralMessageForUseCase1,
   givenNameErrorText,
   surnameErrorText
-} from "../GeneralMessageForUseCase1";
-import { testInvalidMessage } from "../utils/selectors";
+} from "../components/GeneralMessageForUseCase1";
+import { testInvalidMessage } from "./utils/selectors";
 
 console.log = jest.fn();
 

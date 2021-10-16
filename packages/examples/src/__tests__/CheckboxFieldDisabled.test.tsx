@@ -1,8 +1,8 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
-import { CheckboxFieldDisabled } from "../CheckboxFieldDisabled";
-import { testInvalidMessage } from "../utils/selectors";
+import { CheckboxFieldDisabled } from "../components/CheckboxFieldDisabled";
+import { testInvalidMessage } from "./utils/selectors";
 
 console.log = jest.fn();
 

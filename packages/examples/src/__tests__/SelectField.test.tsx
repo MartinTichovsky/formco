@@ -1,8 +1,8 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
-import { SelectField } from "../SelectField";
-import { testInvalidMessage } from "../utils/selectors";
+import { SelectField } from "../components/SelectField";
+import { testInvalidMessage } from "./utils/selectors";
 
 console.log = jest.fn();
 

@@ -1,8 +1,8 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
-import { RadioFieldDisabledUseCase2 } from "../RadioFieldDisabledUseCase2";
-import { testInvalidMessage } from "../utils/selectors";
+import { RadioFieldDisabledUseCase2 } from "../components/RadioFieldDisabledUseCase2";
+import { testInvalidMessage } from "./utils/selectors";
 
 console.log = jest.fn();
 

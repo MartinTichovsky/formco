@@ -5,8 +5,8 @@ import {
   GeneralMessageForUseCase2,
   givenNameValidText,
   surnameValidText
-} from "../GeneralMessageForUseCase2";
-import { testInvalidMessage } from "../utils/selectors";
+} from "../components/GeneralMessageForUseCase2";
+import { testInvalidMessage } from "./utils/selectors";
 
 console.log = jest.fn();
 

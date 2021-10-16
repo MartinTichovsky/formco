@@ -1,9 +1,9 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
-import { GeneralValidationUseCase1 } from "../GeneralValidationUseCase1";
-import { GeneralValidationUseCase2 } from "../GeneralValidationUseCase2";
-import { testInvalidMessage } from "../utils/selectors";
+import { GeneralValidationUseCase1 } from "../components/GeneralValidationUseCase1";
+import { GeneralValidationUseCase2 } from "../components/GeneralValidationUseCase2";
+import { testInvalidMessage } from "./utils/selectors";
 
 console.log = jest.fn();
 

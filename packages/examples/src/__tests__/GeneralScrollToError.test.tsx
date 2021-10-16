@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
-import { GeneralScrollToError } from "../GeneralScrollToError";
+import { GeneralScrollToError } from "../components/GeneralScrollToError";
 
 console.log = jest.fn();
 
