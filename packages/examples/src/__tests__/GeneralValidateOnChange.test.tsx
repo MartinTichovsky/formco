@@ -1,8 +1,8 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
-import { GeneralValidateOnChange } from "../GeneralValidateOnChange";
-import { testInvalidMessage } from "../utils/selectors";
+import { GeneralValidateOnChange } from "../components/GeneralValidateOnChange";
+import { testInvalidMessage } from "./utils/selectors";
 
 console.log = jest.fn();
 

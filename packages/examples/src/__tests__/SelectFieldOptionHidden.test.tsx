@@ -1,8 +1,8 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
-import { SelectFieldOptionHidden } from "../SelectFieldOptionHidden";
-import { testInvalidMessage } from "../utils/selectors";
+import { SelectFieldOptionHidden } from "../components/SelectFieldOptionHidden";
+import { testInvalidMessage } from "./utils/selectors";
 
 console.log = jest.fn();
 

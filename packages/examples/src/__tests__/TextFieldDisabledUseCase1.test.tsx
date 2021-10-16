@@ -1,8 +1,8 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
-import { TextFieldDisabledUseCase1 } from "../TextFieldDisabledUseCase1";
-import { testInvalidMessage } from "../utils/selectors";
+import { TextFieldDisabledUseCase1 } from "../components/TextFieldDisabledUseCase1";
+import { testInvalidMessage } from "./utils/selectors";
 
 console.log = jest.fn();
 

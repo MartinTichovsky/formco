@@ -2,7 +2,7 @@ import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
-import { GeneralLabel } from "../GeneralLabel";
+import { GeneralLabel } from "../components/GeneralLabel";
 
 console.log = jest.fn();
 

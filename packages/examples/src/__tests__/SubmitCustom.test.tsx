@@ -7,9 +7,9 @@ import {
   waitFor
 } from "@testing-library/react";
 import React from "react";
-import { SubmitCustom } from "../SubmitCustom";
-import { testInvalidMessage } from "../utils/selectors";
+import { SubmitCustom } from "../components/SubmitCustom";
 import { wait } from "../utils/utils";
+import { testInvalidMessage } from "./utils/selectors";
 
 console.error = jest.fn();
 console.log = jest.fn();

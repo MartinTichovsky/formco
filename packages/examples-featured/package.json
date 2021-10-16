@@ -5,16 +5,20 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "tsc --project tsconfig.build.json",
+    "build": "tsc -b tsconfig.build.json",
     "clean": "rimraf tsconfig*.tsbuildinfo lib",
     "postinstall": "node ../../scripts/create-symlinks.js",
     "test": "jest --colors --verbose",
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
+    "@emotion/react": "11.4.1",
+    "@emotion/styled": "11.3.0",
     "@mui/icons-material": "5.0.4",
     "@mui/material": "5.0.4",
-    "lodash.debounce": "4.0.8"
+    "lodash.debounce": "4.0.8",
+    "mobx": "6.3.5",
+    "mobx-react-lite": "3.2.1"
   },
   "devDependencies": {
     "@testing-library/dom": "8.9.1",

@@ -473,7 +473,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/babel-plugin@npm:^11.0.0, @emotion/babel-plugin@npm:^11.3.0":
+"@emotion/babel-plugin@npm:^11.3.0":
   version: 11.3.0
   resolution: "@emotion/babel-plugin@npm:11.3.0"
   dependencies:
@@ -495,7 +495,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/cache@npm:^11.1.3, @emotion/cache@npm:^11.4.0":
+"@emotion/cache@npm:^11.4.0":
   version: 11.4.0
   resolution: "@emotion/cache@npm:11.4.0"
   dependencies:
@@ -505,24 +505,6 @@ __metadata:
     "@emotion/weak-memoize": ^0.2.5
     stylis: ^4.0.3
   checksum: bdef4c0ccc9bb87e99e4d48ff4855afe684035e9233a54bb339eb6aeafef35bd34fbed8ddb0d5ee440abd42c598043a87ebb0a324f2a1d732edf9c6b1709f9ed
-  languageName: node
-  linkType: hard
-
-"@emotion/css@npm:11.1.3":
-  version: 11.1.3
-  resolution: "@emotion/css@npm:11.1.3"
-  dependencies:
-    "@emotion/babel-plugin": ^11.0.0
-    "@emotion/cache": ^11.1.3
-    "@emotion/serialize": ^1.0.0
-    "@emotion/sheet": ^1.0.0
-    "@emotion/utils": ^1.0.0
-  peerDependencies:
-    "@babel/core": ^7.0.0
-  peerDependenciesMeta:
-    "@babel/core":
-      optional: true
-  checksum: dc50283f65bd65d282636b7ccdcfdc4d71b1cd8d604dc54207971eb13bc0204f2d787a2131fb4660348889779369c1c59454d40c986b44c6d4fc770b0e46aaac
   languageName: node
   linkType: hard
 
@@ -572,7 +554,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/serialize@npm:^1.0.0, @emotion/serialize@npm:^1.0.2":
+"@emotion/serialize@npm:^1.0.2":
   version: 1.0.2
   resolution: "@emotion/serialize@npm:1.0.2"
   dependencies:
@@ -1153,22 +1135,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/dom@npm:8.7.2":
-  version: 8.7.2
-  resolution: "@testing-library/dom@npm:8.7.2"
-  dependencies:
-    "@babel/code-frame": ^7.10.4
-    "@babel/runtime": ^7.12.5
-    "@types/aria-query": ^4.2.0
-    aria-query: ^4.2.2
-    chalk: ^4.1.0
-    dom-accessibility-api: ^0.5.6
-    lz-string: ^1.4.4
-    pretty-format: ^27.0.2
-  checksum: 9c0b2a9bc7aa92f22d909d677093d4d520c59de36013e97ba6eeaea4b4fccd3cae7e1221712bf079939b7d86aa69740441b206ae1cb9c3a1ecbb420070f4d0c9
-  languageName: node
-  linkType: hard
-
 "@testing-library/dom@npm:8.9.1, @testing-library/dom@npm:^8.0.0":
   version: 8.9.1
   resolution: "@testing-library/dom@npm:8.9.1"
@@ -1212,17 +1178,6 @@ __metadata:
     react: "*"
     react-dom: "*"
   checksum: 70b0f7f27c83fe1a33e7df01b1e64850fbab4050c403848d611d852cadaa25ccde58518773002ae569a1350b2282c2ccbcbe5eb6af8b29ab377ab2a8ab573b3b
-  languageName: node
-  linkType: hard
-
-"@testing-library/user-event@npm:13.2.1":
-  version: 13.2.1
-  resolution: "@testing-library/user-event@npm:13.2.1"
-  dependencies:
-    "@babel/runtime": ^7.12.5
-  peerDependencies:
-    "@testing-library/dom": ">=7.21.4"
-  checksum: 5c5eacb8feb57c8f1e023e3e5da4544ef0f8ce233a481fa1090ca73929a4666544bf576f362248c780a3fe4c1a11669414204603b0602e166810243391da392e
   languageName: node
   linkType: hard
 
@@ -3345,7 +3300,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "demo@workspace:packages/demo"
   dependencies:
-    "@emotion/css": 11.1.3
     "@emotion/react": 11.4.1
     "@emotion/styled": 11.3.0
     "@pmmmwh/react-refresh-webpack-plugin": 0.5.1
@@ -3830,6 +3784,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "examples-featured@workspace:packages/examples-featured"
   dependencies:
+    "@emotion/react": 11.4.1
+    "@emotion/styled": 11.3.0
     "@mui/icons-material": 5.0.4
     "@mui/material": 5.0.4
     "@testing-library/dom": 8.9.1
@@ -3844,6 +3800,8 @@ __metadata:
     jest: 27.2.5
     jest-collector: 1.0.2
     lodash.debounce: 4.0.8
+    mobx: 6.3.5
+    mobx-react-lite: 3.2.1
     react: 17.0.2
     react-dom: 17.0.2
     rimraf: 3.0.2
@@ -4208,16 +4166,16 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "formco-repo@workspace:."
   dependencies:
-    "@testing-library/dom": 8.7.2
+    "@testing-library/dom": 8.9.1
     "@testing-library/jest-dom": 5.14.1
     "@testing-library/react": 12.1.2
-    "@testing-library/user-event": 13.2.1
+    "@testing-library/user-event": 13.4.1
     jest: 27.2.5
     jest-collector: 1.0.2
     prettier: 2.4.1
     rimraf: 3.0.2
-    ts-jest: 27.0.5
-    typescript: 4.4.3
+    ts-jest: 27.0.7
+    typescript: 4.4.4
   languageName: unknown
   linkType: soft
 
@@ -6224,7 +6182,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:4.x, lodash@npm:^4.17.14, lodash@npm:^4.17.15, lodash@npm:^4.17.20, lodash@npm:^4.17.21, lodash@npm:^4.7.0":
+"lodash@npm:^4.17.14, lodash@npm:^4.17.15, lodash@npm:^4.17.20, lodash@npm:^4.17.21, lodash@npm:^4.7.0":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
@@ -8852,37 +8810,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-jest@npm:27.0.5":
-  version: 27.0.5
-  resolution: "ts-jest@npm:27.0.5"
-  dependencies:
-    bs-logger: 0.x
-    fast-json-stable-stringify: 2.x
-    jest-util: ^27.0.0
-    json5: 2.x
-    lodash: 4.x
-    make-error: 1.x
-    semver: 7.x
-    yargs-parser: 20.x
-  peerDependencies:
-    "@babel/core": ">=7.0.0-beta.0 <8"
-    "@types/jest": ^27.0.0
-    babel-jest: ">=27.0.0 <28"
-    jest: ^27.0.0
-    typescript: ">=3.8 <5.0"
-  peerDependenciesMeta:
-    "@babel/core":
-      optional: true
-    "@types/jest":
-      optional: true
-    babel-jest:
-      optional: true
-  bin:
-    ts-jest: cli.js
-  checksum: fd53cdb6f913cbe802799d2b491f70f33c52c840c4b8483cecf600ff360efbd00c8d7ed9eb0dd677219f330ee38928b7b9890e9853e9f4d3574b9d8e1dcf4a30
-  languageName: node
-  linkType: hard
-
 "ts-jest@npm:27.0.7":
   version: 27.0.7
   resolution: "ts-jest@npm:27.0.7"
@@ -9021,16 +8948,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-typescript@4.4.3:
-  version: 4.4.3
-  resolution: "typescript@npm:4.4.3"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 05823f21796d450531a7e4ab299715d38fd9ded0e4ce7400876053f4b5166ca3dde7a68cecfe72d9086039f03c0b6edba36516fb10ed83c5837d9600532ea4c2
-  languageName: node
-  linkType: hard
-
 typescript@4.4.4:
   version: 4.4.4
   resolution: "typescript@npm:4.4.4"
@@ -9038,16 +8955,6 @@ typescript@4.4.4:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 89ecb8436bb48ef5594d49289f5f89103071716b6e4844278f4fb3362856e31203e187a9c76d205c3f0b674d221a058fd28310dbcbcf5d95e9a57229bb5203f1
-  languageName: node
-  linkType: hard
-
-"typescript@patch:typescript@4.4.3#~builtin<compat/typescript>":
-  version: 4.4.3
-  resolution: "typescript@patch:typescript@npm%3A4.4.3#~builtin<compat/typescript>::version=4.4.3&hash=32657b"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 28ab98313afab46788ff41014fdb5932430ada6e03cf9e92ac47f406526a2cac1ae2894834e7da61e46b7429318e9c47f45ba8de323332f0cb9af99b72ebae74
   languageName: node
   linkType: hard
 

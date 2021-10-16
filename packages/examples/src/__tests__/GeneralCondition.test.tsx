@@ -5,8 +5,8 @@ import {
   formIsValidText,
   GeneralCondition,
   submitConditionText
-} from "../GeneralCondition";
-import { testInvalidMessage } from "../utils/selectors";
+} from "../components/GeneralCondition";
+import { testInvalidMessage } from "./utils/selectors";
 
 console.log = jest.fn();
 
