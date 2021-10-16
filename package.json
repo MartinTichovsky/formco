@@ -11,11 +11,11 @@
     ]
   },
   "scripts": {
-    "build": "yarn workspaces foreach -pti run build",
-    "clean": "yarn workspaces foreach -pti run clean",
-    "run:demo": "yarn workspaces foreach -ptRi --from '{demo-server,demo}' run start",
+    "build": "yarn workspaces foreach -ptiv run build",
+    "clean": "yarn workspaces foreach -piv run clean",
+    "run:demo": "yarn workspaces foreach -ptiv --from '{demo-server,demo}' run start",
     "test": "jest --collect-coverage --colors --verbose",
-    "tsc": "yarn workspaces foreach -pti run tsc"
+    "tsc": "yarn workspaces foreach -piv run tsc"
   },
   "devDependencies": {
     "@testing-library/dom": "8.7.2",

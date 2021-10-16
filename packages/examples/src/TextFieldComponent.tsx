@@ -1,6 +1,5 @@
 import { FormController, Input, Submit } from "formco";
-import React from "react";
-import { RefObject } from "react-is/node_modules/@types/react";
+import React, { RefObject } from "react";
 import { LogStore } from "./utils/store";
 import { Template } from "./utils/Template";
 
