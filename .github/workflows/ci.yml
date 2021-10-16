@@ -6,7 +6,6 @@ on:
       - main
     paths-ignore:
       - "**/package.json"
-      - lerna.json
     tags-ignore:
       - v*
   pull_request:
