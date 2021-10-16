@@ -6,7 +6,6 @@ on:
       - main
     paths-ignore:
       - "**/package.json"
-      - lerna.json
     tags-ignore:
       - v*
   pull_request:
@@ -53,36 +52,59 @@ jobs:
       - name: TypeScript check
         run: yarn tsc
 
-  # bump-version:
-  #   if: github.ref == 'refs/heads/main'
-  #   needs: [build-and-test]
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-  #       with:
-  #         token: ${{ secrets.TOKEN }}
+  bump-version:
+    if: github.ref == 'refs/heads/main'
+    needs: [build-and-test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.TOKEN }}
 
-  #     - name: Install
-  #       run: yarn
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.3.0
 
-  #     - name: Set creator
-  #       run: |
-  #         git config user.email "automated-version@users.noreply.github.com"
-  #         git config user.name "Automated Version"
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            /home/runner/.cache/Cypress
+            node_modules
+            **/node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}-${{ hashFiles('**/package.json') }}
+          restore-keys: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
 
-  #     - name: Increment version
-  #       env:
-  #         VERSION_TYPE: ${{ (startsWith(github.event.head_commit.message, 'BREAKING CHANGE:') || contains(toJSON(github.event.head_commit.message), '\n\nBREAKING CHANGE:')) && 'major' || (startsWith(github.event.head_commit.message, 'fix:') || contains(toJSON(github.event.head_commit.message), '\n\nfix:')) && 'patch' || 'minor' }}
-  #       run: |
-  #         yarn lerna version $VERSION_TYPE --yes
+      - name: Install
+        run: yarn
 
-  # - name: Build
-  #   working-directory: ./packages/formco
-  #   run: yarn build
+      - name: Set creator
+        run: |
+          git config user.email "automated-version@users.noreply.github.com"
+          git config user.name "Automated Version"
 
-  # - name: Publish package
-  #   working-directory: ./packages/formco
-  #   run: |
-  #     npm config set "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}"
-  #     npm publish
+      - name: Increment version
+        env:
+          VERSION_TYPE: ${{ (startsWith(github.event.head_commit.message, 'BREAKING CHANGE:') || contains(toJSON(github.event.head_commit.message), '\n\nBREAKING CHANGE:')) && 'major' || (startsWith(github.event.head_commit.message, 'fix:') || contains(toJSON(github.event.head_commit.message), '\n\nfix:')) && 'patch' || 'minor' }}
+        run: |
+          yarn workspaces foreach -A version $VERSION_TYPE
+          VERSION=$(node -p "require('./package.json').version")
+          git commit -am "v$VERSION"
+          git tag "v$VERSION"
+
+      - name: Push changes
+        run: |
+          git push --follow-tags
+          git push --tags
+
+      # - name: Build
+      #   working-directory: ./packages/formco
+      #   run: yarn build
+
+      # - name: Publish package
+      #   working-directory: ./packages/formco
+      #   run: |
+      #     npm config set "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}"
+      #     npm publish
