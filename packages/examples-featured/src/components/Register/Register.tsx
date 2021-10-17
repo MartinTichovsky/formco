@@ -24,7 +24,7 @@ export const Register = () => {
   );
 
   return (
-    <FormController<RegisterForm> validateOnChange>
+    <FormController<RegisterForm> className="styled-form" validateOnChange>
       {(controller) => (
         <Colored>
           <div className="field-row">
@@ -118,7 +118,7 @@ export const Register = () => {
 
           <div className="field-row buttons">
             <Submit
-              ButtonComponent={SubmitComponent}
+              component={SubmitComponent}
               controller={controller}
               data-testid="submit"
               disabledByDefault

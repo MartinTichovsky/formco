@@ -10,7 +10,9 @@ export const Submit = <
     React.ComponentProps<BComponent> & SubmitPrivateProps<T>
   >
 >(
-  props: React.ComponentProps<SubmitComponentType<T, BComponent>>
+  props: React.PropsWithChildren<
+    React.ComponentProps<SubmitComponentType<T, BComponent>>
+  >
 ) => {
   if (!(props.controller instanceof Controller)) {
     throw new Error("Controller is not provided");

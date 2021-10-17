@@ -1,19 +1,20 @@
 import React from "react";
 import { FormFields } from "../controller.types";
-import { Field } from "./Field";
-import { FieldPrivateProps, FieldType } from "./Field.types";
+import { FormField } from "./FormField";
+import { FormFieldPrivateProps, FormFieldType } from "./FormField.types";
 
 export function Textarea<
   T extends FormFields<T>,
   K extends keyof T,
   IComponent extends React.ComponentType<
-    React.ComponentProps<IComponent> & FieldPrivateProps<HTMLTextAreaElement>
+    React.ComponentProps<IComponent> &
+      FormFieldPrivateProps<HTMLTextAreaElement>
   >,
   MComponent extends React.ElementType
 >(
   props: React.PropsWithChildren<
     React.ComponentProps<
-      FieldType<
+      FormFieldType<
         T,
         K,
         IComponent,
@@ -25,7 +26,7 @@ export function Textarea<
   >
 ) {
   return (
-    <Field<
+    <FormField<
       T,
       K,
       IComponent,

@@ -1,5 +1,5 @@
 import React from "react";
-import { CommonFieldProps } from "./components/Field.types";
+import { CommonFormFieldProps } from "./components/FormField.types";
 import {
   OnChangeCondition,
   SelectProviderProps,
@@ -7,7 +7,7 @@ import {
   ValidationProviderProps
 } from "./providers.types";
 
-export const commonPropsContext = React.createContext<CommonFieldProps>({});
+export const commonPropsContext = React.createContext<CommonFormFieldProps>({});
 
 export const disableIfContext = React.createContext<
   OnChangeCondition | undefined

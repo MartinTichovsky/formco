@@ -80,7 +80,7 @@ export const SelectFieldComponent = (
           <div className="g-label-150">
             <div className="field-row">
               <Select
-                Component={ClassSelectComponent}
+                component={ClassSelectComponent}
                 controller={controller}
                 data-testid="select-1"
                 labelText="Class Select"
@@ -95,7 +95,7 @@ export const SelectFieldComponent = (
             </div>
             <div className="field-row">
               <Select
-                Component={FunctionalSelectComponent}
+                component={FunctionalSelectComponent}
                 controller={controller}
                 data-testid="select-2"
                 labeltext="Functional Select"

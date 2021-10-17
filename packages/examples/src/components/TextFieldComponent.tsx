@@ -122,7 +122,7 @@ export const TextFieldComponent = (
               <Input
                 controller={controller}
                 data-testid="givenName"
-                Component={ClassInputComponent}
+                component={ClassInputComponent}
                 labelText="Class component"
                 name="givenName"
                 placeholder="Input a given name"
@@ -135,7 +135,7 @@ export const TextFieldComponent = (
               <Input
                 controller={controller}
                 data-testid="surname"
-                Component={FunctionalInputComponent}
+                component={FunctionalInputComponent}
                 labelText="Functional component"
                 name="surname"
                 placeholder="Input a surname"

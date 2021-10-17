@@ -136,7 +136,7 @@ export const SubmitComponent = (
             </div>
             <div className="field-row full-width">
               <Submit
-                ButtonComponent={FunctionalSubmitComponent}
+                component={FunctionalSubmitComponent}
                 controller={controller}
                 data-testid="functional-submit"
                 onSubmit={(fields, controller) =>
@@ -148,7 +148,7 @@ export const SubmitComponent = (
             </div>
             <div className="field-row full-width">
               <Submit
-                ButtonComponent={ClassSubmitComponent}
+                component={ClassSubmitComponent}
                 controller={controller}
                 data-testid="class-submit"
                 onSubmit={(fields, controller) =>

@@ -13,7 +13,7 @@ const resetTestId = "reset";
 const submitTestId = "submit";
 const surnameTestId = "surname";
 
-const fieldComponentName = "FieldComponent";
+const fieldComponentName = "FormFieldComponent";
 const formControllerComponentName = "FormControllerComponent";
 const submitComponentName = "SubmitComponent";
 

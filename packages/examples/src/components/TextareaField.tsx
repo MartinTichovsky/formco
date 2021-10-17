@@ -33,7 +33,7 @@ export const TextareaField = (
                 controller={controller}
                 data-testid="textarea"
                 initialValidation
-                MessageComponent={TextareaMessage}
+                messageComponent={TextareaMessage}
                 name="description"
                 placeholder="Input a text"
                 validation={(value) => {
