@@ -8,14 +8,16 @@ export const SubmitComponent = <
     React.ComponentProps<BComponent> & SubmitPrivateProps<T>
   >
 >({
-  ButtonComponent,
+  component: Component,
   children,
   controller,
   disabledByDefault = false,
   disableIfNotValid = false,
   onSubmit,
   ...rest
-}: React.ComponentProps<SubmitComponentType<T, BComponent>>) => {
+}: React.PropsWithChildren<
+  React.ComponentProps<SubmitComponentType<T, BComponent>>
+>) => {
   const [isDisabled, setDisabled] = React.useState(disabledByDefault === true);
 
   const ButtonElement = React.useCallback(
@@ -24,8 +26,8 @@ export const SubmitComponent = <
         React.ButtonHTMLAttributes<HTMLButtonElement>
       >
     ) =>
-      ButtonComponent && typeof ButtonComponent === "function" ? (
-        <ButtonComponent
+      Component && typeof Component === "function" ? (
+        <Component
           {...({
             ...rest,
             ...props
@@ -37,7 +39,7 @@ export const SubmitComponent = <
         </button>
       ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [ButtonComponent]
+    [Component]
   );
 
   const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {

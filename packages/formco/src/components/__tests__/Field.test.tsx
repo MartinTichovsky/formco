@@ -4,13 +4,13 @@ import React from "react";
 import { Controller } from "../../controller";
 import { ValidationProvider } from "../../providers";
 import { getGeneratedValues } from "../../__tests__/utils/value-generator";
-import { Field } from "../Field";
+import { FormField } from "../FormField";
 import {
-  FieldInternalProps,
-  FieldPrivateInputProps,
-  FieldType,
+  FormFieldInternalProps,
+  FormFieldPrivateInputProps,
+  FormFieldType,
   InitialState
-} from "../Field.types";
+} from "../FormField.types";
 
 type Form = {
   input: string;
@@ -27,13 +27,13 @@ let passedValues: {
   validation?: Function;
 } = {};
 
-jest.mock("../FieldComponent", () => {
-  const origin = jest.requireActual("../FieldComponent");
+jest.mock("../FormFieldComponent", () => {
+  const origin = jest.requireActual("../FormFieldComponent");
 
   return {
-    FieldComponent: function (...args: any[]) {
+    FormFieldComponent: function (...args: any[]) {
       passedValues = args[0];
-      return origin.FieldComponent(...args);
+      return origin.FormFieldComponent(...args);
     }
   };
 });
@@ -43,22 +43,22 @@ console.error = jest.fn();
 const FieldContainer = <K extends keyof Form>(
   props: React.PropsWithChildren<
     React.ComponentProps<
-      FieldType<
+      FormFieldType<
         Form,
         K,
-        React.ComponentType<FieldPrivateInputProps<HTMLInputElement>>,
+        React.ComponentType<FormFieldPrivateInputProps<HTMLInputElement>>,
         React.ElementType,
         HTMLInputElement,
         React.InputHTMLAttributes<HTMLInputElement>
       >
     > &
-      FieldInternalProps
+      FormFieldInternalProps
   >
 ) => (
-  <Field<
+  <FormField<
     Form,
     K,
-    React.ComponentType<FieldPrivateInputProps<HTMLInputElement>>,
+    React.ComponentType<FormFieldPrivateInputProps<HTMLInputElement>>,
     React.ElementType,
     HTMLInputElement,
     React.InputHTMLAttributes<HTMLInputElement>

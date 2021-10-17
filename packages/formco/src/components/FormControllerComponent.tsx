@@ -5,6 +5,7 @@ import { FormControllerComponentProps } from "./FormController.types";
 
 export const FormControllerComponent = <T extends FormFields<T>>({
   children,
+  className,
   disableIf,
   hideIf,
   initialValues,
@@ -54,7 +55,7 @@ export const FormControllerComponent = <T extends FormFields<T>>({
     <form
       {...rest}
       aria-label="form"
-      className="form-controller"
+      className={"form-controller" + (className ? ` ${className}` : "")}
       key={controller.key}
       onSubmit={(event) => event.preventDefault()}
     >

@@ -47,7 +47,7 @@ import {
   TextFieldValidationDependencies,
   TextFieldValidationTimeout
 } from "examples";
-import { Register } from "examples-featured";
+import { Gmail, Register } from "examples-featured";
 import React from "react";
 import { ContentWithColoredInputs } from "./App.styles";
 import { Info } from "./Info";
@@ -77,6 +77,10 @@ const menuItems: MenuItems = {
     }
   ],
   "Featured Examples": [
+    {
+      label: "Gmail",
+      render: () => <Gmail />
+    },
     {
       label: "Register",
       render: () => <Register />

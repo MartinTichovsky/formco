@@ -3,7 +3,7 @@ import { FormFields, OnSubmit } from "../controller.types";
 
 type RestProps<T> = Omit<
   T,
-  | "ButtonComponent"
+  | "component"
   | "controller"
   | "disabled"
   | "disabledByDefault"
@@ -20,22 +20,24 @@ export interface SubmitComponentType<
   >
 > {
   ({
-    ButtonComponent,
     children,
     controller,
+    component,
     disabledByDefault,
     disableIfNotValid,
     onSubmit,
     ...rest
-  }: SubmitProps<T> &
-    (
-      | ({
-          ButtonComponent: undefined;
-        } & RestProps<React.ButtonHTMLAttributes<HTMLButtonElement>>)
-      | ({
-          ButtonComponent?: BComponent;
-        } & RestProps<React.ComponentProps<BComponent>>)
-    )): JSX.Element;
+  }: React.PropsWithChildren<
+    SubmitProps<T> &
+      (
+        | ({
+            component: undefined;
+          } & RestProps<React.ButtonHTMLAttributes<HTMLButtonElement>>)
+        | ({
+            component?: BComponent;
+          } & RestProps<React.ComponentProps<BComponent>>)
+      )
+  >): JSX.Element;
 }
 
 export interface SubmitPrivateProps<T extends FormFields<T>> {
@@ -45,11 +47,9 @@ export interface SubmitPrivateProps<T extends FormFields<T>> {
   ) => Promise<Controller<T>>;
 }
 
-export type SubmitProps<T extends FormFields<T>> = React.PropsWithChildren<
-  {
-    controller: Controller<T>;
-    disabledByDefault?: boolean;
-    disableIfNotValid?: boolean;
-    onSubmit?: OnSubmit<T>;
-  } & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onSubmit">
->;
+export type SubmitProps<T extends FormFields<T>> = {
+  controller: Controller<T>;
+  disabledByDefault?: boolean;
+  disableIfNotValid?: boolean;
+  onSubmit?: OnSubmit<T>;
+} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onSubmit">;

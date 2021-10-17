@@ -208,7 +208,7 @@ describe("Submit", () => {
 
       const onSubmit = jest.fn();
 
-      const ButtonComponent = (props: any) => {
+      const Component = (props: any) => {
         return (
           <button data-testid={testid} {...props}>
             {props.children}
@@ -218,7 +218,7 @@ describe("Submit", () => {
 
       render(
         <SubmitComponent
-          ButtonComponent={ButtonComponent}
+          component={Component}
           controller={controller}
           onSubmit={onSubmit}
         >

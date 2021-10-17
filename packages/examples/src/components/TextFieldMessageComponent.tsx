@@ -48,7 +48,7 @@ export const TextFieldMessageComponent = (
               <Input
                 controller={controller}
                 data-testid="givenName"
-                MessageComponent={FunctionalMessageComponent}
+                messageComponent={FunctionalMessageComponent}
                 name="givenName"
                 placeholder="Input a given name"
                 validation={(value) =>
@@ -60,7 +60,7 @@ export const TextFieldMessageComponent = (
               <Input
                 controller={controller}
                 data-testid="surname"
-                MessageComponent={ClassMessageComponent}
+                messageComponent={ClassMessageComponent}
                 name="surname"
                 placeholder="Input a surname"
                 validation={(value) =>

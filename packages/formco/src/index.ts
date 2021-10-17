@@ -1,4 +1,5 @@
 export { Condition } from "./components/Condition";
+export { Field } from "./components/Field";
 export { FormController } from "./components/FormController";
 export { Input } from "./components/Input";
 export { MessageFor } from "./components/MessageFor";

@@ -1,19 +1,19 @@
 import React from "react";
 import { FormFields } from "../controller.types";
-import { Field } from "./Field";
-import { FieldPrivateProps, FieldType } from "./Field.types";
+import { FormField } from "./FormField";
+import { FormFieldPrivateProps, FormFieldType } from "./FormField.types";
 
 export function Select<
   T extends FormFields<T>,
   K extends keyof T,
   IComponent extends React.ComponentType<
-    React.ComponentProps<IComponent> & FieldPrivateProps<HTMLSelectElement>
+    React.ComponentProps<IComponent> & FormFieldPrivateProps<HTMLSelectElement>
   >,
   MComponent extends React.ElementType
 >(
   props: React.PropsWithChildren<
     React.ComponentProps<
-      FieldType<
+      FormFieldType<
         T,
         K,
         IComponent,
@@ -25,7 +25,7 @@ export function Select<
   >
 ) {
   return (
-    <Field<
+    <FormField<
       T,
       K,
       IComponent,

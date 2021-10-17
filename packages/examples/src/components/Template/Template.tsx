@@ -9,7 +9,7 @@ export const Template = ({
   const [counter, setCounter] = React.useState(0);
 
   return (
-    <div className="form">
+    <div className="styled-form">
       <div className="re-render">
         <button
           data-testid="re-render"

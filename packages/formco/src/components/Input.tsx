@@ -1,18 +1,19 @@
 import React from "react";
 import { FormFields } from "../controller.types";
-import { Field } from "./Field";
-import { FieldPrivateInputProps, FieldType } from "./Field.types";
+import { FormField } from "./FormField";
+import { FormFieldPrivateInputProps, FormFieldType } from "./FormField.types";
 
 export function Input<
   T extends FormFields<T>,
   K extends keyof T,
   IComponent extends React.ComponentType<
-    React.ComponentProps<IComponent> & FieldPrivateInputProps<HTMLInputElement>
+    React.ComponentProps<IComponent> &
+      FormFieldPrivateInputProps<HTMLInputElement>
   >,
   MComponent extends React.ElementType
 >(
   props: React.ComponentProps<
-    FieldType<
+    FormFieldType<
       T,
       K,
       IComponent,
@@ -23,7 +24,7 @@ export function Input<
   >
 ) {
   return (
-    <Field<
+    <FormField<
       T,
       K,
       IComponent,

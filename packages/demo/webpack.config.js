@@ -63,6 +63,14 @@ module.exports = (env = {}, argv = {}) => {
                   }
                 }
               ]
+            },
+            {
+              test: /\.s[ac]ss$/i,
+              use: [
+                isEnvProduction ? MiniCssExtractPlugin.loader : "style-loader",
+                "css-loader",
+                "sass-loader"
+              ]
             }
           ]
         }
