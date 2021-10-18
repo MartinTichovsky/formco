@@ -7,7 +7,7 @@ export function Select<
   T extends FormFields<T>,
   K extends keyof T,
   IComponent extends React.ComponentType<
-    React.ComponentProps<IComponent> & FormFieldPrivateProps<HTMLSelectElement>
+    React.ComponentProps<IComponent> & FormFieldPrivateProps
   >,
   MComponent extends React.ElementType
 >(
