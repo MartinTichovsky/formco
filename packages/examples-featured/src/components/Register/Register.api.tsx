@@ -39,7 +39,10 @@ export const api = async ({
 
   resolve({
     content: isValid ? (
-      <CheckIcon sx={{ color: validColor, fontSize: 16 }} />
+      <CheckIcon
+        data-testid={`${id}-valid`}
+        sx={{ color: validColor, fontSize: 16 }}
+      />
     ) : (
       <span data-testid={`${id}-invalid`}>{errorMessage}</span>
     ),

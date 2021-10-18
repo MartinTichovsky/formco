@@ -1,13 +1,13 @@
 import React from "react";
 import { FormFields } from "../controller.types";
 import { FormField } from "./FormField";
-import { FormFieldPrivateInputProps, FormFieldType } from "./FormField.types";
+import { FormFieldPrivateProps, FormFieldType } from "./FormField.types";
 
 export function Input<
   T extends FormFields<T>,
   K extends keyof T,
   IComponent extends React.ComponentType<
-    React.ComponentProps<IComponent> & FormFieldPrivateInputProps
+    React.ComponentProps<IComponent> & FormFieldPrivateProps
   >,
   MComponent extends React.ElementType
 >(

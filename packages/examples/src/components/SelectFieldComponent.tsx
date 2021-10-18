@@ -14,10 +14,18 @@ class ClassSelectComponent extends React.Component<{
   labelText: string;
   onBlur: (event: React.ChangeEvent) => void; // required
   onChange: (event: React.ChangeEvent) => void; // required
+  onKeyDown: (event: React.KeyboardEvent) => void; // required
 }> {
   render() {
-    const { defaultValue, disabled, labelText, onBlur, onChange, ...rest } =
-      this.props;
+    const {
+      defaultValue,
+      disabled,
+      labelText,
+      onBlur,
+      onChange,
+      onKeyDown,
+      ...rest
+    } = this.props;
 
     return (
       <span>
@@ -31,6 +39,7 @@ class ClassSelectComponent extends React.Component<{
           id="class-select"
           onBlur={onBlur}
           onChange={onChange}
+          onKeyDown={onKeyDown}
         >
           {this.props.children}
         </select>
@@ -45,25 +54,43 @@ const FunctionalSelectComponent = React.forwardRef<
     defaultValue: string; // required
     disabled: boolean; // required
     labeltext: string;
+    onBlur: (event: React.ChangeEvent) => void; // required
     onChange: (event: React.ChangeEvent) => void; // required
+    onKeyDown: (event: React.KeyboardEvent) => void; // required
   }>
->(({ children, defaultValue, disabled, labeltext, onChange, ...rest }, ref) => (
-  <span>
-    <label htmlFor="functional-select" style={{ marginRight: 10 }}>
-      {labeltext}
-    </label>
-    <select
-      {...rest}
-      defaultValue={defaultValue}
-      disabled={disabled}
-      ref={ref}
-      id="functional-select"
-      onChange={onChange}
-    >
-      {children}
-    </select>
-  </span>
-));
+>(
+  (
+    {
+      children,
+      defaultValue,
+      disabled,
+      labeltext,
+      onBlur,
+      onChange,
+      onKeyDown,
+      ...rest
+    },
+    ref
+  ) => (
+    <span>
+      <label htmlFor="functional-select" style={{ marginRight: 10 }}>
+        {labeltext}
+      </label>
+      <select
+        {...rest}
+        defaultValue={defaultValue}
+        disabled={disabled}
+        ref={ref}
+        id="functional-select"
+        onBlur={onBlur}
+        onChange={onChange}
+        onKeyDown={onKeyDown}
+      >
+        {children}
+      </select>
+    </span>
+  )
+);
 
 export const SelectFieldComponent = (
   props: Partial<React.ComponentProps<typeof FormController>>

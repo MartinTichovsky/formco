@@ -26,15 +26,12 @@ export interface FormFieldInternalProps {
   fieldType: "input" | "select" | "textarea";
 }
 
-export interface FormFieldPrivateInputProps extends FormFieldPrivateProps {
-  onKeyDown: (event: React.KeyboardEvent) => void;
-}
-
 export interface FormFieldPrivateProps {
   defaultValue: string;
   disabled: boolean;
   onBlur: (event: React.ChangeEvent) => void;
   onChange: (event: React.ChangeEvent) => void;
+  onKeyDown: (event: React.KeyboardEvent) => void;
 }
 
 export interface FormFieldPublicProps<
@@ -60,10 +57,7 @@ export interface FormFieldType<
   T extends FormFields<T>,
   K extends keyof T,
   IComponent extends React.ComponentType<
-    React.ComponentProps<IComponent> &
-      (ElementType extends HTMLInputElement
-        ? FormFieldPrivateInputProps
-        : FormFieldPrivateProps)
+    React.ComponentProps<IComponent> & FormFieldPrivateProps
   >,
   MComponent extends React.ElementType,
   ElementType,

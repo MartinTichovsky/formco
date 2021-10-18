@@ -1,7 +1,7 @@
 import React from "react";
 import { Controller } from "../controller";
 import { FormFields } from "../controller.types";
-import { FieldType } from "./Field.types";
+import { FieldPrivateProps, FieldType } from "./Field.types";
 import { FieldComponent } from "./FieldComponent";
 
 let idCounter = 0;
@@ -11,7 +11,9 @@ const getRandomId = () => `field-${++idCounter}`;
 export const Field = <
   T extends FormFields<T>,
   K extends keyof T,
-  IComponent extends React.ComponentType<React.ComponentProps<IComponent>>
+  IComponent extends React.ComponentType<
+    React.ComponentProps<IComponent> & FieldPrivateProps
+  >
 >(
   props: React.PropsWithChildren<
     React.ComponentProps<FieldType<T, K, IComponent>>

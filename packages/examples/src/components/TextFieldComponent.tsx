@@ -23,6 +23,7 @@ interface FunctionalComponentProps {
   defaultValue: string; // required
   disabled: boolean; // required
   labelText: string;
+  onBlur: (event: React.ChangeEvent) => void; // required
   onChange: (event: React.ChangeEvent) => void; // required
   onKeyDown: (event: React.KeyboardEvent) => void; // required
   placeholder: string;
@@ -78,6 +79,7 @@ const FunctionalInputComponent = React.forwardRef<
       defaultValue,
       disabled,
       labelText,
+      onBlur,
       onChange,
       onKeyDown,
       placeholder,
@@ -95,6 +97,7 @@ const FunctionalInputComponent = React.forwardRef<
           defaultValue={defaultValue}
           disabled={disabled}
           id="functional-input"
+          onBlur={onBlur}
           onChange={onChange}
           onKeyDown={onKeyDown}
           placeholder={placeholder}

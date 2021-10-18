@@ -7,7 +7,7 @@ import { getGeneratedValues } from "../../__tests__/utils/value-generator";
 import { FormField } from "../FormField";
 import {
   FormFieldInternalProps,
-  FormFieldPrivateInputProps,
+  FormFieldPrivateProps,
   FormFieldType,
   InitialState
 } from "../FormField.types";
@@ -46,7 +46,7 @@ const FieldContainer = <K extends keyof Form>(
       FormFieldType<
         Form,
         K,
-        React.ComponentType<FormFieldPrivateInputProps>,
+        React.ComponentType<FormFieldPrivateProps>,
         React.ElementType,
         HTMLInputElement,
         React.InputHTMLAttributes<HTMLInputElement>
@@ -58,7 +58,7 @@ const FieldContainer = <K extends keyof Form>(
   <FormField<
     Form,
     K,
-    React.ComponentType<FormFieldPrivateInputProps>,
+    React.ComponentType<FormFieldPrivateProps>,
     React.ElementType,
     HTMLInputElement,
     React.InputHTMLAttributes<HTMLInputElement>
@@ -484,6 +484,7 @@ describe("Field", () => {
         isVisible: true,
         validationContent: undefined,
         validationInProgress: false,
+        validationToBeExecuted: false,
         value: undefined
       };
 

@@ -5,7 +5,6 @@ import { SelectProvider } from "../providers";
 import {
   FormFieldInitialProps,
   FormFieldInternalProps,
-  FormFieldPrivateInputProps,
   FormFieldPrivateProps,
   FormFieldState,
   FormFieldType
@@ -15,10 +14,7 @@ export function FormFieldComponent<
   T extends FormFields<T>,
   K extends keyof T,
   IComponent extends React.ComponentType<
-    React.ComponentProps<IComponent> &
-      (ElementType extends HTMLInputElement
-        ? FormFieldPrivateInputProps
-        : FormFieldPrivateProps)
+    React.ComponentProps<IComponent> & FormFieldPrivateProps
   >,
   MComponent extends React.ElementType,
   ElementType,
@@ -67,9 +63,7 @@ export function FormFieldComponent<
   const ref = React.useRef<HTMLSelectElement | HTMLInputElement>();
   const defaultValue = React.useRef(controller.getFieldValue(name) || "");
   const key = React.useRef(0);
-  const onBlur = React.useRef<
-    React.FocusEventHandler<HTMLInputElement> | undefined
-  >(undefined);
+  const onBlur = React.useRef<React.FocusEventHandler | undefined>(undefined);
 
   React.useEffect(
     () => {
@@ -172,13 +166,12 @@ export function FormFieldComponent<
           id: rest.id,
           key: name,
           type: rest.type,
-          validation: () => {
-            return validation(
+          validation: () =>
+            validation(
               controller.getFieldValue(name),
               controller.getObservedFields(name),
               rest
-            );
-          }
+            )
         });
 
         return () => {

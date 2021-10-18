@@ -9,7 +9,6 @@ import {
 } from "../providers";
 import {
   FormFieldInternalProps,
-  FormFieldPrivateInputProps,
   FormFieldPrivateProps,
   FormFieldType,
   InitialState
@@ -24,10 +23,7 @@ export function FormField<
   T extends FormFields<T>,
   K extends keyof T,
   IComponent extends React.ComponentType<
-    React.ComponentProps<IComponent> &
-      (ElementType extends HTMLInputElement
-        ? FormFieldPrivateInputProps
-        : FormFieldPrivateProps)
+    React.ComponentProps<IComponent> & FormFieldPrivateProps
   >,
   MComponent extends React.ElementType,
   ElementType,
