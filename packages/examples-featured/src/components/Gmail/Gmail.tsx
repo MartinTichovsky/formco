@@ -1,5 +1,6 @@
+import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import { Field, FormController } from "formco";
+import { Field, FormController, Submit } from "formco";
 import React from "react";
 import { GmailForm } from "./Gmail.types";
 
@@ -27,6 +28,16 @@ export const Gmail = () => {
               validation={(value) => !value?.trim()}
               variant="outlined"
             />
+          </div>
+          <div className="field-row">
+            <Submit
+              component={Button}
+              controller={controller}
+              onSubmit={() => console.log(controller.isValid)}
+              variant="outlined"
+            >
+              Submit
+            </Submit>
           </div>
         </>
       )}
