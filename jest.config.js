@@ -13,6 +13,10 @@ module.exports = async () => {
     setupFilesAfterEnv: ["./jest.setup.js"],
     testEnvironment: "jsdom",
     testMatch: ["**/?(*.)+(spec|test).ts?(x)"],
-    roots: ["<rootDir>/packages/examples/src", "<rootDir>/packages/formco/src"]
+    roots: [
+      "<rootDir>/packages/examples/src",
+      "<rootDir>/packages/examples-featured/src",
+      "<rootDir>/packages/formco/src"
+    ]
   };
 };

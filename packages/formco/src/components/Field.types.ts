@@ -1,10 +1,18 @@
 import { Controller } from "../controller";
-import { FormFields } from "../controller.types";
+import { FormFields, ValidationResult } from "../controller.types";
+
+export interface FieldPrivateProps {
+  onBlur: (event: React.ChangeEvent) => void;
+  onChange: (event: React.ChangeEvent) => void;
+  onKeyDown: (event: React.KeyboardEvent) => void;
+}
 
 export interface FieldType<
   T extends FormFields<T>,
   K extends keyof T,
-  IComponent extends React.ComponentType<React.ComponentProps<IComponent>>
+  IComponent extends React.ComponentType<
+    React.ComponentProps<IComponent> & FieldPrivateProps
+  >
 > {
   ({
     children,
@@ -21,14 +29,15 @@ export interface FieldType<
       id?: string;
       name: K;
       onValidation?: (
-        isValid: boolean,
-        setProps: React.Dispatch<React.SetStateAction<typeof rest>>
+        isFieldValid: boolean,
+        setProps: React.Dispatch<React.SetStateAction<typeof rest>>,
+        validationInProgress: boolean
       ) => void;
       validation?: (
         value: T[K] | undefined,
         fields: Partial<T>,
         props: typeof rest
-      ) => boolean;
+      ) => ValidationResult;
     } & React.ComponentPropsWithoutRef<IComponent>
   >): JSX.Element | null;
 }

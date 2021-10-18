@@ -24,6 +24,7 @@ beforeEach(() => {
     isVisible: true,
     validationContent: undefined,
     validationInProgress: false,
+    validationToBeExecuted: false,
     value: undefined
   };
 });

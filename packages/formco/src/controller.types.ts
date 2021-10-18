@@ -51,10 +51,12 @@ export type DisableIf<T> = {
 };
 
 export interface ExecutePromise<T> {
+  blurAction?: boolean;
   key: T;
   onSuccess?: (result: ValidationPromiseResult) => void;
   promise: ValidationPromise;
   queueId: number;
+  withWait: boolean;
 }
 
 export interface FieldAdditionalProperties {
@@ -79,6 +81,7 @@ export interface Field extends FieldAdditionalProperties {
   >;
   validationContent: ValidationContentResult;
   validationInProgress: boolean;
+  validationToBeExecuted: boolean;
   value: Value;
 }
 
@@ -140,6 +143,7 @@ export type OnValidationAction = (
 ) => void;
 
 export interface PromiseQueue<T> {
+  blurAction?: boolean;
   key: T;
   onSuccess?: (result: ValidationPromiseResult) => void;
   promise: ValidationPromise;
@@ -237,7 +241,7 @@ export type ValidationResult =
       content?: string | JSX.Element;
     }
   | {
-      content: string | JSX.Element;
+      content?: string | JSX.Element;
       promise: ValidationPromise;
       wait?: number;
     };

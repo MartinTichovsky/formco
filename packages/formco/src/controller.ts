@@ -255,16 +255,22 @@ export class Controller<T extends FormFields<T>> {
   }
 
   private executePromise({
+    blurAction,
     key,
     onSuccess,
     promise,
-    queueId
+    queueId,
+    withWait
   }: ExecutePromise<keyof T>) {
     if (queueId !== this.getQueueId(key)) {
       return;
     }
 
     this._fields[key]!.validationInProgress = true;
+
+    if (blurAction || withWait) {
+      this.onChange(key);
+    }
 
     promise()
       .then((result) => {
@@ -277,7 +283,8 @@ export class Controller<T extends FormFields<T>> {
           isValid: result.isValid,
           isValidated: true,
           validationContent: result.content,
-          validationInProgress: false
+          validationInProgress: false,
+          validationToBeExecuted: false
         };
 
         if (onSuccess) {
@@ -291,7 +298,8 @@ export class Controller<T extends FormFields<T>> {
 
         this._fields[key] = {
           ...this._fields[key],
-          validationInProgress: false
+          validationInProgress: false,
+          validationToBeExecuted: false
         };
       });
   }
@@ -393,6 +401,18 @@ export class Controller<T extends FormFields<T>> {
     return validationResult;
   }
 
+  public isFieldValid(key: keyof T) {
+    return this._fields[key]?.isValid;
+  }
+
+  public isFieldValidationInProgress(key: keyof T) {
+    return this._fields[key]?.validationInProgress;
+  }
+
+  public isFieldValidationToBeExecuted(key: keyof T) {
+    return this._fields[key]?.validationToBeExecuted;
+  }
+
   public initialRenderDone() {
     this._initialRender = false;
   }
@@ -447,6 +467,7 @@ export class Controller<T extends FormFields<T>> {
   }
 
   private promiseQueue({
+    blurAction,
     key,
     onSuccess,
     promise,
@@ -455,12 +476,29 @@ export class Controller<T extends FormFields<T>> {
     const queueId = this.registerQueueId(key);
 
     if (wait) {
+      this._fields[key]!.validationToBeExecuted = true;
+
       setTimeout(
-        () => this.executePromise({ key, onSuccess, promise, queueId }),
+        () =>
+          this.executePromise({
+            blurAction,
+            key,
+            onSuccess,
+            promise,
+            queueId,
+            withWait: true
+          }),
         wait
       );
     } else {
-      this.executePromise({ key, onSuccess, promise, queueId });
+      this.executePromise({
+        blurAction,
+        key,
+        onSuccess,
+        promise,
+        queueId,
+        withWait: false
+      });
     }
   }
 
@@ -487,6 +525,7 @@ export class Controller<T extends FormFields<T>> {
         isValidated: false,
         isVisible: true,
         validationInProgress: false,
+        validationToBeExecuted: false,
         validationContent: undefined,
         value: this._initialValues?.[key]
       };
@@ -582,6 +621,7 @@ export class Controller<T extends FormFields<T>> {
         isVisible: true,
         validationContent: this.getValidationResultContent(validationResult),
         validationInProgress: false,
+        validationToBeExecuted: false,
         value: this._initialValues?.[key]
       };
     }
@@ -643,6 +683,7 @@ export class Controller<T extends FormFields<T>> {
         isVisible: true,
         validationContent: this.getValidationResultContent(validationResult),
         validationInProgress: false,
+        validationToBeExecuted: false,
         value: this._initialValues?.[key]
       };
     }
@@ -690,6 +731,7 @@ export class Controller<T extends FormFields<T>> {
         isVisible: false,
         validationContent: this.getValidationResultContent(validationResult),
         validationInProgress: false,
+        validationToBeExecuted: false,
         value: this._initialValues?.[key]
       };
     }
@@ -733,6 +775,7 @@ export class Controller<T extends FormFields<T>> {
         isVisible: true,
         validationContent: undefined,
         validationInProgress: false,
+        validationToBeExecuted: false,
         value: undefined
       };
     }
@@ -758,6 +801,8 @@ export class Controller<T extends FormFields<T>> {
           isValid === undefined
             ? this._fields[key]!.validationContent
             : undefined,
+        validationInProgress: false,
+        validationToBeExecuted: false,
         value
       };
     } else {
@@ -770,6 +815,7 @@ export class Controller<T extends FormFields<T>> {
         isVisible: true,
         validationContent: undefined,
         validationInProgress: false,
+        validationToBeExecuted: false,
         value
       };
     }
@@ -825,6 +871,7 @@ export class Controller<T extends FormFields<T>> {
         isVisible: true,
         validationContent: undefined,
         validationInProgress: false,
+        validationToBeExecuted: false,
         value: initialValues[key]
       };
     }
@@ -1081,6 +1128,7 @@ export class Controller<T extends FormFields<T>> {
         isVisible: true,
         validationContent: undefined,
         validationInProgress: false,
+        validationToBeExecuted: false,
         value: this._initialValues?.[key]
       };
     }
@@ -1250,6 +1298,7 @@ export class Controller<T extends FormFields<T>> {
 
       this.promiseQueue({
         key,
+        blurAction,
         onSuccess: (result) => {
           if (
             !silent &&

@@ -53,6 +53,75 @@ beforeEach(() => {
 });
 
 describe("Register", () => {
+  test("Fetch", async () => {
+    const { container } = render(<Register />);
+
+    // loading should not be in the document
+    expect(() => screen.getByTestId(usernameLoadingTestId)).toThrowError();
+
+    // input one letter to trigger a promise with wait
+    fireEvent.change(screen.getByTestId(usernameTestId), {
+      target: { value: "J" }
+    });
+
+    await wait(500);
+
+    // no error should be shown
+    testInvalidMessage(container, 0);
+
+    // wait for the return of the fetch
+    await act(async () => {
+      await wait(1000);
+    });
+
+    // one error message should be shown
+    testInvalidMessage(container, 1);
+
+    // mock the fetch response
+    mockResponse({ isValid: true }, 1000);
+
+    // inout valid text to trigger a fetch
+    fireEvent.change(screen.getByTestId(usernameTestId), {
+      target: { value: "James" }
+    });
+
+    // loading should be shown
+    expect(screen.getByTestId(usernameLoadingTestId)).toBeTruthy();
+
+    // wait for the response
+    await act(async () => {
+      await wait(1500);
+    });
+
+    // loading should not be shown
+    expect(() => screen.getByTestId(usernameLoadingTestId)).toThrowError();
+
+    // an icon with a checkmark should be shown
+    expect(screen.getByTestId(usernameValidTestId)).toBeTruthy();
+
+    // mock the fetch response to show an invalid message
+    mockResponse({ isValid: false }, 1000);
+
+    // input a text
+    fireEvent.change(screen.getByTestId(usernameTestId), {
+      target: { value: "James B" }
+    });
+
+    // loading should be shown
+    expect(screen.getByTestId(usernameLoadingTestId)).toBeTruthy();
+
+    // wait for the response
+    await act(async () => {
+      await wait(1500);
+    });
+
+    // loading should not be shown
+    expect(() => screen.getByTestId(usernameLoadingTestId)).toThrowError();
+
+    // an invalid message should be shown
+    expect(screen.getByTestId(usernameInvalidTestId)).toBeTruthy();
+  }, 8000);
+
   test("Call count on blur", async () => {
     render(<Register />);
 
@@ -125,73 +194,4 @@ describe("Register", () => {
 
     expect(screen.getByTestId(messageTestId)).toBeTruthy();
   });
-
-  test("Fetch", async () => {
-    const { container } = render(<Register />);
-
-    // loading should not be in the document
-    expect(() => screen.getByTestId(usernameLoadingTestId)).toThrowError();
-
-    // input one letter to trigger a promise with wait
-    fireEvent.change(screen.getByTestId(usernameTestId), {
-      target: { value: "J" }
-    });
-
-    await wait(500);
-
-    // no error should be shown
-    testInvalidMessage(container, 0);
-
-    // wait for the return of the fetch
-    await act(async () => {
-      await wait(1000);
-    });
-
-    // one error message should be shown
-    testInvalidMessage(container, 1);
-
-    // mock the fetch response
-    mockResponse({ isValid: true }, 1000);
-
-    // inout valid text to trigger a fetch
-    fireEvent.change(screen.getByTestId(usernameTestId), {
-      target: { value: "James" }
-    });
-
-    // loading should be shown
-    expect(screen.getByTestId(usernameLoadingTestId)).toBeTruthy();
-
-    // wait for the response
-    await act(async () => {
-      await wait(1500);
-    });
-
-    // loading should not be shown
-    expect(() => screen.getByTestId(usernameLoadingTestId)).toThrowError();
-
-    // an icon with a checkmark should be shown
-    expect(screen.getByTestId(usernameValidTestId)).toBeTruthy();
-
-    // mock the fetch response to show an invalid message
-    mockResponse({ isValid: false }, 1000);
-
-    // input a text
-    fireEvent.change(screen.getByTestId(usernameTestId), {
-      target: { value: "James B" }
-    });
-
-    // loading should be shown
-    expect(screen.getByTestId(usernameLoadingTestId)).toBeTruthy();
-
-    // wait for the response
-    await act(async () => {
-      await wait(1500);
-    });
-
-    // loading should not be shown
-    expect(() => screen.getByTestId(usernameLoadingTestId)).toThrowError();
-
-    // an invalid message should be shown
-    expect(screen.getByTestId(usernameInvalidTestId)).toBeTruthy();
-  }, 6000);
 });

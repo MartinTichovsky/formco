@@ -1,11 +1,13 @@
 import React from "react";
 import { FormFields, ValidationResult } from "../controller.types";
-import { FieldType } from "./Field.types";
+import { FieldPrivateProps, FieldType } from "./Field.types";
 
 export const FieldComponent = <
   T extends FormFields<T>,
   K extends keyof T,
-  IComponent extends React.ComponentType<React.ComponentProps<IComponent>>
+  IComponent extends React.ComponentType<
+    React.ComponentProps<IComponent> & FieldPrivateProps
+  >
 >({
   children,
   component: Component,
@@ -21,6 +23,7 @@ export const FieldComponent = <
   const ref = React.useRef<HTMLElement>();
   const refProps = React.useRef(props);
   refProps.current = props;
+  const onBlur = React.useRef<React.FocusEventHandler | undefined>(undefined);
 
   if (validation) {
     React.useEffect(
@@ -39,23 +42,18 @@ export const FieldComponent = <
             ref.current.scrollTo();
             ref.current.focus();
           }
-
-          if (onValidation) {
-            onValidation(!validationResult, setProps);
-          }
         };
 
         controller.subscribeValidator({
           action,
           id: rest.id,
           key: name,
-          validation: () => {
-            return validation(
+          validation: () =>
+            validation(
               controller.getFieldValue(name),
               controller.getObservedFields(name),
               refProps.current
-            );
-          }
+            )
         });
 
         return () => {
@@ -66,8 +64,35 @@ export const FieldComponent = <
     );
   }
 
-  return React.createElement(Component as any, {
+  if (onValidation) {
+    React.useEffect(() => {
+      const action = () => {
+        onValidation(
+          controller.isFieldValid(name) === true,
+          setProps,
+          controller.isFieldValidationInProgress(name) === true ||
+            controller.isFieldValidationToBeExecuted(name) === true
+        );
+      };
+
+      controller.subscribeOnChange(action, name);
+
+      return () => {
+        controller.unsubscribeOnChange(action, name);
+      };
+    }, [controller, name, onValidation, setProps]);
+  }
+
+  if (validation && !onBlur.current) {
+    onBlur.current = () => {
+      controller.validateOnBlur(name);
+    };
+  }
+
+  return React.createElement(Component, {
     ...props,
+    name,
+    onBlur: onBlur.current,
     onChange: (event: React.ChangeEvent<{ checked: boolean; value: string }>) =>
       controller.setFieldValue({
         id: rest.id,
@@ -75,6 +100,11 @@ export const FieldComponent = <
         key: name,
         value: event.currentTarget.value
       }),
+    onKeyDown: (event: React.KeyboardEvent) => {
+      if (event.key === "Enter") {
+        controller.submit();
+      }
+    },
     ref
-  });
+  } as React.ComponentProps<React.ElementType>);
 };
