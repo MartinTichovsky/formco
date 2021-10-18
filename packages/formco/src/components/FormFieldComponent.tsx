@@ -17,8 +17,8 @@ export function FormFieldComponent<
   IComponent extends React.ComponentType<
     React.ComponentProps<IComponent> &
       (ElementType extends HTMLInputElement
-        ? FormFieldPrivateInputProps<ElementType>
-        : FormFieldPrivateProps<ElementType>)
+        ? FormFieldPrivateInputProps
+        : FormFieldPrivateProps)
   >,
   MComponent extends React.ElementType,
   ElementType,

@@ -26,16 +26,15 @@ export interface FormFieldInternalProps {
   fieldType: "input" | "select" | "textarea";
 }
 
-export interface FormFieldPrivateInputProps<T>
-  extends FormFieldPrivateProps<T> {
-  onKeyDown: (event: React.KeyboardEvent<T>) => void;
+export interface FormFieldPrivateInputProps extends FormFieldPrivateProps {
+  onKeyDown: (event: React.KeyboardEvent) => void;
 }
 
-export interface FormFieldPrivateProps<T> {
+export interface FormFieldPrivateProps {
   defaultValue: string;
   disabled: boolean;
-  onBlur: (event: React.ChangeEvent<T>) => void;
-  onChange: (event: React.ChangeEvent<T>) => void;
+  onBlur: (event: React.ChangeEvent) => void;
+  onChange: (event: React.ChangeEvent) => void;
 }
 
 export interface FormFieldPublicProps<
@@ -63,8 +62,8 @@ export interface FormFieldType<
   IComponent extends React.ComponentType<
     React.ComponentProps<IComponent> &
       (ElementType extends HTMLInputElement
-        ? FormFieldPrivateInputProps<ElementType>
-        : FormFieldPrivateProps<ElementType>)
+        ? FormFieldPrivateInputProps
+        : FormFieldPrivateProps)
   >,
   MComponent extends React.ElementType,
   ElementType,
@@ -93,24 +92,27 @@ export interface FormFieldType<
     value,
     ...rest
   }: React.PropsWithChildren<
-    FormFieldPublicProps<T, K> & {
-      className?: string;
-      onFormChange?: (name: K, props: typeof rest) => void;
-    } & CommonFormFieldProps &
-      (
-        | ({
-            component: undefined;
-            messageComponent: undefined;
-          } & RestProps<HTMLAttributesType>)
-        | ({
-            component: undefined;
-            messageComponent: MComponent;
-          } & RestProps<HTMLAttributesType>)
-        | ({
-            component?: IComponent;
-            messageComponent?: MComponent;
-          } & RestProps<React.ComponentPropsWithoutRef<IComponent>>)
-      ) &
+    (
+      | ({
+          component?: undefined;
+          messageComponent: undefined;
+        } & HTMLAttributesType)
+      | ({
+          component?: undefined;
+          messageComponent: MComponent;
+        } & HTMLAttributesType)
+      | ({
+          component?: IComponent;
+          messageComponent?: MComponent;
+        } & Omit<
+          React.ComponentPropsWithoutRef<IComponent>,
+          "defaultValue" | "disabled" | "onBlur" | "onChange" | "onKeyDown"
+        >)
+    ) &
+      FormFieldPublicProps<T, K> & {
+        className?: string;
+        onFormChange?: (name: K, props: typeof rest) => void;
+      } & CommonFormFieldProps &
       (ElementType extends HTMLInputElement
         ?
             | {
@@ -194,33 +196,3 @@ export interface FormFieldType<
           })
   >): JSX.Element | null;
 }
-
-type RestProps<T> = Omit<
-  T,
-  | "children"
-  | "component"
-  | "controller"
-  | "disableIf"
-  | "hideMessage"
-  | "hideIf"
-  | "hideRequiredStar"
-  | "initialValidation"
-  | "label"
-  | "messageComponent"
-  | "name"
-  | "onFormChange"
-  | "requiredComponent"
-  | "requiredInvalidMessage"
-  | "requiredValidMessage"
-  | "validation"
-  | "validateOnBlur"
-  | "validateOnChange"
-  | "validationDependencies"
-  | "value"
-  // private props
-  | "defaultValue"
-  | "disabled"
-  | "onBlur"
-  | "onChange"
-  | "onKeyDown"
->;

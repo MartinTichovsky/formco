@@ -12,8 +12,8 @@ class ClassSelectComponent extends React.Component<{
   defaultValue: string; // required
   disabled: boolean; // required
   labelText: string;
-  onBlur: (event: React.ChangeEvent<HTMLSelectElement>) => void; // required
-  onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void; // required
+  onBlur: (event: React.ChangeEvent) => void; // required
+  onChange: (event: React.ChangeEvent) => void; // required
 }> {
   render() {
     const { defaultValue, disabled, labelText, onBlur, onChange, ...rest } =
@@ -45,7 +45,7 @@ const FunctionalSelectComponent = React.forwardRef<
     defaultValue: string; // required
     disabled: boolean; // required
     labeltext: string;
-    onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void; // required
+    onChange: (event: React.ChangeEvent) => void; // required
   }>
 >(({ children, defaultValue, disabled, labeltext, onChange, ...rest }, ref) => (
   <span>

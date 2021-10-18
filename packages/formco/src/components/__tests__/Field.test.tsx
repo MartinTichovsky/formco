@@ -46,7 +46,7 @@ const FieldContainer = <K extends keyof Form>(
       FormFieldType<
         Form,
         K,
-        React.ComponentType<FormFieldPrivateInputProps<HTMLInputElement>>,
+        React.ComponentType<FormFieldPrivateInputProps>,
         React.ElementType,
         HTMLInputElement,
         React.InputHTMLAttributes<HTMLInputElement>
@@ -58,7 +58,7 @@ const FieldContainer = <K extends keyof Form>(
   <FormField<
     Form,
     K,
-    React.ComponentType<FormFieldPrivateInputProps<HTMLInputElement>>,
+    React.ComponentType<FormFieldPrivateInputProps>,
     React.ElementType,
     HTMLInputElement,
     React.InputHTMLAttributes<HTMLInputElement>

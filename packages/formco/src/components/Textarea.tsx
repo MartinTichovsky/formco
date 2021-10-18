@@ -7,8 +7,7 @@ export function Textarea<
   T extends FormFields<T>,
   K extends keyof T,
   IComponent extends React.ComponentType<
-    React.ComponentProps<IComponent> &
-      FormFieldPrivateProps<HTMLTextAreaElement>
+    React.ComponentProps<IComponent> & FormFieldPrivateProps
   >,
   MComponent extends React.ElementType
 >(
