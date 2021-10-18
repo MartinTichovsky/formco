@@ -13,6 +13,7 @@ export const SubmitComponent = <
   controller,
   disabledByDefault = false,
   disableIfNotValid = false,
+  onClick,
   onSubmit,
   ...rest
 }: React.PropsWithChildren<
@@ -26,7 +27,7 @@ export const SubmitComponent = <
         React.ButtonHTMLAttributes<HTMLButtonElement>
       >
     ) =>
-      Component && typeof Component === "function" ? (
+      Component ? (
         <Component
           {...({
             ...rest,
@@ -43,8 +44,8 @@ export const SubmitComponent = <
   );
 
   const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (rest.onClick) {
-      rest.onClick(event);
+    if (onClick) {
+      onClick(event);
     }
 
     await controller.submit();

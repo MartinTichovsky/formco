@@ -15,9 +15,7 @@ const FunctionalSubmitComponent = ({
   ...rest
 }: React.PropsWithChildren<{
   disabled: boolean; // required
-  onClick: (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => Promise<Controller<MyForm>>; // required
+  onClick: (event: React.MouseEvent) => Controller<MyForm>; // required
 }>) => {
   const [pending, setPending] = React.useState(false);
   const isMounted = React.useRef(true);
@@ -55,9 +53,7 @@ const FunctionalSubmitComponent = ({
 
 interface ClassSubmitComponentProps {
   disabled: boolean; // required
-  onClick: (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => Promise<Controller<MyForm>>; // required
+  onClick: (event: React.MouseEvent) => Controller<MyForm>; // required
 }
 
 class ClassSubmitComponent extends React.Component<ClassSubmitComponentProps> {

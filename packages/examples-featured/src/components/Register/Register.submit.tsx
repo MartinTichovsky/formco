@@ -37,9 +37,7 @@ export const SubmitComponent = ({
   ...rest
 }: React.PropsWithChildren<{
   disabled: boolean;
-  onClick: (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => Promise<Controller<RegisterForm>>;
+  onClick: (event: React.MouseEvent) => Controller<RegisterForm>;
   store: MessageStore;
 }>) => {
   const [state, setState] = React.useState<State>({ pending: false });
