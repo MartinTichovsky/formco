@@ -115,4 +115,37 @@ describe("FormController", () => {
       expect(useEffectHooks?.get(1)?.action).toBeCalledTimes(1);
     });
   });
+
+  test("Mapped Fields", () => {
+    type FormType = {
+      age: string;
+      checked: boolean;
+      name: string;
+      undefined: undefined;
+    };
+
+    render(
+      <FormController<FormType> initialValues={{ age: 5 }}>
+        {(controller) => {
+          controller.setFieldValue({ key: "age", value: "10" });
+
+          const fields = controller.getMappedFields({
+            age: Number(),
+            checked: Boolean(),
+            name: String(),
+            undefined: undefined
+          });
+
+          expect(fields).toEqual({
+            age: 10,
+            checked: false,
+            name: "",
+            undefined: undefined
+          });
+
+          return <></>;
+        }}
+      </FormController>
+    );
+  });
 });

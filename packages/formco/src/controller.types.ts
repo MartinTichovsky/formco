@@ -23,7 +23,7 @@ export interface ControllerProps<T extends FormFields<T>> {
     [key in keyof T]?: (fields: Partial<T>) => boolean;
   };
   initialValidation?: boolean;
-  initialValues?: Partial<T>;
+  initialValues?: InitialValues<T>;
   options?: ControllerOptions;
   onSubmit?: OnSubmit<T>;
   requiredInvalidMessage?: string | JSX.Element;
@@ -112,10 +112,19 @@ export type FieldTypes =
 export type FormFields<T> = { [K in keyof T]: Value };
 
 export type HideIf<T> = { [key in keyof T]?: (fields: Partial<T>) => boolean };
+
+export type InitialValues<T> = {
+  [key in keyof T]?: Value | number;
+};
+
 export interface KeyType<T> {
   key: keyof T;
   type?: FieldTypes;
 }
+
+export type MapFields<T> = {
+  [key in keyof T]: Number | String | Boolean | undefined;
+};
 
 export interface OnDisable<T> {
   action: OnDisableAction;

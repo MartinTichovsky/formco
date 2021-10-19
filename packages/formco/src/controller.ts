@@ -13,7 +13,9 @@ import {
   FieldTypes,
   FormFields,
   HideIf,
+  InitialValues,
   KeyType,
+  MapFields,
   OnChangeAction,
   OnDisable,
   OnDisableAction,
@@ -54,7 +56,7 @@ export class Controller<T extends FormFields<T>> {
   private _hideIf?: HideIf<T>;
   private _initialRender = true;
   private _initialValidation?: boolean;
-  private _initialValues?: Partial<T>;
+  private _initialValues?: InitialValues<T>;
   private _isSubmitted = false;
   private _onChangeCounter = 0;
   private _onSubmit?: OnSubmit<T>;
@@ -97,8 +99,8 @@ export class Controller<T extends FormFields<T>> {
     validation
   }: ControllerProps<T>) {
     if (initialValues) {
-      this.setInitialValues(initialValues);
       this._initialValues = initialValues;
+      this.setInitialValues(initialValues);
     }
     if (onSubmit) {
       this._onSubmit = onSubmit;
@@ -336,6 +338,26 @@ export class Controller<T extends FormFields<T>> {
     return this._hideIf && key in this._hideIf ? this._hideIf[key] : undefined;
   }
 
+  public getMappedFields<K extends MapFields<T>>(
+    map: K
+  ): { [key in keyof K]: K[key] } {
+    const mapped: { [key in keyof K]?: unknown } = {};
+
+    for (let key in map) {
+      if (typeof map[key] === "number") {
+        mapped[key] = parseInt(this._fields[key]?.value?.toString() || "");
+      } else if (typeof map[key] === "string") {
+        mapped[key] = this._fields[key]?.value?.toString() || "";
+      } else if (typeof map[key] === "boolean") {
+        mapped[key] = this._fields[key]?.value === true;
+      } else {
+        mapped[key] = this._fields[key]?.value;
+      }
+    }
+
+    return mapped as { [key in keyof K]: K[key] };
+  }
+
   public getObservedFields(key: keyof T) {
     return this._initialRender && Proxy !== undefined
       ? new Proxy<Partial<T>>(
@@ -357,6 +379,18 @@ export class Controller<T extends FormFields<T>> {
           }
         )
       : this.fields;
+  }
+
+  private getInitialValue(key: keyof T): T[typeof key] | undefined {
+    if (!this._initialValues || !(key in this._initialValues)) {
+      return undefined;
+    }
+
+    if (typeof this._initialValues[key] === "number") {
+      return this._initialValues[key]?.toString() as T[typeof key];
+    }
+
+    return this._initialValues[key] as T[typeof key];
   }
 
   private getQueueId(key: keyof T) {
@@ -527,7 +561,7 @@ export class Controller<T extends FormFields<T>> {
         validationInProgress: false,
         validationToBeExecuted: false,
         validationContent: undefined,
-        value: this._initialValues?.[key]
+        value: this.getInitialValue(key)
       };
     }
 
@@ -573,6 +607,7 @@ export class Controller<T extends FormFields<T>> {
         hideIf: this._hideIf,
         initialValidation: this._initialValidation,
         initialValues: this._initialValues,
+
         options: this.options,
         onSubmit: this._onSubmit,
         requiredInvalidMessage: this.requiredInvalidMessage,
@@ -622,7 +657,7 @@ export class Controller<T extends FormFields<T>> {
         validationContent: this.getValidationResultContent(validationResult),
         validationInProgress: false,
         validationToBeExecuted: false,
-        value: this._initialValues?.[key]
+        value: this.getInitialValue(key)
       };
     }
 
@@ -684,7 +719,7 @@ export class Controller<T extends FormFields<T>> {
         validationContent: this.getValidationResultContent(validationResult),
         validationInProgress: false,
         validationToBeExecuted: false,
-        value: this._initialValues?.[key]
+        value: this.getInitialValue(key)
       };
     }
 
@@ -732,7 +767,7 @@ export class Controller<T extends FormFields<T>> {
         validationContent: this.getValidationResultContent(validationResult),
         validationInProgress: false,
         validationToBeExecuted: false,
-        value: this._initialValues?.[key]
+        value: this.getInitialValue(key)
       };
     }
 
@@ -861,7 +896,7 @@ export class Controller<T extends FormFields<T>> {
     }
   }
 
-  private setInitialValues(initialValues: Partial<T>) {
+  private setInitialValues(initialValues: InitialValues<T>) {
     for (let key in initialValues) {
       this._fields[key] = {
         isDisabled: false,
@@ -872,7 +907,7 @@ export class Controller<T extends FormFields<T>> {
         validationContent: undefined,
         validationInProgress: false,
         validationToBeExecuted: false,
-        value: initialValues[key]
+        value: this.getInitialValue(key)
       };
     }
   }
@@ -900,7 +935,7 @@ export class Controller<T extends FormFields<T>> {
 
     let value =
       disable || this._fields[key]!.options === undefined
-        ? this._initialValues?.[key]
+        ? this.getInitialValue(key)
         : isDisabled &&
           this._fields[key]!.activeId === id &&
           id !== this._defaultActiveRadioId[key]
@@ -915,7 +950,7 @@ export class Controller<T extends FormFields<T>> {
         this._defaultActiveRadioId[key]!
       )
     ) {
-      value = this._initialValues?.[key];
+      value = this.getInitialValue(key);
       this.isSelectedAction(this._defaultActiveRadioId[key]);
     }
 
@@ -943,7 +978,7 @@ export class Controller<T extends FormFields<T>> {
         this._fields[key] = {
           ...this._fields[key],
           activeId: this._defaultActiveRadioId[key],
-          value: this._initialValues?.[key]
+          value: this.getInitialValue(key)
         };
         this.validateAll(key, true);
         this.isSelectedAction(this._defaultActiveRadioId[key]);
@@ -985,7 +1020,7 @@ export class Controller<T extends FormFields<T>> {
     }
 
     if (type !== "radio" && visible && this._fields[key]!.value === undefined) {
-      this._fields[key]!.value = this._initialValues?.[key];
+      this._fields[key]!.value = this.getInitialValue(key);
     }
 
     if (type === "radio" && !this._afterAll.visible.has(key)) {
@@ -1025,7 +1060,7 @@ export class Controller<T extends FormFields<T>> {
         this._fields[key]!.options?.get(this._defaultActiveRadioId?.[key]!)
           ?.isVisible === true
       ) {
-        this._fields[key]!.value = this._initialValues?.[key];
+        this._fields[key]!.value = this.getInitialValue(key);
         this._fields[key] = {
           ...this._fields[key],
           activeId: this._defaultActiveRadioId?.[key]
@@ -1129,7 +1164,7 @@ export class Controller<T extends FormFields<T>> {
         validationContent: undefined,
         validationInProgress: false,
         validationToBeExecuted: false,
-        value: this._initialValues?.[key]
+        value: this.getInitialValue(key)
       };
     }
 
