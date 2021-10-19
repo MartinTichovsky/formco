@@ -2,6 +2,7 @@ import { Controller } from "../controller";
 import {
   ControllerOptions,
   FormFields,
+  InitialValues,
   OnSubmit,
   ValidationResult
 } from "../controller.types";
@@ -20,7 +21,7 @@ export type FormControllerProps<T extends FormFields<T>> =
       [key in keyof T]?: (fields: Partial<T>) => boolean;
     };
     initialValidation?: boolean;
-    initialValues?: Partial<T>;
+    initialValues?: InitialValues<T>;
     options?: ControllerOptions;
     onSubmit?: OnSubmit<T>;
     requiredInvalidMessage?: string | JSX.Element;

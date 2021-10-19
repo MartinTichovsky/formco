@@ -64,24 +64,41 @@ export const FieldComponent = <
     );
   }
 
-  if (onValidation) {
-    React.useEffect(() => {
-      const action = () => {
-        onValidation(
-          controller.isFieldValid(name) === true,
-          setProps,
-          controller.isFieldValidationInProgress(name) === true ||
-            controller.isFieldValidationToBeExecuted(name) === true
-        );
-      };
+  React.useEffect(() => {
+    const onValidationAction =
+      onValidation ||
+      ((
+        isFieldValid: boolean,
+        setProps: React.Dispatch<React.SetStateAction<typeof rest>>,
+        validationInProgress: boolean
+      ) => {
+        if (validationInProgress) {
+          setProps((prevProps) => ({ ...prevProps, error: undefined }));
+          return;
+        }
 
-      controller.subscribeOnChange(action, name);
+        if (isFieldValid) {
+          setProps((prevProps) => ({ ...prevProps, error: undefined }));
+        } else {
+          setProps((prevProps) => ({ ...prevProps, error: true }));
+        }
+      });
 
-      return () => {
-        controller.unsubscribeOnChange(action, name);
-      };
-    }, [controller, name, onValidation, setProps]);
-  }
+    const action = () => {
+      onValidationAction(
+        controller.isFieldValid(name) === true,
+        setProps,
+        controller.isFieldValidationInProgress(name) === true ||
+          controller.isFieldValidationToBeExecuted(name) === true
+      );
+    };
+
+    controller.subscribeOnChange(action, name);
+
+    return () => {
+      controller.unsubscribeOnChange(action, name);
+    };
+  }, [controller, name, onValidation, setProps]);
 
   if (validation && !onBlur.current) {
     onBlur.current = () => {
