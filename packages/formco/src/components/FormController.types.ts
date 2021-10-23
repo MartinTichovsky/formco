@@ -5,7 +5,7 @@ import {
   InitialValues,
   OnSubmit,
   ValidationResult
-} from "../controller.types";
+} from "../private-controller.types";
 
 export type FormControllerComponentProps<T extends FormFields<T>> =
   FormControllerProps<T> &

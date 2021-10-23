@@ -1,13 +1,17 @@
 import React from "react";
-import { FormFields, ValidationContentResult } from "../controller.types";
+import {
+  FormFields,
+  ValidationContentResult
+} from "../private-controller.types";
+import { usePrivateController } from "../providers";
 import { MessageForProps, MessageForState } from "./MessageFor.types";
 
 export const MessageFor = <T extends FormFields<T>, K extends keyof T>({
   children,
-  controller,
   isValid,
   name
 }: MessageForProps<T, K>) => {
+  const privateController = usePrivateController<T>();
   const [state, setState] = React.useState<MessageForState>({
     message: undefined,
     isVisible: false
@@ -39,12 +43,12 @@ export const MessageFor = <T extends FormFields<T>, K extends keyof T>({
       key: name
     };
 
-    controller.subscribeOnValidation(onValidation);
+    privateController.subscribeOnValidation(onValidation);
 
     return () => {
-      controller.unsubscribeOnValidation(onValidation);
+      privateController.unsubscribeOnValidation(onValidation);
     };
-  }, [controller, refState, setState]);
+  }, [privateController, refState, setState]);
 
   return <>{state.isVisible && (children ? children : state.message)}</>;
 };

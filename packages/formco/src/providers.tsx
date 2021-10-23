@@ -1,5 +1,7 @@
 import React from "react";
 import { CommonFormFieldProps } from "./components/FormField.types";
+import { PrivateController } from "./private-controller";
+import { FormFields } from "./private-controller.types";
 import {
   OnChangeCondition,
   SelectProviderProps,
@@ -17,6 +19,10 @@ export const hideIfContext = React.createContext<OnChangeCondition | undefined>(
   undefined
 );
 
+export const privateControllerContext = React.createContext<
+  PrivateController<{}> | undefined
+>(undefined);
+
 export const selectContext = React.createContext<
   SelectProviderProps | undefined
 >(undefined);
@@ -24,6 +30,25 @@ export const selectContext = React.createContext<
 export const validationContext = React.createContext<
   ValidationAction | undefined
 >(undefined);
+
+export const getControllerProviderContext = <T extends FormFields<T>>() =>
+  privateControllerContext as React.Context<PrivateController<T> | undefined>;
+
+export const usePrivateController = <
+  T extends FormFields<T>
+>(): PrivateController<T> => {
+  const controller = React.useContext<PrivateController<T> | undefined>(
+    getControllerProviderContext<T>()
+  );
+
+  if (!controller) {
+    throw Error(
+      "Controller is not provided. Every component from formco must be inside FormController."
+    );
+  }
+
+  return controller;
+};
 
 export const SelectProvider = ({
   children,

@@ -1,6 +1,10 @@
 import React from "react";
 import { CN } from "../constants";
-import { FormFields, ValidationResult } from "../controller.types";
+import {
+  FormFields,
+  PrivateProps,
+  ValidationResult
+} from "../private-controller.types";
 import { SelectProvider } from "../providers";
 import {
   FormFieldInitialProps,
@@ -24,17 +28,23 @@ export function FormFieldComponent<
   component: Component,
   controller,
   disableIf,
+  fieldType,
   hideMessage,
   hideIf,
   hideRequiredStar,
+  id,
+  initialState,
   initialValidation,
   label,
   messageComponent: MessageComponent,
   name,
   onFormChange,
+  privateController,
+  required,
   requiredComponent,
   requiredInvalidMessage,
   requiredValidMessage,
+  type,
   validation,
   validateOnBlur,
   validateOnChange,
@@ -44,177 +54,176 @@ export function FormFieldComponent<
 }: React.PropsWithChildren<
   React.ComponentProps<
     FormFieldType<T, K, IComponent, MComponent, ElementType, HTMLAttributesType>
-  > &
-    FormFieldInternalProps &
-    FormFieldInitialProps
->) {
-  const { initialState, fieldType, ...restProps } = rest;
+  >
+> &
+  FormFieldInternalProps &
+  FormFieldInitialProps &
+  PrivateProps<T>) {
   const [state, setState] = React.useState<FormFieldState>({
     ...initialState!,
-    isOnFirstPosition: controller.isOnFirstPosition(name, rest.id),
+    isOnFirstPosition: privateController.isOnFirstPosition(name, id),
     isSelected:
-      rest.type === "checkbox"
-        ? controller.getFieldValue(name) === true
-        : controller.getFieldValue(name) === value
+      type === "checkbox"
+        ? privateController.getFieldValue(name) === true
+        : privateController.getFieldValue(name) === value
   });
-  const refState = React.useRef<FormFieldState>();
-  refState.current = state;
 
-  const ref = React.useRef<HTMLSelectElement | HTMLInputElement>();
-  const defaultValue = React.useRef(controller.getFieldValue(name) || "");
+  const defaultValue = React.useRef(
+    privateController.getFieldValue(name) || ""
+  );
   const key = React.useRef(0);
   const onBlur = React.useRef<React.FocusEventHandler | undefined>(undefined);
+  const ref = React.useRef<HTMLSelectElement | HTMLInputElement>();
+  const refState = React.useRef<FormFieldState>();
 
-  React.useEffect(
-    () => {
-      if (
-        rest.type === "radio" &&
-        rest.id &&
-        controller.getFieldValue(name) === value
-      ) {
-        controller.setDefaultActiveRadioId(name, rest.id);
-      }
+  refState.current = state;
 
-      if (
-        rest.type === "radio" &&
-        ((rest.required && !hideRequiredStar) || !hideMessage)
-      ) {
-        const action = () => {
-          const isOnFirstPosition = controller.isOnFirstPosition(name, rest.id);
+  React.useEffect(() => {
+    if (
+      type === "radio" &&
+      id &&
+      privateController.getFieldValue(name) === value
+    ) {
+      privateController.setDefaultActiveRadioId(name, id);
+    }
 
-          if (
-            (!refState.current?.isOnFirstPosition && isOnFirstPosition) ||
-            (refState.current?.isOnFirstPosition && !isOnFirstPosition)
-          ) {
-            setState((prevState) => ({ ...prevState, isOnFirstPosition }));
-          }
-        };
+    if (type === "radio" && ((required && !hideRequiredStar) || !hideMessage)) {
+      const action = () => {
+        const isOnFirstPosition = privateController.isOnFirstPosition(name, id);
 
-        controller.subscribeOnChange(action, name);
+        if (
+          (!refState.current?.isOnFirstPosition && isOnFirstPosition) ||
+          (refState.current?.isOnFirstPosition && !isOnFirstPosition)
+        ) {
+          setState((prevState) => ({ ...prevState, isOnFirstPosition }));
+        }
+      };
 
-        return () => {
-          controller.unsubscribeOnChange(action, name);
-          controller.deleteField(name, rest.id);
-        };
-      }
+      privateController.subscribeOnChange(action, name);
 
       return () => {
-        controller.deleteField(name, rest.id);
+        privateController.unsubscribeOnChange(action, name);
+        privateController.deleteField(name, id);
       };
-    }, // eslint-disable-next-line react-hooks/exhaustive-deps
-    [controller, refState]
-  );
+    }
+
+    return () => {
+      privateController.deleteField(name, id);
+    };
+  }, [
+    hideMessage,
+    hideRequiredStar,
+    id,
+    name,
+    privateController,
+    required,
+    refState,
+    type
+  ]);
 
   if (validation && !onBlur.current) {
     onBlur.current = () => {
-      controller.validateOnBlur(name);
+      privateController.validateOnBlur(name);
     };
   }
 
   if (validation) {
-    React.useEffect(
-      () => {
-        const action = (
-          validationResult: ValidationResult,
-          submitAction: boolean
-        ) => {
-          if (hideMessage) {
-            return;
-          }
+    React.useEffect(() => {
+      const action = (
+        validationResult: ValidationResult,
+        submitAction: boolean
+      ) => {
+        if (hideMessage) {
+          return;
+        }
 
-          const field = controller.getField(name);
-          const isValid =
-            field === undefined ||
-            (field.validationInProgress ? undefined : field.isValid);
+        const field = privateController.getField(name);
+        const isValid =
+          field === undefined ||
+          (field.validationInProgress ? undefined : field.isValid);
 
-          if (
-            validationResult &&
-            submitAction &&
-            controller.scrollToError &&
-            ref.current &&
-            controller.canScrollToElement
-          ) {
-            ref.current.scrollTo();
-            ref.current.focus();
-          }
+        if (
+          validationResult &&
+          submitAction &&
+          privateController.scrollToError &&
+          ref.current &&
+          privateController.canScrollToElement
+        ) {
+          ref.current.scrollTo();
+          ref.current.focus();
+        }
 
-          if (
-            validationResult &&
-            (refState.current!.message !== validationResult ||
-              refState.current!.isValid !== isValid)
-          ) {
-            setState((prevState) => ({
-              ...prevState,
-              isValid,
-              message: validationResult
-            }));
-          } else if (
-            !validationResult &&
-            (refState.current!.message !== undefined ||
-              refState.current?.isValid !== isValid)
-          ) {
-            setState((prevState) => ({
-              ...prevState,
-              isValid,
-              message: undefined
-            }));
-          }
-        };
-
-        controller.subscribeValidator({
-          action,
-          id: rest.id,
-          key: name,
-          type: rest.type,
-          validation: () =>
-            validation(
-              controller.getFieldValue(name),
-              controller.getObservedFields(name),
-              rest
-            )
-        });
-
-        return () => {
-          controller.unsubscribeValidator(name, action);
-        };
-      }, // eslint-disable-next-line react-hooks/exhaustive-deps
-      [controller, hideMessage, name, setState, validation]
-    );
-  }
-
-  React.useEffect(
-    () => {
-      const action = {
-        action: (disable: boolean) => {
-          if (disable !== refState.current!.isDisabled) {
-            setState((prevState) => ({
-              ...prevState,
-              isDisabled: disable
-            }));
-          }
-        },
-        key: name
+        if (
+          validationResult &&
+          (refState.current!.message !== validationResult ||
+            refState.current!.isValid !== isValid)
+        ) {
+          setState((prevState) => ({
+            ...prevState,
+            isValid,
+            message: validationResult
+          }));
+        } else if (
+          !validationResult &&
+          (refState.current!.message !== undefined ||
+            refState.current?.isValid !== isValid)
+        ) {
+          setState((prevState) => ({
+            ...prevState,
+            isValid,
+            message: undefined
+          }));
+        }
       };
 
-      controller.subscribeOnDisable(action);
+      privateController.subscribeValidator({
+        action,
+        id,
+        key: name,
+        type,
+        validation: () =>
+          validation(
+            privateController.getFieldValue(name),
+            privateController.getObservedFields(name)
+          )
+      });
 
       return () => {
-        controller.unsubscribeOnDisable(action);
+        privateController.unsubscribeValidator(name, action);
       };
-    }, // eslint-disable-next-line react-hooks/exhaustive-deps
-    [controller, name, setState]
-  );
+    }, [hideMessage, id, name, privateController, setState, type, validation]);
+  }
+
+  React.useEffect(() => {
+    const action = {
+      action: (disable: boolean) => {
+        if (disable !== refState.current!.isDisabled) {
+          setState((prevState) => ({
+            ...prevState,
+            isDisabled: disable
+          }));
+        }
+      },
+      key: name
+    };
+
+    privateController.subscribeOnDisable(action);
+
+    return () => {
+      privateController.unsubscribeOnDisable(action);
+    };
+  }, [name, privateController, setState]);
 
   if (disableIf) {
     React.useEffect(() => {
       const action = () => {
-        const isDisabled = disableIf(controller.fields);
+        const isDisabled = disableIf(privateController.fields);
 
-        controller.setIsDisabled({
-          id: rest.id,
+        privateController.setIsDisabled({
+          id,
           isDisabled,
           key: name,
-          type: rest.type
+          type
         });
 
         if (isDisabled && !refState.current!.isDisabled) {
@@ -224,9 +233,9 @@ export function FormFieldComponent<
             ...prevState,
             isDisabled: true,
             isSelected:
-              (rest.type === "checkbox" &&
-                controller.getFieldValue(name) === true) ||
-              controller.getFieldValue(name) === value,
+              (type === "checkbox" &&
+                privateController.getFieldValue(name) === true) ||
+              privateController.getFieldValue(name) === value,
             isValid: undefined,
             message: undefined
           }));
@@ -238,130 +247,127 @@ export function FormFieldComponent<
         }
       };
 
-      controller.subscribeOnChange(action);
+      privateController.subscribeOnChange(action);
 
       return () => {
-        controller.unsubscribeOnChange(action);
+        privateController.unsubscribeOnChange(action);
       };
-    }, [controller, disableIf, key, name, refState, setState]);
+    }, [
+      disableIf,
+      id,
+      key,
+      name,
+      privateController,
+      refState,
+      setState,
+      type,
+      value
+    ]);
   }
 
   if (onFormChange) {
-    React.useEffect(
-      () => {
-        const action = () => {
-          onFormChange(name, rest);
-        };
+    React.useEffect(() => {
+      const action = () => {
+        onFormChange(name);
+      };
 
-        controller.subscribeOnChange(action);
+      privateController.subscribeOnChange(action);
 
-        return () => {
-          controller.unsubscribeOnChange(action);
-        };
-      }, // eslint-disable-next-line react-hooks/exhaustive-deps
-      [controller, name, onFormChange]
-    );
+      return () => {
+        privateController.unsubscribeOnChange(action);
+      };
+    }, [name, onFormChange, privateController]);
   }
 
   if (hideIf) {
-    React.useEffect(
-      () => {
-        const action = () => {
-          const isVisible = !hideIf(controller.fields);
+    React.useEffect(() => {
+      const action = () => {
+        const isVisible = !hideIf(privateController.fields);
 
-          controller.setIsVisible({
-            id: rest.id,
-            isVisible,
-            key: name,
-            type: rest.type
-          });
+        privateController.setIsVisible({
+          id,
+          isVisible,
+          key: name,
+          type
+        });
 
-          if (!isVisible && refState.current!.isVisible) {
-            setState((prevState) => ({
-              ...prevState,
-              isOnFirstPosition: controller.isOnFirstPosition(name, rest.id),
-              isVisible: false
-            }));
-          } else if (isVisible && !refState.current!.isVisible) {
-            key.current++;
-
-            setState((prevState) => ({
-              ...prevState,
-              isSelected:
-                (rest.type === "checkbox" &&
-                  controller.getFieldValue(name) === true) ||
-                controller.getFieldValue(name) === value,
-              isOnFirstPosition: controller.isOnFirstPosition(name, rest.id),
-              isVisible: true
-            }));
-          }
-        };
-
-        controller.subscribeOnChange(action);
-
-        return () => {
-          controller.unsubscribeOnChange(action);
-        };
-      }, // eslint-disable-next-line react-hooks/exhaustive-deps
-      [controller, hideIf, setState]
-    );
-  }
-
-  if (rest.type === "radio" && rest.id) {
-    React.useEffect(
-      () => {
-        controller.subscribeIsSelected(rest.id!, () => {
+        if (!isVisible && refState.current!.isVisible) {
+          setState((prevState) => ({
+            ...prevState,
+            isOnFirstPosition: privateController.isOnFirstPosition(name, id),
+            isVisible: false
+          }));
+        } else if (isVisible && !refState.current!.isVisible) {
           key.current++;
-          const field = controller.getField(name);
 
           setState((prevState) => ({
             ...prevState,
-            isSelected: true,
-            isValid: field === undefined || field.isValid,
-            message:
-              prevState.message && validation
-                ? validation(
-                    field?.value as T[K],
-                    controller.getObservedFields(name),
-                    rest
-                  )
-                : undefined
+            isSelected:
+              (type === "checkbox" &&
+                privateController.getFieldValue(name) === true) ||
+              privateController.getFieldValue(name) === value,
+            isOnFirstPosition: privateController.isOnFirstPosition(name, id),
+            isVisible: true
           }));
-        });
+        }
+      };
 
-        return () => {
-          controller.unsubscribeIsSelected(rest.id!);
-        };
-      }, // eslint-disable-next-line react-hooks/exhaustive-deps
-      [controller, setState]
-    );
+      privateController.subscribeOnChange(action);
+
+      return () => {
+        privateController.unsubscribeOnChange(action);
+      };
+    }, [hideIf, id, name, privateController, setState, type, value]);
+  }
+
+  if (type === "radio" && id) {
+    React.useEffect(() => {
+      privateController.subscribeIsSelected(id!, () => {
+        key.current++;
+        const field = privateController.getField(name);
+
+        setState((prevState) => ({
+          ...prevState,
+          isSelected: true,
+          isValid: field === undefined || field.isValid,
+          message:
+            prevState.message && validation
+              ? validation(
+                  field?.value as T[K],
+                  privateController.getObservedFields(name)
+                )
+              : undefined
+        }));
+      });
+
+      return () => {
+        privateController.unsubscribeIsSelected(id!);
+      };
+    }, [id, name, privateController, setState]);
   }
 
   if (fieldType === "select") {
-    React.useEffect(
-      () => {
-        let proceedValidation = true;
+    React.useEffect(() => {
+      let proceedValidation = true;
 
-        const _ref = ref as React.MutableRefObject<HTMLSelectElement>;
+      const _ref = ref as React.MutableRefObject<HTMLSelectElement>;
 
-        if (_ref && _ref.current && _ref.current.options) {
-          proceedValidation =
-            Array.prototype.filter.call(
-              _ref.current.options,
-              (option) => option.value && !option.disabled
-            ).length > 0;
-        }
+      if (_ref && _ref.current && _ref.current.options) {
+        proceedValidation =
+          Array.prototype.filter.call(
+            _ref.current.options,
+            (option) => option.value && !option.disabled
+          ).length > 0;
+      }
 
-        controller.setFieldValue({
-          id: rest.id,
-          isValid: proceedValidation ? undefined : true,
-          key: name,
-          silent: true,
-          value: _ref.current?.value
-        });
-      }, // eslint-disable-next-line react-hooks/exhaustive-deps
-      [controller, ref]
-    );
+      privateController.setFieldValue({
+        id,
+        isValid: proceedValidation ? undefined : true,
+        key: name,
+        silent: true,
+        value: _ref.current?.value
+      });
+    }, [id, name, privateController, ref]);
   }
 
   const ComponentElement = React.useCallback(
@@ -370,9 +376,9 @@ export function FormFieldComponent<
         Component ? (
           React.createElement(
             Component,
-            { ...restProps, ...props, controller, onBlur: onBlur.current, ref },
+            { ...rest, ...props, controller, onBlur: onBlur.current, ref },
             <SelectProvider
-              id={rest.id}
+              id={id}
               name={name as string}
               selectRef={ref as React.MutableRefObject<HTMLSelectElement>}
             >
@@ -380,9 +386,9 @@ export function FormFieldComponent<
             </SelectProvider>
           )
         ) : (
-          <select {...restProps} {...props} onBlur={onBlur.current} ref={ref}>
+          <select {...rest} {...props} onBlur={onBlur.current} ref={ref}>
             <SelectProvider
-              id={rest.id}
+              id={id}
               name={name as string}
               selectRef={ref as React.MutableRefObject<HTMLSelectElement>}
             >
@@ -393,13 +399,13 @@ export function FormFieldComponent<
       ) : Component ? (
         React.createElement(
           Component,
-          { ...restProps, ...props, controller, onBlur: onBlur.current, ref },
+          { ...rest, ...props, controller, onBlur: onBlur.current, ref },
           children
         )
       ) : fieldType === "textarea" ? (
-        <textarea {...restProps} {...props} onBlur={onBlur.current} ref={ref} />
+        <textarea {...rest} {...props} onBlur={onBlur.current} ref={ref} />
       ) : (
-        <input {...restProps} {...props} onBlur={onBlur.current} ref={ref} />
+        <input {...rest} {...props} onBlur={onBlur.current} ref={ref} />
       ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [Component, fieldType]
@@ -413,7 +419,7 @@ export function FormFieldComponent<
       MessageComponent ? (
         React.createElement(
           MessageComponent,
-          { ...restProps, ...props, controller },
+          { ...rest, ...props, controller },
           children
         )
       ) : (
@@ -429,68 +435,70 @@ export function FormFieldComponent<
 
   let props = {
     defaultChecked: false,
-    defaultValue: value || (defaultValue.current as string)
+    defaultValue: value || defaultValue.current
   };
 
-  if ((rest.type === "checkbox" || rest.type === "radio") && state.isSelected) {
+  if ((type === "checkbox" || type === "radio") && state.isSelected) {
     props.defaultChecked = true;
   }
 
   return (
     <>
-      {rest.type !== "checkbox" &&
-        rest.type !== "radio" &&
+      {type !== "checkbox" &&
+        type !== "radio" &&
         (typeof label === "string" ? (
           <>
-            <label htmlFor={rest.id}>{label}</label>{" "}
+            <label htmlFor={id}>{label}</label>{" "}
           </>
         ) : (
           label
         ))}
       <ComponentElement
-        {...restProps}
+        {...rest}
         {...props}
         className={
           state.isValid === undefined
-            ? rest.required
+            ? required
               ? `${rest.className} ${CN.Required}`
               : rest.className
             : `${rest.className !== undefined ? `${rest.className} ` : ""}${
-                rest.required ? `${CN.Required} ` : ""
+                required ? `${CN.Required} ` : ""
               }${state.isValid === false ? CN.InvalidField : CN.ValidField}`
         }
         disabled={state.isDisabled}
+        id={id}
         key={key.current}
         name={name as string}
         onChange={(
           event: React.ChangeEvent<{ checked: boolean; value: string }>
         ) =>
-          controller.setFieldValue({
-            id: rest.id,
+          privateController.setFieldValue({
+            id,
             isTouched: true,
             key: name,
             value:
-              rest.type === "checkbox"
+              type === "checkbox"
                 ? event.currentTarget.checked
                 : event.currentTarget.value
           })
         }
         onKeyDown={(event: React.KeyboardEvent) => {
           if (event.key === "Enter") {
-            controller.submit();
+            privateController.submit();
           }
         }}
+        type={type}
       />
-      {(rest.type === "checkbox" || rest.type === "radio") &&
+      {(type === "checkbox" || type === "radio") &&
         (typeof label === "string" ? (
           <>
             {" "}
-            <label htmlFor={rest.id}>{label}</label>
+            <label htmlFor={id}>{label}</label>
           </>
         ) : (
           label
         ))}
-      {rest.required &&
+      {required &&
         !hideRequiredStar &&
         state.isOnFirstPosition &&
         (requiredComponent ? (

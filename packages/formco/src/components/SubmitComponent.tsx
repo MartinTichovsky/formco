@@ -1,5 +1,6 @@
 import React from "react";
-import { FormFields } from "../controller.types";
+import { Controller } from "../controller";
+import { FormFields, PrivateProps } from "../private-controller.types";
 import { SubmitComponentType, SubmitPrivateProps } from "./Submit.types";
 
 export const SubmitComponent = <
@@ -15,10 +16,12 @@ export const SubmitComponent = <
   disableIfNotValid = false,
   onClick,
   onSubmit,
+  privateController,
   ...rest
 }: React.PropsWithChildren<
   React.ComponentProps<SubmitComponentType<T, BComponent>>
->) => {
+> &
+  PrivateProps<T>) => {
   const [isDisabled, setDisabled] = React.useState(disabledByDefault === true);
 
   const ButtonElement = React.useCallback(
@@ -46,40 +49,42 @@ export const SubmitComponent = <
       onClick(event);
     }
 
-    await controller.submit();
+    await privateController.submit();
 
     if (onSubmit) {
-      onSubmit(controller.fields, controller);
+      onSubmit(privateController.fields, new Controller(privateController));
     }
 
-    return controller;
+    return new Controller(privateController);
   };
 
   React.useEffect(() => {
     if (disableIfNotValid) {
       const onChangeAction = (isValid: boolean) => {
-        setDisabled((controller.isSubmitted || disabledByDefault) && !isValid);
+        setDisabled(
+          (privateController.isSubmitted || disabledByDefault) && !isValid
+        );
       };
 
-      controller.subscribeOnChange(onChangeAction);
+      privateController.subscribeOnChange(onChangeAction);
 
       return () => {
-        controller.unsubscribeOnChange(onChangeAction);
+        privateController.unsubscribeOnChange(onChangeAction);
       };
     }
-  }, [controller, disableIfNotValid, setDisabled]);
+  }, [privateController, disableIfNotValid, setDisabled]);
 
   React.useEffect(() => {
     const onDisableAction = (disable: boolean) => {
       setDisabled(disable);
     };
 
-    controller.subscribeOnDisableButton(onDisableAction);
+    privateController.subscribeOnDisableButton(onDisableAction);
 
     return () => {
-      controller.unsubscribeOnDisableButton(onDisableAction);
+      privateController.unsubscribeOnDisableButton(onDisableAction);
     };
-  }, [controller, setDisabled]);
+  }, [privateController, setDisabled]);
 
   return (
     <ButtonElement {...rest} disabled={isDisabled} onClick={handleClick}>

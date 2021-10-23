@@ -1,4 +1,4 @@
-import { ValidationResult, Value } from "./controller.types";
+import { ValidationResult, Value } from "./private-controller.types";
 
 export type OnChangeCondition = ((fields: {}) => boolean) | undefined;
 
@@ -8,11 +8,7 @@ export interface SelectProviderProps {
   selectRef: React.MutableRefObject<HTMLSelectElement | undefined>;
 }
 
-export type ValidationAction = (
-  value: Value,
-  fields: {},
-  props: {}
-) => ValidationResult;
+export type ValidationAction = (value: Value, fields: {}) => ValidationResult;
 
 export interface ValidationProviderProps {
   readonly disableIf?: OnChangeCondition;

@@ -2,6 +2,8 @@ import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
 import { Controller } from "../../controller";
+import { PrivateController } from "../../private-controller";
+import { getControllerProviderContext } from "../../providers";
 import { getGeneratedValues } from "../../__tests__/utils/value-generator";
 import { Submit } from "../Submit";
 import { SubmitComponent } from "../SubmitComponent";
@@ -10,8 +12,10 @@ type Form = {
   input: string;
 };
 
-const buttonText = "Test text";
 let controller: Controller<Form>;
+let privateController: PrivateController<Form>;
+
+const buttonText = "Test text";
 
 const defaultFunctionalityTest = async (
   unmount: () => void,
@@ -68,34 +72,35 @@ console.error = jest.fn();
 
 beforeEach(() => {
   collector.reset();
-  const setController = jest.fn();
-  controller = new Controller<Form>({ setController });
+  privateController = new PrivateController<Form>({ setController: jest.fn() });
+  controller = new Controller(privateController);
 });
 
 describe("Submit", () => {
   describe("Submit Element", () => {
     test("Default functionality", () => {
-      render(<Submit controller={controller}>{buttonText}</Submit>);
+      const context = getControllerProviderContext<Form>();
+
+      render(
+        <context.Provider value={privateController}>
+          <Submit controller={controller}>{buttonText}</Submit>
+        </context.Provider>
+      );
 
       expect(screen.getByText(buttonText)).toBeTruthy();
     });
 
-    test("Providing wrong controller should throw an error", () => {
-      const values = getGeneratedValues();
-
-      values.forEach((value) => {
-        expect(() => {
-          render(<Submit controller={value} />);
-        }).toThrowError();
-      });
-    });
-
     test("Providing wrong onSubmit should throw an error", () => {
+      const context = getControllerProviderContext<Form>();
       const values = getGeneratedValues(false, "function", "undefined");
 
       values.forEach((value) => {
         expect(() => {
-          render(<Submit controller={controller} onSubmit={value} />);
+          render(
+            <context.Provider value={privateController}>
+              <Submit controller={controller} onSubmit={value} />
+            </context.Provider>
+          );
         }).toThrowError();
       });
     });
@@ -104,7 +109,12 @@ describe("Submit", () => {
   describe("SubmitComponent Element", () => {
     test("Default functionality", async () => {
       const { unmount } = render(
-        <SubmitComponent controller={controller}>{buttonText}</SubmitComponent>
+        <SubmitComponent
+          controller={controller}
+          privateController={privateController}
+        >
+          {buttonText}
+        </SubmitComponent>
       );
 
       await defaultFunctionalityTest(unmount);
@@ -112,7 +122,11 @@ describe("Submit", () => {
 
     test("DisabledByDefault is set to true and disableIfNotValid is false, the behaviour must be the same as default", async () => {
       const { unmount } = render(
-        <SubmitComponent controller={controller} disabledByDefault>
+        <SubmitComponent
+          controller={controller}
+          disabledByDefault
+          privateController={privateController}
+        >
           {buttonText}
         </SubmitComponent>
       );
@@ -126,6 +140,7 @@ describe("Submit", () => {
           controller={controller}
           disabledByDefault
           disableIfNotValid
+          privateController={privateController}
         >
           {buttonText}
         </SubmitComponent>
@@ -147,7 +162,7 @@ describe("Submit", () => {
       expect(useEffectHooks?.get(2)?.unmount).not.toBeCalled();
 
       // when onChange is triggered and the form is valid, the button should be enabled
-      controller.onChange();
+      privateController.onChange();
 
       expect(button).not.toBeDisabled();
       expect(collector.getCallCount(SubmitComponent.name)).toBe(2);
@@ -173,7 +188,11 @@ describe("Submit", () => {
       const onSubmit = jest.fn();
 
       render(
-        <SubmitComponent controller={controller} onSubmit={onSubmit}>
+        <SubmitComponent
+          controller={controller}
+          onSubmit={onSubmit}
+          privateController={privateController}
+        >
           {buttonText}
         </SubmitComponent>
       );
@@ -191,14 +210,19 @@ describe("Submit", () => {
 
     test("On disable action triggered from controller should disable the button - use case 1", () => {
       render(
-        <SubmitComponent controller={controller}>{buttonText}</SubmitComponent>
+        <SubmitComponent
+          controller={controller}
+          privateController={privateController}
+        >
+          {buttonText}
+        </SubmitComponent>
       );
 
       const button = screen.getByText(buttonText);
       expect(button).not.toBeDisabled();
 
       // disable fields manualy
-      controller.disableFields(true);
+      privateController.disableFields(true);
 
       expect(button).toBeDisabled();
     });
@@ -221,6 +245,7 @@ describe("Submit", () => {
           component={Component}
           controller={controller}
           onSubmit={onSubmit}
+          privateController={privateController}
         >
           {buttonText}
         </SubmitComponent>
@@ -234,7 +259,7 @@ describe("Submit", () => {
       expect(collector.getCallCount(SubmitComponent.name)).toBe(1);
 
       // test disability
-      controller.disableFields(true);
+      privateController.disableFields(true);
 
       expect(button).toBeDisabled();
       expect(collector.getCallCount(SubmitComponent.name)).toBe(2);
@@ -247,7 +272,7 @@ describe("Submit", () => {
       expect(collector.getCallCount(SubmitComponent.name)).toBe(2);
 
       // enable button to be able click
-      controller.disableFields(false);
+      privateController.disableFields(false);
       expect(collector.getCallCount(SubmitComponent.name)).toBe(3);
 
       // click on the button must call onSubmit

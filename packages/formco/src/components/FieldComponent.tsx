@@ -1,5 +1,9 @@
 import React from "react";
-import { FormFields, ValidationResult } from "../controller.types";
+import {
+  FormFields,
+  PrivateProps,
+  ValidationResult
+} from "../private-controller.types";
 import { FieldPrivateProps, FieldType } from "./Field.types";
 
 export const FieldComponent = <
@@ -12,14 +16,16 @@ export const FieldComponent = <
   children,
   component: Component,
   controller,
+  id,
   name,
   onValidation,
+  privateController,
   validation,
   ...rest
-}: React.PropsWithChildren<
-  React.ComponentProps<FieldType<T, K, IComponent>>
->) => {
-  const [props, setProps] = React.useState(rest);
+}: React.PropsWithChildren<React.ComponentProps<FieldType<T, K, IComponent>>> &
+  PrivateProps<T>) => {
+  const [props, setProps] =
+    React.useState<React.ComponentProps<React.ElementType>>(rest);
   const ref = React.useRef<HTMLElement>();
   const refProps = React.useRef(props);
   refProps.current = props;
@@ -35,32 +41,31 @@ export const FieldComponent = <
           if (
             validationResult &&
             submitAction &&
-            controller.scrollToError &&
+            privateController.scrollToError &&
             ref.current &&
-            controller.canScrollToElement
+            privateController.canScrollToElement
           ) {
             ref.current.scrollTo();
             ref.current.focus();
           }
         };
 
-        controller.subscribeValidator({
+        privateController.subscribeValidator({
           action,
-          id: rest.id,
+          id,
           key: name,
           validation: () =>
             validation(
-              controller.getFieldValue(name),
-              controller.getObservedFields(name),
-              refProps.current
+              privateController.getFieldValue(name),
+              privateController.getObservedFields(name)
             )
         });
 
         return () => {
-          controller.unsubscribeValidator(name, action);
+          privateController.unsubscribeValidator(name, action);
         };
       }, // eslint-disable-next-line react-hooks/exhaustive-deps
-      [controller, name, refProps, setProps, validation]
+      [privateController, name, refProps, setProps, validation]
     );
   }
 
@@ -86,42 +91,49 @@ export const FieldComponent = <
 
     const action = () => {
       onValidationAction(
-        controller.isFieldValid(name) === true,
+        privateController.isFieldValid(name) === true,
         setProps,
-        controller.isFieldValidationInProgress(name) === true ||
-          controller.isFieldValidationToBeExecuted(name) === true
+        privateController.isFieldValidationInProgress(name) === true ||
+          privateController.isFieldValidationToBeExecuted(name) === true
       );
     };
 
-    controller.subscribeOnChange(action, name);
+    privateController.subscribeOnChange(action, name);
 
     return () => {
-      controller.unsubscribeOnChange(action, name);
+      privateController.unsubscribeOnChange(action, name);
     };
-  }, [controller, name, onValidation, setProps]);
+  }, [privateController, name, onValidation, setProps]);
 
   if (validation && !onBlur.current) {
     onBlur.current = () => {
-      controller.validateOnBlur(name);
+      privateController.validateOnBlur(name);
     };
   }
 
-  return React.createElement(Component, {
-    ...props,
-    name,
-    onBlur: onBlur.current,
-    onChange: (event: React.ChangeEvent<{ checked: boolean; value: string }>) =>
-      controller.setFieldValue({
-        id: rest.id,
-        isTouched: true,
-        key: name,
-        value: event.currentTarget.value
-      }),
-    onKeyDown: (event: React.KeyboardEvent) => {
-      if (event.key === "Enter") {
-        controller.submit();
-      }
+  return React.createElement(
+    Component,
+    {
+      ...props,
+      id,
+      name,
+      onBlur: onBlur.current,
+      onChange: (
+        event: React.ChangeEvent<{ checked: boolean; value: string }>
+      ) =>
+        privateController.setFieldValue({
+          id,
+          isTouched: true,
+          key: name,
+          value: event.currentTarget.value
+        }),
+      onKeyDown: (event: React.KeyboardEvent) => {
+        if (event.key === "Enter") {
+          privateController.submit();
+        }
+      },
+      ref
     },
-    ref
-  } as React.ComponentProps<React.ElementType>);
+    children
+  );
 };

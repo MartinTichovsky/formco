@@ -1,5 +1,8 @@
 import { Controller } from "../controller";
-import { FormFields, ValidationContentResult } from "../controller.types";
+import {
+  FormFields,
+  ValidationContentResult
+} from "../private-controller.types";
 
 export type MessageForProps<
   T extends FormFields<T>,

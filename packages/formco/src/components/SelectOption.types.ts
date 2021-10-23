@@ -1,16 +1,17 @@
 import { Controller } from "../controller";
-import { FormFields, Value } from "../controller.types";
+import { PrivateController } from "../private-controller";
+import { FormFields, Value } from "../private-controller.types";
 
 export type FormType = {
   [key: string]: Value;
 };
 
 export interface RegisterAfterAll {
-  controller: Controller<FormFields<FormType>>;
   id?: string;
   isDisabled: boolean;
   isVisible: boolean;
   name: string;
+  privateController: PrivateController<FormFields<FormType>>;
   selectRef: React.MutableRefObject<HTMLSelectElement | undefined>;
   value: string | React.ReactNode;
 }

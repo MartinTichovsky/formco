@@ -1,4 +1,5 @@
 import { Controller } from "./controller";
+import { PrivateController } from "./private-controller";
 
 export type Action = () => void;
 
@@ -17,10 +18,10 @@ export interface ControllerOptions {
 
 export interface ControllerProps<T extends FormFields<T>> {
   disableIf?: {
-    [key in keyof T]?: (fields: Partial<T>) => boolean;
+    [K in keyof T]?: (fields: Partial<T>) => boolean;
   };
   hideIf?: {
-    [key in keyof T]?: (fields: Partial<T>) => boolean;
+    [K in keyof T]?: (fields: Partial<T>) => boolean;
   };
   initialValidation?: boolean;
   initialValues?: InitialValues<T>;
@@ -29,25 +30,24 @@ export interface ControllerProps<T extends FormFields<T>> {
   requiredInvalidMessage?: string | JSX.Element;
   requiredValidMessage?: string | JSX.Element;
   setController: React.Dispatch<
-    React.SetStateAction<Controller<T> | undefined>
+    React.SetStateAction<PrivateController<T> | undefined>
   >;
   validateOnBlur?: boolean;
   validateOnChange?: boolean;
   validation?: {
-    [key in keyof T]?: (
-      value: T[key] | undefined,
-      fields: Partial<T>,
-      props: unknown
+    [K in keyof T]?: (
+      value: T[K] | undefined,
+      fields: Partial<T>
     ) => ValidationResult;
   };
 }
 
-export type DefaultActiveRadioId<T> = { [key in keyof T]?: string };
+export type DefaultActiveRadioId<T> = { [K in keyof T]?: string };
 
-export type DefaultDisabledRadioId<T> = { [key in keyof T]?: string[] };
+export type DefaultDisabledRadioId<T> = { [K in keyof T]?: string[] };
 
 export type DisableIf<T> = {
-  [key in keyof T]?: (fields: Partial<T>) => boolean;
+  [K in keyof T]?: (fields: Partial<T>) => boolean;
 };
 
 export interface ExecutePromise<T> {
@@ -111,10 +111,10 @@ export type FieldTypes =
 
 export type FormFields<T> = { [K in keyof T]: Value };
 
-export type HideIf<T> = { [key in keyof T]?: (fields: Partial<T>) => boolean };
+export type HideIf<T> = { [K in keyof T]?: (fields: Partial<T>) => boolean };
 
 export type InitialValues<T> = {
-  [key in keyof T]?: Value | number;
+  [K in keyof T]?: T[K] | number;
 };
 
 export interface KeyType<T> {
@@ -123,7 +123,7 @@ export interface KeyType<T> {
 }
 
 export type MapFields<T> = {
-  [key in keyof T]: Number | String | Boolean | undefined;
+  [K in keyof T]: Number | String | Boolean | undefined;
 };
 
 export interface OnDisable<T> {
@@ -157,6 +157,10 @@ export interface PromiseQueue<T> {
   onSuccess?: (result: ValidationPromiseResult) => void;
   promise: ValidationPromise;
   wait?: number;
+}
+
+export interface PrivateProps<T extends FormFields<T>> {
+  privateController: PrivateController<T>;
 }
 
 export interface SetDefaultIsDisabled<T> {
@@ -216,10 +220,9 @@ export interface SubscribeValidator<T> {
 }
 
 export type Validation<T> = {
-  [key in keyof T]?: (
-    value: T[key] | undefined,
-    fields: Partial<T>,
-    props: unknown
+  [K in keyof T]?: (
+    value: T[K] | undefined,
+    fields: Partial<T>
   ) => ValidationResult;
 };
 
@@ -230,13 +233,13 @@ export type ValidationContentResult =
   | undefined
   | JSX.Element;
 
-export type ValidationDependencies<T> = { [key in keyof T]?: Set<keyof T> };
+export type ValidationDependencies<T> = { [K in keyof T]?: Set<keyof T> };
 
 export type ValidationPromise = () => Promise<
   ValidationPromiseResult | undefined | null
 >;
 
-export type ValidationQueue<T> = { [key in keyof T]?: number };
+export type ValidationQueue<T> = { [K in keyof T]?: number };
 
 export interface ValidationPromiseResult {
   isValid: boolean;

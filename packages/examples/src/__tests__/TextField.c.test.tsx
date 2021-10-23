@@ -17,6 +17,9 @@ const fieldComponentName = "FormFieldComponent";
 const formControllerComponentName = "FormControllerComponent";
 const submitComponentName = "SubmitComponent";
 
+// TODO: check
+jest.setTimeout(10000);
+
 beforeEach(() => {
   collector.reset();
 });

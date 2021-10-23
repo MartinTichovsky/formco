@@ -1,12 +1,13 @@
 import React from "react";
-import { Controller } from "../controller";
-import { ConditionComponentType } from "./Condition.types";
+import { FormFields } from "../private-controller.types";
+import { usePrivateController } from "../providers";
+import { ConditionProps } from "./Condition.types";
 import { ConditionComponent } from "./ConditionComponent";
 
-export const Condition: ConditionComponentType = (props) => {
-  if (!(props.controller instanceof Controller)) {
-    throw new Error("Controller is not provided");
-  }
+export const Condition = <T extends FormFields<T>>(
+  props: ConditionProps<T>
+) => {
+  const privateController = usePrivateController<T>();
 
   if (props.showIf !== undefined && typeof props.showIf !== "function") {
     throw new Error("CustomCondition is not a function");
@@ -19,5 +20,7 @@ export const Condition: ConditionComponentType = (props) => {
     throw new Error("DynamicContent is not a function");
   }
 
-  return <ConditionComponent {...props} />;
+  return (
+    <ConditionComponent {...props} privateController={privateController} />
+  );
 };

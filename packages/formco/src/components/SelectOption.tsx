@@ -1,7 +1,7 @@
 import React from "react";
-import { Controller } from "../controller";
-import { FormFields } from "../controller.types";
-import { selectContext } from "../providers";
+import { PrivateController } from "../private-controller";
+import { FormFields } from "../private-controller.types";
+import { selectContext, usePrivateController } from "../providers";
 import {
   FormType,
   RegisterAfterAll,
@@ -10,42 +10,42 @@ import {
 } from "./SelectOption.types";
 
 const afterAll = new Map<
-  Controller<FormFields<FormType>>,
+  PrivateController<FormFields<FormType>>,
   { action: () => void; queueId: number }
 >();
 
 export const executeAfterAll = async <T extends FormFields<T>>(
-  controller: Controller<FormFields<FormType>>
+  privateController: PrivateController<FormFields<FormType>>
 ) => {
-  if (!afterAll.has(controller)) {
+  if (!afterAll.has(privateController)) {
     return;
   }
 
-  const stack = afterAll.get(controller)!;
+  const stack = afterAll.get(privateController)!;
   stack.queueId--;
 
   if (stack!.queueId === 0) {
     stack.action();
-    afterAll.delete(controller);
+    afterAll.delete(privateController);
   }
 };
 
 export const registerAfterAll = ({
-  controller,
   id,
   isDisabled,
   isVisible,
   name,
+  privateController,
   selectRef,
   value
 }: RegisterAfterAll) => {
   let queueId = 1;
 
-  if (afterAll.has(controller)) {
-    queueId = ++afterAll.get(controller)!.queueId;
+  if (afterAll.has(privateController)) {
+    queueId = ++afterAll.get(privateController)!.queueId;
   }
 
-  afterAll.set(controller, {
+  afterAll.set(privateController, {
     action: () => {
       let proceedValidation = true;
 
@@ -60,14 +60,14 @@ export const registerAfterAll = ({
       }
 
       if (proceedValidation) {
-        controller.setFieldValue({
+        privateController.setFieldValue({
           id,
           key: name,
-          silent: !controller.canFieldBeValidated(name),
+          silent: !privateController.canFieldBeValidated(name),
           value: selectRef.current!.value
         });
       } else {
-        controller.setFieldValue({
+        privateController.setFieldValue({
           id,
           isValid: true,
           key: name,
@@ -91,10 +91,11 @@ export const SelectOption = <T extends FormFields<T>>({
     return null;
   }
 
+  const privateController = usePrivateController<T>();
   const { id, name, selectRef } = context;
   const [state, setState] = React.useState<SelectOptionState>({
-    isDisabled: disableIf !== undefined && disableIf(controller.fields),
-    isVisible: hideIf === undefined || !hideIf(controller.fields)
+    isDisabled: disableIf !== undefined && disableIf(privateController.fields),
+    isVisible: hideIf === undefined || !hideIf(privateController.fields)
   });
   const refState = React.useRef<SelectOptionState>();
   refState.current = state;
@@ -105,19 +106,22 @@ export const SelectOption = <T extends FormFields<T>>({
     React.useEffect(() => {
       const action = () => {
         const isDisabled =
-          disableIf !== undefined && disableIf(controller.fields);
-        const isVisible = hideIf === undefined || !hideIf(controller.fields);
+          disableIf !== undefined && disableIf(privateController.fields);
+        const isVisible =
+          hideIf === undefined || !hideIf(privateController.fields);
 
         if (
           refState.current!.isDisabled !== isDisabled ||
           refState.current!.isVisible !== isVisible
         ) {
           registerAfterAll({
-            controller: controller as Controller<FormFields<unknown>>,
             id,
             isDisabled,
             isVisible,
             name,
+            privateController: privateController as PrivateController<
+              FormFields<unknown>
+            >,
             selectRef,
             value: rest.value !== undefined ? rest.value : children
           });
@@ -130,16 +134,18 @@ export const SelectOption = <T extends FormFields<T>>({
         }
       };
 
-      controller.subscribeOnChange(action);
+      privateController.subscribeOnChange(action);
 
       return () => {
-        controller.unsubscribeOnChange(action);
+        privateController.unsubscribeOnChange(action);
       };
     }, [controller, disableIf, hideIf, refState]);
   }
 
   React.useEffect(() => {
-    executeAfterAll(controller as Controller<FormFields<unknown>>);
+    executeAfterAll(
+      privateController as PrivateController<FormFields<unknown>>
+    );
   }, [state]);
 
   if (!state.isVisible) {

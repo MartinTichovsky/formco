@@ -2,22 +2,26 @@ import "@testing-library/jest-dom";
 import { act, render, screen } from "@testing-library/react";
 import React from "react";
 import { Controller } from "../../controller";
+import { PrivateController } from "../../private-controller";
+import { getControllerProviderContext } from "../../providers";
 import { MessageFor } from "../MessageFor";
 
 type Form = {
   input: string;
 };
 
+let controller: Controller<Form>;
+let privateController: PrivateController<Form>;
+
 const testText1 = "Test text 1";
 const testText2 = "Test text 2";
-let controller: Controller<Form>;
 
 beforeEach(() => {
   collector.reset();
-  const setController = jest.fn();
-  controller = new Controller<Form>({ setController });
+  privateController = new PrivateController<Form>({ setController: jest.fn() });
+  controller = new Controller(privateController);
 
-  controller["_fields"].input = {
+  privateController["_fields"].input = {
     isDisabled: false,
     isValid: true,
     isValidated: true,
@@ -54,10 +58,14 @@ const checkUseEffectActions = () => {
 
 describe("MessageFor", () => {
   test("Default functionality - isValid is undefined, equal to false", () => {
+    const context = getControllerProviderContext<Form>();
+
     const { unmount } = render(
-      <MessageFor controller={controller} name="input">
-        {testText1}
-      </MessageFor>
+      <context.Provider value={privateController}>
+        <MessageFor controller={controller} name="input">
+          {testText1}
+        </MessageFor>
+      </context.Provider>
     );
 
     // the test message should not be in the document
@@ -69,11 +77,11 @@ describe("MessageFor", () => {
     checkUseEffectActions();
 
     // the controller should have registered one onValidateMessage listener
-    expect(controller["onValidationListeners"].size).toBe(1);
+    expect(privateController["onValidationListeners"].size).toBe(1);
 
     // manually call private method
     act(() => {
-      controller["validationListeners"]("input");
+      privateController["validationListeners"]("input");
     });
 
     // the test message should not be in the document
@@ -84,21 +92,21 @@ describe("MessageFor", () => {
 
     checkUseEffectActions();
 
-    controller["_fields"].input!.isValid = false;
+    privateController["_fields"].input!.isValid = false;
 
     // manually call private method
     act(() => {
-      controller["validationListeners"]("input");
+      privateController["validationListeners"]("input");
     });
 
     // the test message should not be in the document because form is not submited and validateOnChange is false
     expect(() => screen.getByText(testText1)).toThrowError();
 
-    controller["_validateOnChange"] = true;
+    privateController["_validateOnChange"] = true;
 
     // manually call private method
     act(() => {
-      controller["validationListeners"]("input");
+      privateController["validationListeners"]("input");
     });
 
     // the test message should be in the document
@@ -109,11 +117,11 @@ describe("MessageFor", () => {
 
     checkUseEffectActions();
 
-    controller["_validateOnChange"] = false;
+    privateController["_validateOnChange"] = false;
 
     // manually call private method
     act(() => {
-      controller["validationListeners"]("input");
+      privateController["validationListeners"]("input");
     });
 
     // the test message should not be in the document
@@ -124,11 +132,11 @@ describe("MessageFor", () => {
 
     checkUseEffectActions();
 
-    controller["_isSubmitted"] = true;
+    privateController["_isSubmitted"] = true;
 
     // manually call private method
     act(() => {
-      controller["validationListeners"]("input");
+      privateController["validationListeners"]("input");
     });
 
     // the test message should be in the document
@@ -139,11 +147,11 @@ describe("MessageFor", () => {
 
     checkUseEffectActions();
 
-    controller["_fields"].input!.isDisabled = true;
+    privateController["_fields"].input!.isDisabled = true;
 
     // manually call private method
     act(() => {
-      controller["validationListeners"]("input");
+      privateController["validationListeners"]("input");
     });
 
     // the test message should not be in the document
@@ -154,12 +162,12 @@ describe("MessageFor", () => {
 
     checkUseEffectActions();
 
-    controller["_fields"].input!.isDisabled = false;
-    controller["_fields"].input!.isVisible = false;
+    privateController["_fields"].input!.isDisabled = false;
+    privateController["_fields"].input!.isVisible = false;
 
     // manually call private method
     act(() => {
-      controller["validationListeners"]("input");
+      privateController["validationListeners"]("input");
     });
 
     // the test message should not be in the document
@@ -182,10 +190,14 @@ describe("MessageFor", () => {
   });
 
   test("IsValid is true, show message only for valid fields", () => {
+    const context = getControllerProviderContext<Form>();
+
     const { unmount } = render(
-      <MessageFor controller={controller} isValid={true} name="input">
-        {testText1}
-      </MessageFor>
+      <context.Provider value={privateController}>
+        <MessageFor controller={controller} isValid={true} name="input">
+          {testText1}
+        </MessageFor>
+      </context.Provider>
     );
 
     // the test message should not be in the document
@@ -197,11 +209,11 @@ describe("MessageFor", () => {
     checkUseEffectActions();
 
     // the controller should have registered one onValidationMessage listener
-    expect(controller["onValidationListeners"].size).toBe(1);
+    expect(privateController["onValidationListeners"].size).toBe(1);
 
     // manually call private method
     act(() => {
-      controller["validationListeners"]("input");
+      privateController["validationListeners"]("input");
     });
 
     // the test message should not be in the document
@@ -212,11 +224,11 @@ describe("MessageFor", () => {
 
     checkUseEffectActions();
 
-    controller["_validateOnChange"] = true;
+    privateController["_validateOnChange"] = true;
 
     // manually call private method
     act(() => {
-      controller["validationListeners"]("input");
+      privateController["validationListeners"]("input");
     });
 
     // the test message should be in the document
@@ -227,11 +239,11 @@ describe("MessageFor", () => {
 
     checkUseEffectActions();
 
-    controller["_validateOnChange"] = false;
+    privateController["_validateOnChange"] = false;
 
     // manually call private method
     act(() => {
-      controller["validationListeners"]("input");
+      privateController["validationListeners"]("input");
     });
 
     // the test message should not be in the document
@@ -242,11 +254,11 @@ describe("MessageFor", () => {
 
     checkUseEffectActions();
 
-    controller["_isSubmitted"] = true;
+    privateController["_isSubmitted"] = true;
 
     // manually call private method
     act(() => {
-      controller["validationListeners"]("input");
+      privateController["validationListeners"]("input");
     });
 
     // the test message should be in the document
@@ -257,11 +269,11 @@ describe("MessageFor", () => {
 
     checkUseEffectActions();
 
-    controller["_fields"].input!.isValid = false;
+    privateController["_fields"].input!.isValid = false;
 
     // manually call private method
     act(() => {
-      controller["validationListeners"]("input");
+      privateController["validationListeners"]("input");
     });
 
     // the test message should not be in the document
@@ -272,12 +284,12 @@ describe("MessageFor", () => {
 
     checkUseEffectActions();
 
-    controller["_fields"].input!.isValid = true;
-    controller["_fields"].input!.isDisabled = true;
+    privateController["_fields"].input!.isValid = true;
+    privateController["_fields"].input!.isDisabled = true;
 
     // manually call private method
     act(() => {
-      controller["validationListeners"]("input");
+      privateController["validationListeners"]("input");
     });
 
     // the test message should not be in the document
@@ -288,12 +300,12 @@ describe("MessageFor", () => {
 
     checkUseEffectActions();
 
-    controller["_fields"].input!.isDisabled = false;
-    controller["_fields"].input!.isVisible = false;
+    privateController["_fields"].input!.isDisabled = false;
+    privateController["_fields"].input!.isVisible = false;
 
     // manually call private method
     act(() => {
-      controller["validationListeners"]("input");
+      privateController["validationListeners"]("input");
     });
 
     // the test message should not be in the document
@@ -316,10 +328,16 @@ describe("MessageFor", () => {
   });
 
   test("Passing text from validation", () => {
-    render(<MessageFor controller={controller} isValid={true} name="input" />);
+    const context = getControllerProviderContext<Form>();
 
-    controller["_fields"].input!.validationContent = testText1;
-    controller["_validateOnChange"] = true;
+    render(
+      <context.Provider value={privateController}>
+        <MessageFor controller={controller} isValid={true} name="input" />
+      </context.Provider>
+    );
+
+    privateController["_fields"].input!.validationContent = testText1;
+    privateController["_validateOnChange"] = true;
 
     // the test message should not be in the document
     expect(() => screen.getByText(testText1)).toThrowError();
@@ -329,17 +347,17 @@ describe("MessageFor", () => {
 
     // manually call private method
     act(() => {
-      controller["validationListeners"]("input");
+      privateController["validationListeners"]("input");
     });
 
     // the test message should be in the document
     expect(screen.getByText(testText1)).toBeTruthy();
 
-    controller["_fields"].input!.validationContent = testText2;
+    privateController["_fields"].input!.validationContent = testText2;
 
     // manually call private method
     act(() => {
-      controller["validationListeners"]("input");
+      privateController["validationListeners"]("input");
     });
 
     // the test message should be in the document
