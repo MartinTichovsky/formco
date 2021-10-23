@@ -1,17 +1,16 @@
 import React from "react";
-import {
-  ConditionComponentState,
-  ConditionComponentType
-} from "./Condition.types";
+import { Controller } from "../controller";
+import { FormFields, PrivateProps } from "../private-controller.types";
+import { ConditionComponentState, ConditionProps } from "./Condition.types";
 
-export const ConditionComponent: ConditionComponentType = ({
+export const ConditionComponent = <T extends FormFields<T>>({
   children,
-  controller,
   dynamicContent,
   dynamicRender,
   ifFormValid,
+  privateController,
   showIf
-}) => {
+}: ConditionProps<T> & PrivateProps<T>) => {
   const [state, setState] = React.useState<ConditionComponentState>({
     isVisible: false
   });
@@ -52,18 +51,20 @@ export const ConditionComponent: ConditionComponentType = ({
       }
     };
 
-    controller.subscribeOnChange(action);
+    privateController.subscribeOnChange(action);
 
     return () => {
-      controller.unsubscribeOnChange(action);
+      privateController.unsubscribeOnChange(action);
     };
-  }, [controller, ifFormValid, refState, showIf]);
+  }, [privateController, ifFormValid, refState, showIf]);
 
   return (
     <>
       {state.isVisible &&
         (dynamicContent ? (
-          <React.Fragment>{dynamicContent(controller)}</React.Fragment>
+          <React.Fragment>
+            {dynamicContent(new Controller(privateController))}
+          </React.Fragment>
         ) : (
           <React.Fragment key={key.current}>{children}</React.Fragment>
         ))}

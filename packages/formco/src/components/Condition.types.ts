@@ -1,12 +1,5 @@
 import { Controller } from "../controller";
-import { FormFields } from "../controller.types";
-
-export type ConditionComponentType = <T extends FormFields<T>>({
-  children,
-  controller,
-  ifFormValid,
-  showIf
-}: ConditionProps<T>) => JSX.Element;
+import { FormFields } from "../private-controller.types";
 
 export type ConditionProps<T extends FormFields<T>> = React.PropsWithChildren<
   {

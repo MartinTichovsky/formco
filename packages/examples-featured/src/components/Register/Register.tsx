@@ -1,7 +1,6 @@
 import CircularProgress from "@mui/material/CircularProgress";
-import { FormController, Input, Submit } from "formco";
+import { FormController, Input, Submit, ValidationPromiseResult } from "formco";
 import debounce from "lodash.debounce";
-import { ValidationPromiseResult } from "packages/formco/src/controller.types";
 import React from "react";
 import { MessageStore } from "../../store";
 import { emailRegex } from "../../utils/utils";

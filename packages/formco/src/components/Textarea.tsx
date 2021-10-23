@@ -1,5 +1,5 @@
 import React from "react";
-import { FormFields } from "../controller.types";
+import { FormFields } from "../private-controller.types";
 import { FormField } from "./FormField";
 import { FormFieldPrivateProps, FormFieldType } from "./FormField.types";
 

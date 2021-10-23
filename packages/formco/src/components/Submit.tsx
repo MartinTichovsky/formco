@@ -1,6 +1,6 @@
 import React from "react";
-import { Controller } from "../controller";
-import { FormFields } from "../controller.types";
+import { FormFields } from "../private-controller.types";
+import { usePrivateController } from "../providers";
 import { SubmitComponentType, SubmitPrivateProps } from "./Submit.types";
 import { SubmitComponent } from "./SubmitComponent";
 
@@ -14,13 +14,11 @@ export const Submit = <
     React.ComponentProps<SubmitComponentType<T, BComponent>>
   >
 ) => {
-  if (!(props.controller instanceof Controller)) {
-    throw new Error("Controller is not provided");
-  }
+  const privateController = usePrivateController<T>();
 
   if (props.onSubmit !== undefined && typeof props.onSubmit !== "function") {
     throw new Error("OnSubmit is not a function");
   }
 
-  return <SubmitComponent {...props} />;
+  return <SubmitComponent {...props} privateController={privateController} />;
 };

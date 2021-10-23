@@ -1,5 +1,5 @@
 import { Controller } from "../controller";
-import { FormFields, OnSubmit } from "../controller.types";
+import { FormFields, OnSubmit } from "../private-controller.types";
 
 export interface SubmitComponentType<
   T extends FormFields<T>,

@@ -1,5 +1,5 @@
 import { Controller } from "../controller";
-import { FormFields, ValidationResult } from "../controller.types";
+import { FormFields, ValidationResult } from "../private-controller.types";
 
 export interface FieldPrivateProps {
   onBlur: (event: React.ChangeEvent) => void;
@@ -18,26 +18,25 @@ export interface FieldType<
     children,
     component,
     controller,
+    id,
     name,
     onValidation,
     validation,
     ...rest
-  }: React.PropsWithChildren<
-    {
-      component: IComponent;
-      controller: Controller<T>;
-      id?: string;
-      name: K;
-      onValidation?: (
-        isFieldValid: boolean,
-        setProps: React.Dispatch<React.SetStateAction<typeof rest>>,
-        validationInProgress: boolean
-      ) => void;
-      validation?: (
-        value: T[K] | undefined,
-        fields: Partial<T>,
-        props: typeof rest
-      ) => ValidationResult;
-    } & React.ComponentPropsWithoutRef<IComponent>
-  >): JSX.Element | null;
+  }: React.PropsWithChildren<{
+    component: IComponent;
+    controller: Controller<T>;
+    id?: string;
+    name: K;
+    onValidation?: (
+      isFieldValid: boolean,
+      setProps: React.Dispatch<React.SetStateAction<typeof rest>>,
+      validationInProgress: boolean
+    ) => void;
+    validation?: (
+      value: T[K] | undefined,
+      fields: Partial<T>
+    ) => ValidationResult;
+  }> &
+    React.ComponentPropsWithoutRef<IComponent>): JSX.Element | null;
 }

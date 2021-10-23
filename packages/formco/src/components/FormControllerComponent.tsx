@@ -1,6 +1,8 @@
 import React from "react";
 import { Controller } from "../controller";
-import { FormFields } from "../controller.types";
+import { PrivateController } from "../private-controller";
+import { FormFields } from "../private-controller.types";
+import { getControllerProviderContext } from "../providers";
 import { FormControllerComponentProps } from "./FormController.types";
 
 export const FormControllerComponent = <T extends FormFields<T>>({
@@ -18,11 +20,12 @@ export const FormControllerComponent = <T extends FormFields<T>>({
   validation,
   ...rest
 }: FormControllerComponentProps<T>) => {
-  const [controller, setController] = React.useState<Controller<T>>();
+  const [privateController, setController] =
+    React.useState<PrivateController<T>>();
 
   React.useEffect(
     () => {
-      const controller = new Controller<T>({
+      const controller = new PrivateController<T>({
         disableIf,
         hideIf,
         initialValues,
@@ -41,25 +44,29 @@ export const FormControllerComponent = <T extends FormFields<T>>({
   );
 
   React.useEffect(() => {
-    if (controller) {
-      controller.initialRenderDone();
-      controller.onChange();
+    if (privateController) {
+      privateController.initialRenderDone();
+      privateController.onChange();
     }
-  }, [controller]);
+  }, [privateController]);
 
-  if (controller === undefined) {
+  if (privateController === undefined) {
     return null;
   }
 
+  const privateControllerContext = getControllerProviderContext<T>();
+
   return (
-    <form
-      {...rest}
-      aria-label="form"
-      className={"form-controller" + (className ? ` ${className}` : "")}
-      key={controller.key}
-      onSubmit={(event) => event.preventDefault()}
-    >
-      {children(controller)}
-    </form>
+    <privateControllerContext.Provider value={privateController}>
+      <form
+        {...rest}
+        aria-label="form"
+        className={"form-controller" + (className ? ` ${className}` : "")}
+        key={privateController.key}
+        onSubmit={(event) => event.preventDefault()}
+      >
+        {children(new Controller(privateController))}
+      </form>
+    </privateControllerContext.Provider>
   );
 };

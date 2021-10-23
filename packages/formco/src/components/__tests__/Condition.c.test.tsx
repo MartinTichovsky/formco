@@ -2,6 +2,8 @@ import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import React from "react";
 import { Controller } from "../../controller";
+import { PrivateController } from "../../private-controller";
+import { getControllerProviderContext } from "../../providers";
 import { getGeneratedValues } from "../../__tests__/utils/value-generator";
 import { Condition } from "../Condition";
 import { ConditionComponent } from "../ConditionComponent";
@@ -10,8 +12,10 @@ type Form = {
   input: string;
 };
 
-const testId = "test-id";
 let controller: Controller<Form>;
+let privateController: PrivateController<Form>;
+
+const testId = "test-id";
 
 const testValidForm = (unmount: () => void) => {
   const useEffectHooks = collector
@@ -26,7 +30,7 @@ const testValidForm = (unmount: () => void) => {
   expect(() => screen.getByTestId(testId)).toThrowError();
 
   // onChange is trigered and the form is valid, it should re-render the component and show the children
-  controller.onChange();
+  privateController.onChange();
 
   expect(collector.getCallCount(ConditionComponent.name)).toBe(2);
   expect(useEffectHooks?.get(1)?.action).toBeCalledTimes(1);
@@ -35,7 +39,7 @@ const testValidForm = (unmount: () => void) => {
   expect(screen.getByTestId(testId)).toBeTruthy();
 
   // set form values and make the form invalid, it should hide the children
-  controller["_fields"].input = {
+  privateController["_fields"].input = {
     isDisabled: false,
     isValid: false,
     isValidated: true,
@@ -46,7 +50,7 @@ const testValidForm = (unmount: () => void) => {
     value: undefined
   };
 
-  controller.onChange();
+  privateController.onChange();
   expect(collector.getCallCount(ConditionComponent.name)).toBe(3);
   expect(useEffectHooks?.get(1)?.action).toBeCalledTimes(1);
   expect(useEffectHooks?.get(1)?.unmount).not.toBeCalled();
@@ -64,53 +68,57 @@ console.error = jest.fn();
 
 beforeEach(() => {
   collector.reset();
-  const setController = jest.fn();
-  controller = new Controller<Form>({ setController });
+  privateController = new PrivateController<Form>({ setController: jest.fn() });
+  controller = new Controller(privateController);
 });
 
 describe("Condition", () => {
   describe("Condition Element", () => {
-    test("Providing wrong controller should throw an error", () => {
-      const values = getGeneratedValues();
-
-      values.forEach((value) => {
-        expect(() => {
-          render(<Condition controller={value} />);
-        }).toThrowError();
-      });
-    });
-
     test("Providing wrong showIf should throw an error", () => {
       const values = getGeneratedValues(false, "function", "undefined");
+      const context = getControllerProviderContext<Form>();
 
       values.forEach((value) => {
         expect(() => {
-          render(<Condition controller={controller} showIf={value} />);
+          render(
+            <context.Provider value={privateController}>
+              <Condition controller={controller} showIf={value} />
+            </context.Provider>
+          );
         }).toThrowError();
       });
     });
 
     test("Providing wrong dynamicContent should throw an error", () => {
       const values = getGeneratedValues(false, "function", "undefined");
+      const context = getControllerProviderContext<Form>();
 
       values.forEach((value) => {
         expect(() => {
-          render(<Condition controller={controller} dynamicContent={value} />);
+          render(
+            <context.Provider value={privateController}>
+              <Condition controller={controller} dynamicContent={value} />
+            </context.Provider>
+          );
         }).toThrowError();
       });
     });
 
     test("IfFormValid is undefined and showIf is undefined", () => {
+      const context = getControllerProviderContext<Form>();
+
       render(
-        <Condition controller={controller}>
-          <div data-testid={testId}></div>
-        </Condition>
+        <context.Provider value={privateController}>
+          <Condition controller={controller}>
+            <div data-testid={testId}></div>
+          </Condition>
+        </context.Provider>
       );
 
-      controller.onChange();
+      privateController.onChange();
       expect(screen.getByTestId(testId)).toBeTruthy();
 
-      controller["_fields"].input = {
+      privateController["_fields"].input = {
         isDisabled: false,
         isValid: true,
         isValidated: true,
@@ -121,7 +129,7 @@ describe("Condition", () => {
         value: undefined
       };
 
-      controller.onChange();
+      privateController.onChange();
       expect(screen.getByTestId(testId)).toBeTruthy();
     });
   });
@@ -129,7 +137,10 @@ describe("Condition", () => {
   describe("ConditionComponent Element", () => {
     test("Default functionality", () => {
       render(
-        <ConditionComponent controller={controller}>
+        <ConditionComponent
+          controller={controller}
+          privateController={privateController}
+        >
           <div data-testid={testId}></div>
         </ConditionComponent>
       );
@@ -144,20 +155,24 @@ describe("Condition", () => {
       };
 
       render(
-        <ConditionComponent controller={controller} dynamicRender>
+        <ConditionComponent
+          controller={controller}
+          dynamicRender
+          privateController={privateController}
+        >
           <TestComponent />
         </ConditionComponent>
       );
 
-      controller.onChange();
+      privateController.onChange();
 
       expect(screen.getByTestId(testId)).toHaveTextContent("1");
 
-      controller.onChange();
+      privateController.onChange();
 
       expect(screen.getByTestId(testId)).toHaveTextContent("2");
 
-      controller.onChange();
+      privateController.onChange();
 
       expect(screen.getByTestId(testId)).toHaveTextContent("3");
     });
@@ -168,25 +183,30 @@ describe("Condition", () => {
         <ConditionComponent
           controller={controller}
           dynamicContent={() => <div data-testid={testId}>{++num}</div>}
+          privateController={privateController}
         />
       );
 
-      controller.onChange();
+      privateController.onChange();
 
       expect(screen.getByTestId(testId)).toHaveTextContent("1");
 
-      controller.onChange();
+      privateController.onChange();
 
       expect(screen.getByTestId(testId)).toHaveTextContent("2");
 
-      controller.onChange();
+      privateController.onChange();
 
       expect(screen.getByTestId(testId)).toHaveTextContent("3");
     });
 
     test("IfFormValid is true and showIf is undefined", () => {
       const { unmount } = render(
-        <ConditionComponent controller={controller} ifFormValid>
+        <ConditionComponent
+          controller={controller}
+          ifFormValid
+          privateController={privateController}
+        >
           <div data-testid={testId}></div>
         </ConditionComponent>
       );
@@ -196,11 +216,15 @@ describe("Condition", () => {
 
     test("IfFormValid is undefined and showIf is set", () => {
       const showIf = jest.fn(() => {
-        return controller.isValid;
+        return privateController.isValid;
       });
 
       const { unmount } = render(
-        <ConditionComponent controller={controller} showIf={showIf}>
+        <ConditionComponent
+          controller={controller}
+          privateController={privateController}
+          showIf={showIf}
+        >
           <div data-testid={testId}></div>
         </ConditionComponent>
       );
@@ -210,11 +234,16 @@ describe("Condition", () => {
 
     test("IfFormValid is true and showIf is set - default", () => {
       const showIf = jest.fn(() => {
-        return controller.isValid;
+        return privateController.isValid;
       });
 
       const { unmount } = render(
-        <ConditionComponent controller={controller} ifFormValid showIf={showIf}>
+        <ConditionComponent
+          controller={controller}
+          ifFormValid
+          privateController={privateController}
+          showIf={showIf}
+        >
           <div data-testid={testId}></div>
         </ConditionComponent>
       );
@@ -228,7 +257,12 @@ describe("Condition", () => {
       });
 
       render(
-        <ConditionComponent controller={controller} ifFormValid showIf={showIf}>
+        <ConditionComponent
+          controller={controller}
+          ifFormValid
+          privateController={privateController}
+          showIf={showIf}
+        >
           <div data-testid={testId}></div>
         </ConditionComponent>
       );
@@ -245,7 +279,7 @@ describe("Condition", () => {
       expect(() => screen.getByTestId(testId)).toThrowError();
 
       // the form is not valid because of the custom condition, the component shouldn't re-render
-      controller.onChange();
+      privateController.onChange();
       expect(collector.getCallCount(ConditionComponent.name)).toBe(1);
       expect(useEffectHooks?.get(1)?.action).toBeCalledTimes(1);
       expect(useEffectHooks?.get(1)?.unmount).not.toBeCalled();

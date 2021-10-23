@@ -1,10 +1,10 @@
 import React from "react";
-import { Controller } from "../controller";
-import { FormFields } from "../controller.types";
+import { FormFields } from "../private-controller.types";
 import {
   commonPropsContext,
   disableIfContext,
   hideIfContext,
+  usePrivateController,
   validationContext
 } from "../providers";
 import {
@@ -51,6 +51,7 @@ export function FormField<
     hideMessage,
     hideIf,
     hideRequiredStar,
+    id,
     initialValidation,
     label,
     messageComponent,
@@ -67,9 +68,7 @@ export function FormField<
     ...rest
   } = props;
 
-  if (!(controller instanceof Controller)) {
-    throw new Error("Controller is not provided");
-  }
+  const privateController = usePrivateController<T>();
 
   if (disableIf !== undefined && typeof disableIf !== "function") {
     throw new Error("DisableIf is not a function");
@@ -94,12 +93,15 @@ export function FormField<
     throw new Error("ValidationDependencies must be an array");
   }
 
-  if (!controller.registerKey(name, rest.type || "text")) {
+  if (!privateController.registerKey(name, rest.type || "text")) {
     console.warn(`Key '${name}' is already registered in the form`);
   }
 
   if (validationDependencies) {
-    controller.registerValidationDependencies(name, validationDependencies);
+    privateController.registerValidationDependencies(
+      name,
+      validationDependencies
+    );
   }
 
   const providedProps = {
@@ -107,7 +109,7 @@ export function FormField<
     hideIf,
     hideRequiredStar,
     hideMessage,
-    id: rest.id,
+    id,
     required: rest.required,
     requiredComponent,
     requiredInvalidMessage,
@@ -120,7 +122,7 @@ export function FormField<
   }
 
   if (!providedProps.disableIf) {
-    providedProps.disableIf = controller.getDisableCondition(name);
+    providedProps.disableIf = privateController.getDisableCondition(name);
   }
 
   if (!providedProps.hideIf) {
@@ -128,7 +130,7 @@ export function FormField<
   }
 
   if (!providedProps.hideIf) {
-    providedProps.hideIf = controller.getHideCondition(name);
+    providedProps.hideIf = privateController.getHideCondition(name);
   }
 
   if (!providedProps.validation) {
@@ -136,7 +138,7 @@ export function FormField<
   }
 
   if (!providedProps.validation) {
-    providedProps.validation = controller.getValidationCondition(name);
+    providedProps.validation = privateController.getValidationCondition(name);
   }
 
   const commonProps = React.useContext(commonPropsContext);
@@ -148,11 +150,12 @@ export function FormField<
   }
 
   if (providedProps.requiredInvalidMessage === undefined) {
-    providedProps.requiredInvalidMessage = controller.requiredInvalidMessage;
+    providedProps.requiredInvalidMessage =
+      privateController.requiredInvalidMessage;
   }
 
   if (providedProps.requiredValidMessage === undefined) {
-    providedProps.requiredValidMessage = controller.requiredValidMessage;
+    providedProps.requiredValidMessage = privateController.requiredValidMessage;
   }
 
   let _validation = providedProps.validation;
@@ -168,11 +171,7 @@ export function FormField<
         rest.type === "radio" ||
         rest.fieldType === "select"
       ) {
-        const validationResult = providedProps.validation!(
-          value,
-          fields,
-          props
-        );
+        const validationResult = providedProps.validation!(value, fields);
 
         return (
           validationResult ||
@@ -192,7 +191,7 @@ export function FormField<
           : value === undefined
       )
         ? true
-        : providedProps.validation!(value, fields, props);
+        : providedProps.validation!(value, fields);
     }) as typeof providedProps.validation;
   } else if (providedProps.required) {
     _validation = (value: T[K] | undefined) =>
@@ -208,7 +207,7 @@ export function FormField<
     validateOnBlur !== undefined ||
     validateOnChange !== undefined
   ) {
-    controller.setFieldProperties(name, {
+    privateController.setFieldProperties(name, {
       initialValidation,
       validateOnBlur,
       validateOnChange
@@ -219,34 +218,33 @@ export function FormField<
     (label && !providedProps.id) || rest.type === "radio"
       ? getRandomId()
       : providedProps.id
-  ) as typeof rest.id;
+  ) as typeof id;
 
   if (rest.type === "radio") {
-    controller.registerOption(name, providedProps.id!);
+    privateController.registerOption(name, providedProps.id!);
   }
 
   let validationResult =
     _validation &&
     _validation(
-      controller.getFieldValue(name),
-      controller.getObservedFields(name),
-      rest
+      privateController.getFieldValue(name),
+      privateController.getObservedFields(name)
     );
 
   const initialState: InitialState = {
     isDisabled: providedProps.disableIf
-      ? providedProps.disableIf(controller.fields)
+      ? providedProps.disableIf(privateController.fields)
       : false,
     isVisible: providedProps.hideIf
-      ? !providedProps.hideIf(controller.fields)
+      ? !providedProps.hideIf(privateController.fields)
       : true,
     message: initialValidation
-      ? controller.getValidationResultContent(validationResult)
+      ? privateController.getValidationResultContent(validationResult)
       : undefined
   };
 
   if (initialState.isDisabled) {
-    controller.setDefaultIsDisabled({
+    privateController.setDefaultIsDisabled({
       id: providedProps.id,
       isValidated:
         rest.type !== "radio" && !!(initialValidation && _validation),
@@ -255,7 +253,7 @@ export function FormField<
       validationResult: initialValidation ? validationResult : undefined
     });
   } else if (!initialState.isVisible) {
-    controller.setDefaultIsNotVisible({
+    privateController.setDefaultIsNotVisible({
       id: providedProps.id,
       isValidated:
         rest.type !== "radio" && !!(initialValidation && _validation),
@@ -265,7 +263,7 @@ export function FormField<
       value: value || children
     });
   } else if (_validation) {
-    controller.setDefaultIsValid({
+    privateController.setDefaultIsValid({
       initialValidation,
       isValidated: rest.type !== "radio",
       key: name,
@@ -274,7 +272,7 @@ export function FormField<
     });
   }
 
-  const field = controller.getField(name);
+  const field = privateController.getField(name);
   initialState.isValid = initialValidation
     ? !validationResult && (field === undefined || field.isValid)
     : undefined;
@@ -283,6 +281,7 @@ export function FormField<
     ...props,
     ...providedProps,
     initialState,
+    privateController,
     validation: _validation
   };
 

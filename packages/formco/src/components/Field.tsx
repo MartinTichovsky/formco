@@ -1,6 +1,6 @@
 import React from "react";
-import { Controller } from "../controller";
-import { FormFields } from "../controller.types";
+import { FormFields } from "../private-controller.types";
+import { usePrivateController } from "../providers";
 import { FieldPrivateProps, FieldType } from "./Field.types";
 import { FieldComponent } from "./FieldComponent";
 
@@ -19,21 +19,17 @@ export const Field = <
     React.ComponentProps<FieldType<T, K, IComponent>>
   >
 ) => {
-  const { controller, name } = props;
+  const privateController = usePrivateController<T>();
 
-  if (!(controller instanceof Controller)) {
-    throw new Error("Controller is not provided");
-  }
-
-  if (!name || typeof name !== "string") {
+  if (!props.name || typeof props.name !== "string") {
     throw new Error("Name must be a string");
   }
 
-  const providedProps = {
-    id: props.id
-  };
-
-  providedProps.id = providedProps.id ? providedProps.id : getRandomId();
-
-  return <FieldComponent {...props} {...providedProps} />;
+  return (
+    <FieldComponent
+      {...props}
+      id={props.id ? props.id : getRandomId()}
+      privateController={privateController}
+    />
+  );
 };

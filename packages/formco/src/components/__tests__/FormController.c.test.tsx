@@ -1,6 +1,8 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
 import { Controller } from "../../controller";
+import { PrivateController } from "../../private-controller";
+import { getControllerProviderContext } from "../../providers";
 import { getGeneratedValues } from "../../__tests__/utils/value-generator";
 import { FormController } from "../FormController";
 import { FormControllerComponent } from "../FormControllerComponent";
@@ -74,16 +76,22 @@ describe("FormController", () => {
 
   describe("FormControllerComponent Element", () => {
     test("Default functionality", () => {
-      let controller: Controller<Form> | undefined;
+      let controller: PrivateController<Form> | undefined;
       let renderCount = 0;
+
+      const context = getControllerProviderContext<Form>();
 
       render(
         <FormControllerComponent<Form>>
-          {(createdController) => {
-            renderCount++;
-            controller = createdController;
-            return <div data-testid={testid}></div>;
-          }}
+          {() => (
+            <context.Consumer>
+              {(createdController) => {
+                renderCount++;
+                controller = createdController;
+                return <div data-testid={testid}></div>;
+              }}
+            </context.Consumer>
+          )}
         </FormControllerComponent>
       );
 
@@ -109,7 +117,7 @@ describe("FormController", () => {
       expect(fireEvent.submit(form)).toBeFalsy();
 
       // reset the form
-      act(() => controller?.resetForm());
+      act(() => controller!.resetForm());
       expect(renderCount).toBe(2);
       expect(collector.getCallCount(FormControllerComponent.name)).toBe(3);
       expect(useEffectHooks?.get(1)?.action).toBeCalledTimes(1);
@@ -124,27 +132,34 @@ describe("FormController", () => {
       undefined: undefined;
     };
 
+    const context = getControllerProviderContext<FormType>();
+
     render(
       <FormController<FormType> initialValues={{ age: 5 }}>
-        {(controller) => {
-          controller.setFieldValue({ key: "age", value: "10" });
+        {() => (
+          <context.Consumer>
+            {(privateController) => {
+              const controller = new Controller(privateController!);
+              privateController!.setFieldValue({ key: "age", value: "10" });
 
-          const fields = controller.getMappedFields({
-            age: Number(),
-            checked: Boolean(),
-            name: String(),
-            undefined: undefined
-          });
+              const fields = controller!.getMappedFields({
+                age: Number(),
+                checked: Boolean(),
+                name: String(),
+                undefined: undefined
+              });
 
-          expect(fields).toEqual({
-            age: 10,
-            checked: false,
-            name: "",
-            undefined: undefined
-          });
+              expect(fields).toEqual({
+                age: 10,
+                checked: false,
+                name: "",
+                undefined: undefined
+              });
 
-          return <></>;
-        }}
+              return <></>;
+            }}
+          </context.Consumer>
+        )}
       </FormController>
     );
   });

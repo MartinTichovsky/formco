@@ -2,7 +2,8 @@ import "@testing-library/jest-dom";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
 import { Controller } from "../../controller";
-import { SelectProvider } from "../../providers";
+import { PrivateController } from "../../private-controller";
+import { getControllerProviderContext, SelectProvider } from "../../providers";
 import { SelectOption } from "../SelectOption";
 
 type Form = {
@@ -11,18 +12,19 @@ type Form = {
 };
 
 let controller: Controller<Form>;
+let privateController: PrivateController<Form>;
+let selectRef: React.MutableRefObject<HTMLSelectElement | undefined>;
+
 const defaultValue = "default value";
 const testId = "test-id";
 const testText = "Test text";
-let selectRef: React.MutableRefObject<HTMLSelectElement | undefined>;
 
 beforeEach(() => {
   collector.reset();
   jest.resetAllMocks();
 
-  const setController = jest.fn();
-
-  controller = new Controller<Form>({ setController });
+  privateController = new PrivateController<Form>({ setController: jest.fn() });
+  controller = new Controller(privateController);
   selectRef = {
     current: { value: defaultValue }
   } as React.MutableRefObject<HTMLSelectElement | undefined>;
@@ -42,10 +44,14 @@ const checkUseEffectActions = () => {
 
 describe("SelectOption", () => {
   test("Context is not provided", () => {
+    const context = getControllerProviderContext<Form>();
+
     render(
-      <SelectOption controller={controller} data-testid={testId}>
-        {testText}
-      </SelectOption>
+      <context.Provider value={privateController}>
+        <SelectOption controller={controller} data-testid={testId}>
+          {testText}
+        </SelectOption>
+      </context.Provider>
     );
 
     // option should not be in the document
@@ -53,17 +59,21 @@ describe("SelectOption", () => {
   });
 
   test("Default functionality", () => {
+    const context = getControllerProviderContext<Form>();
+
     render(
-      <SelectProvider name="select" selectRef={selectRef}>
-        <SelectOption controller={controller} data-testid={testId}>
-          {testText}
-        </SelectOption>
-      </SelectProvider>
+      <context.Provider value={privateController}>
+        <SelectProvider name="select" selectRef={selectRef}>
+          <SelectOption controller={controller} data-testid={testId}>
+            {testText}
+          </SelectOption>
+        </SelectProvider>
+      </context.Provider>
     );
 
     // option should not be disabled
     expect(screen.getByTestId(testId)).not.toBeDisabled();
-    expect(controller.getFieldValue("select")).toBeUndefined();
+    expect(privateController.getFieldValue("select")).toBeUndefined();
 
     // the component should be rendered one times
     expect(
@@ -73,7 +83,7 @@ describe("SelectOption", () => {
     checkUseEffectActions();
 
     // manually run onChange
-    controller.onChange();
+    privateController.onChange();
 
     // the component should be rendered one times
     expect(
@@ -84,20 +94,24 @@ describe("SelectOption", () => {
 
     // option should not be disabled
     expect(screen.getByTestId(testId)).not.toBeDisabled();
-    expect(controller.getFieldValue("select")).toBeUndefined();
+    expect(privateController.getFieldValue("select")).toBeUndefined();
   });
 
   test("DisableIf", async () => {
+    const context = getControllerProviderContext<Form>();
+
     render(
-      <SelectProvider name="select" selectRef={selectRef}>
-        <SelectOption
-          controller={controller}
-          data-testid={testId}
-          disableIf={(fields) => !fields.input?.trim()}
-        >
-          {testText}
-        </SelectOption>
-      </SelectProvider>
+      <context.Provider value={privateController}>
+        <SelectProvider name="select" selectRef={selectRef}>
+          <SelectOption
+            controller={controller}
+            data-testid={testId}
+            disableIf={(fields) => !fields.input?.trim()}
+          >
+            {testText}
+          </SelectOption>
+        </SelectProvider>
+      </context.Provider>
     );
 
     // option should be disabled
@@ -112,7 +126,7 @@ describe("SelectOption", () => {
 
     // set input value
     act(() => {
-      controller.setFieldValue({ key: "input", value: "some text" });
+      privateController.setFieldValue({ key: "input", value: "some text" });
     });
 
     // check the render count
@@ -127,7 +141,7 @@ describe("SelectOption", () => {
 
     // set select value
     act(() => {
-      controller.setFieldValue({ key: "select", value: testText });
+      privateController.setFieldValue({ key: "select", value: testText });
     });
 
     // check the render count
@@ -137,7 +151,7 @@ describe("SelectOption", () => {
 
     // set input value
     act(() => {
-      controller.setFieldValue({ key: "input", value: "" });
+      privateController.setFieldValue({ key: "input", value: "" });
     });
 
     // option should be disabled
@@ -149,21 +163,25 @@ describe("SelectOption", () => {
     ).toBe(3);
 
     await waitFor(async () => {
-      expect(controller.getFieldValue("select")).toBe(defaultValue);
+      expect(privateController.getFieldValue("select")).toBe(defaultValue);
     });
   });
 
   test("HideIf", async () => {
+    const context = getControllerProviderContext<Form>();
+
     render(
-      <SelectProvider name="select" selectRef={selectRef}>
-        <SelectOption
-          controller={controller}
-          data-testid={testId}
-          hideIf={(fields) => !fields.input?.trim()}
-        >
-          {testText}
-        </SelectOption>
-      </SelectProvider>
+      <context.Provider value={privateController}>
+        <SelectProvider name="select" selectRef={selectRef}>
+          <SelectOption
+            controller={controller}
+            data-testid={testId}
+            hideIf={(fields) => !fields.input?.trim()}
+          >
+            {testText}
+          </SelectOption>
+        </SelectProvider>
+      </context.Provider>
     );
 
     // option should not be in the document
@@ -178,7 +196,7 @@ describe("SelectOption", () => {
 
     // set input value
     act(() => {
-      controller.setFieldValue({ key: "input", value: "some text" });
+      privateController.setFieldValue({ key: "input", value: "some text" });
     });
 
     // check the render count
@@ -193,7 +211,7 @@ describe("SelectOption", () => {
 
     // set select value
     act(() => {
-      controller.setFieldValue({ key: "select", value: testText });
+      privateController.setFieldValue({ key: "select", value: testText });
     });
 
     // check the render count
@@ -203,7 +221,7 @@ describe("SelectOption", () => {
 
     // set input value
     act(() => {
-      controller.setFieldValue({ key: "input", value: "" });
+      privateController.setFieldValue({ key: "input", value: "" });
     });
 
     // option should not be in the document
@@ -215,62 +233,65 @@ describe("SelectOption", () => {
     ).toBe(3);
 
     await waitFor(async () => {
-      expect(controller.getFieldValue("select")).toBe(defaultValue);
+      expect(privateController.getFieldValue("select")).toBe(defaultValue);
     });
   });
 
   test("registerAfterAll with more options", () => {
-    const originSetFieldValue = controller.setFieldValue;
+    const originSetFieldValue = privateController.setFieldValue;
+    const context = getControllerProviderContext<Form>();
 
-    controller.setFieldValue = jest.fn((...props) =>
-      originSetFieldValue.call(controller, ...props)
+    privateController.setFieldValue = jest.fn((...props) =>
+      originSetFieldValue.call(privateController, ...props)
     );
 
     render(
-      <SelectProvider name="select" selectRef={selectRef}>
-        <select ref={selectRef as React.RefObject<HTMLSelectElement>}>
-          <option></option>
-          <SelectOption
-            controller={controller}
-            hideIf={(fields) => !fields.input}
-          >
-            Option 1
-          </SelectOption>
-          <SelectOption
-            controller={controller}
-            hideIf={(fields) => !fields.input}
-          >
-            {testText}
-          </SelectOption>
-        </select>
-      </SelectProvider>
+      <context.Provider value={privateController}>
+        <SelectProvider name="select" selectRef={selectRef}>
+          <select ref={selectRef as React.RefObject<HTMLSelectElement>}>
+            <option></option>
+            <SelectOption
+              controller={controller}
+              hideIf={(fields) => !fields.input}
+            >
+              Option 1
+            </SelectOption>
+            <SelectOption
+              controller={controller}
+              hideIf={(fields) => !fields.input}
+            >
+              {testText}
+            </SelectOption>
+          </select>
+        </SelectProvider>
+      </context.Provider>
     );
 
-    expect(controller.setFieldValue).toBeCalledTimes(0);
+    expect(privateController.setFieldValue).toBeCalledTimes(0);
 
     act(() => {
-      originSetFieldValue.call(controller, {
+      originSetFieldValue.call(privateController, {
         key: "input",
         value: "value"
       });
     });
 
-    expect(controller.setFieldValue).toHaveBeenCalledTimes(1);
-    expect(controller.setFieldValue).lastCalledWith({
+    expect(privateController.setFieldValue).toHaveBeenCalledTimes(1);
+    expect(privateController.setFieldValue).lastCalledWith({
       key: "select",
       silent: true,
       value: ""
     });
 
     act(() => {
-      originSetFieldValue.call(controller, {
+      originSetFieldValue.call(privateController, {
         key: "input",
         value: ""
       });
     });
 
-    expect(controller.setFieldValue).toHaveBeenCalledTimes(2);
-    expect(controller.setFieldValue).lastCalledWith({
+    expect(privateController.setFieldValue).toHaveBeenCalledTimes(2);
+    expect(privateController.setFieldValue).lastCalledWith({
       isValid: true,
       key: "select",
       value: ""
@@ -278,50 +299,53 @@ describe("SelectOption", () => {
   });
 
   test("registerAfterAll with single option", () => {
-    const originSetFieldValue = controller.setFieldValue;
+    const originSetFieldValue = privateController.setFieldValue;
+    const context = getControllerProviderContext<Form>();
 
-    controller.setFieldValue = jest.fn((...props) =>
-      originSetFieldValue.call(controller, ...props)
+    privateController.setFieldValue = jest.fn((...props) =>
+      originSetFieldValue.call(privateController, ...props)
     );
 
     render(
-      <SelectProvider name="select" selectRef={selectRef}>
-        <select ref={selectRef as React.RefObject<HTMLSelectElement>}>
-          <SelectOption
-            controller={controller}
-            hideIf={(fields) => !fields.input}
-          >
-            {testText}
-          </SelectOption>
-        </select>
-      </SelectProvider>
+      <context.Provider value={privateController}>
+        <SelectProvider name="select" selectRef={selectRef}>
+          <select ref={selectRef as React.RefObject<HTMLSelectElement>}>
+            <SelectOption
+              controller={controller}
+              hideIf={(fields) => !fields.input}
+            >
+              {testText}
+            </SelectOption>
+          </select>
+        </SelectProvider>
+      </context.Provider>
     );
 
-    expect(controller.setFieldValue).toBeCalledTimes(0);
+    expect(privateController.setFieldValue).toBeCalledTimes(0);
 
     act(() => {
-      originSetFieldValue.call(controller, {
+      originSetFieldValue.call(privateController, {
         key: "input",
         value: "value"
       });
     });
 
-    expect(controller.setFieldValue).toHaveBeenCalledTimes(1);
-    expect(controller.setFieldValue).lastCalledWith({
+    expect(privateController.setFieldValue).toHaveBeenCalledTimes(1);
+    expect(privateController.setFieldValue).lastCalledWith({
       key: "select",
       silent: true,
       value: testText
     });
 
     act(() => {
-      originSetFieldValue.call(controller, {
+      originSetFieldValue.call(privateController, {
         key: "input",
         value: ""
       });
     });
 
-    expect(controller.setFieldValue).toHaveBeenCalledTimes(2);
-    expect(controller.setFieldValue).lastCalledWith({
+    expect(privateController.setFieldValue).toHaveBeenCalledTimes(2);
+    expect(privateController.setFieldValue).lastCalledWith({
       isValid: true,
       key: "select",
       value: ""

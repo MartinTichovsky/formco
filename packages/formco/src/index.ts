@@ -10,4 +10,7 @@ export { Textarea } from "./components/Textarea";
 export { Validation } from "./components/Validation";
 export { CN } from "./constants";
 export { Controller } from "./controller";
-export { FormFields, ValidationPromiseResult } from "./controller.types";
+export {
+  FormFields,
+  ValidationPromiseResult
+} from "./private-controller.types";

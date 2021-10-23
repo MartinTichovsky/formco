@@ -2,7 +2,11 @@ import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import React from "react";
 import { Controller } from "../../controller";
-import { ValidationProvider } from "../../providers";
+import { PrivateController } from "../../private-controller";
+import {
+  getControllerProviderContext,
+  ValidationProvider
+} from "../../providers";
 import { getGeneratedValues } from "../../__tests__/utils/value-generator";
 import { FormField } from "../FormField";
 import {
@@ -18,14 +22,16 @@ type Form = {
   radio: string;
 };
 
-const testId = "test-id";
 let controller: Controller<Form>;
+let privateController: PrivateController<Form>;
 let passedValues: {
   disableIf?: Function;
   hideIf?: Function;
   initialState?: InitialState;
   validation?: Function;
 } = {};
+
+const testId = "test-id";
 
 jest.mock("../FormFieldComponent", () => {
   const origin = jest.requireActual("../FormFieldComponent");
@@ -69,48 +75,43 @@ const FieldContainer = <K extends keyof Form>(
 
 beforeEach(() => {
   passedValues = {};
-  const setController = jest.fn();
-  controller = new Controller<Form>({ setController });
+  privateController = new PrivateController<Form>({ setController: jest.fn() });
+  controller = new Controller(privateController);
 });
 
 describe("Field", () => {
   test("Default functionality", () => {
+    const context = getControllerProviderContext<Form>();
+
     render(
-      <FieldContainer
-        controller={controller}
-        data-testid={testId}
-        fieldType="input"
-        name="input"
-      />
+      <context.Provider value={privateController}>
+        <FieldContainer
+          controller={controller}
+          data-testid={testId}
+          fieldType="input"
+          name="input"
+        />
+      </context.Provider>
     );
 
     expect(screen.getByTestId(testId)).toBeTruthy();
   });
 
-  test("Providing wrong controller should throw an error", () => {
-    const values = getGeneratedValues();
-
-    values.forEach((value) => {
-      expect(() => {
-        render(
-          <FieldContainer controller={value} fieldType="input" name="input" />
-        );
-      }).toThrowError();
-    });
-  });
-
   test("Providing wrong disableIf should throw an error", () => {
     const values = getGeneratedValues(false, "function", "undefined");
+    const context = getControllerProviderContext<Form>();
 
     values.forEach((value) => {
       expect(() => {
         render(
-          <FieldContainer
-            controller={controller}
-            disableIf={value}
-            fieldType="input"
-            name="input"
-          />
+          <context.Provider value={privateController}>
+            <FieldContainer
+              controller={controller}
+              disableIf={value}
+              fieldType="input"
+              name="input"
+            />
+          </context.Provider>
         );
       }).toThrowError();
     });
@@ -118,16 +119,19 @@ describe("Field", () => {
 
   test("Providing wrong validationDependencies should throw an error", () => {
     const values = getGeneratedValues(false, "array", "undefined");
+    const context = getControllerProviderContext<Form>();
 
     values.forEach((value) => {
       expect(() => {
         render(
-          <FieldContainer
-            controller={controller}
-            fieldType="input"
-            name="input"
-            validationDependencies={value}
-          />
+          <context.Provider value={privateController}>
+            <FieldContainer
+              controller={controller}
+              fieldType="input"
+              name="input"
+              validationDependencies={value}
+            />
+          </context.Provider>
         );
       }).toThrowError();
     });
@@ -135,15 +139,18 @@ describe("Field", () => {
 
   test("Providing wrong name should throw an error", () => {
     const values = getGeneratedValues(false, "string");
+    const context = getControllerProviderContext<Form>();
 
     values.forEach((value) => {
       expect(() => {
         render(
-          <FieldContainer
-            controller={controller}
-            fieldType="input"
-            name={value}
-          />
+          <context.Provider value={privateController}>
+            <FieldContainer
+              controller={controller}
+              fieldType="input"
+              name={value}
+            />
+          </context.Provider>
         );
       }).toThrowError();
     });
@@ -151,16 +158,19 @@ describe("Field", () => {
 
   test("Providing wrong onFormChange should throw an error", () => {
     const values = getGeneratedValues(false, "function", "undefined");
+    const context = getControllerProviderContext<Form>();
 
     values.forEach((value) => {
       expect(() => {
         render(
-          <FieldContainer
-            controller={controller}
-            fieldType="input"
-            name="input"
-            onFormChange={value}
-          />
+          <context.Provider value={privateController}>
+            <FieldContainer
+              controller={controller}
+              fieldType="input"
+              name="input"
+              onFormChange={value}
+            />
+          </context.Provider>
         );
       }).toThrowError();
     });
@@ -168,16 +178,19 @@ describe("Field", () => {
 
   test("Providing wrong validate should throw an error", () => {
     const values = getGeneratedValues(false, "function", "undefined");
+    const context = getControllerProviderContext<Form>();
 
     values.forEach((value) => {
       expect(() => {
         render(
-          <FieldContainer
-            controller={controller}
-            fieldType="input"
-            name="input"
-            validation={value}
-          />
+          <context.Provider value={privateController}>
+            <FieldContainer
+              controller={controller}
+              fieldType="input"
+              name="input"
+              validation={value}
+            />
+          </context.Provider>
         );
       }).toThrowError();
     });
@@ -186,9 +199,10 @@ describe("Field", () => {
   describe("Name checking", () => {
     test("Providing different name or radios with same name should not log a warning", () => {
       console.warn = jest.fn();
+      const context = getControllerProviderContext<Form>();
 
       render(
-        <>
+        <context.Provider value={privateController}>
           <FieldContainer
             controller={controller}
             fieldType="input"
@@ -215,7 +229,7 @@ describe("Field", () => {
             type="radio"
             value="radio-2"
           />
-        </>
+        </context.Provider>
       );
 
       expect(console.warn).not.toBeCalled();
@@ -223,11 +237,12 @@ describe("Field", () => {
 
     test("Providing same name should log a warning", () => {
       console.warn = jest.fn();
+      const context = getControllerProviderContext<Form>();
 
       expect(console.warn).not.toBeCalled();
 
       render(
-        <>
+        <context.Provider value={privateController}>
           <FieldContainer
             controller={controller}
             fieldType="input"
@@ -238,7 +253,7 @@ describe("Field", () => {
             fieldType="input"
             name="input"
           />
-        </>
+        </context.Provider>
       );
 
       expect(console.warn).toBeCalled();
@@ -246,11 +261,12 @@ describe("Field", () => {
 
     test("Providing same name should log a warning - test with radio", () => {
       console.warn = jest.fn();
+      const context = getControllerProviderContext<Form>();
 
       expect(console.warn).not.toBeCalled();
 
       render(
-        <>
+        <context.Provider value={privateController}>
           <FieldContainer
             controller={controller}
             fieldType="input"
@@ -264,7 +280,7 @@ describe("Field", () => {
             type="radio"
             value="radio-2"
           />
-        </>
+        </context.Provider>
       );
 
       expect(console.warn).toBeCalled();
@@ -277,45 +293,54 @@ describe("Field", () => {
     const disableIfProvider = jest.fn();
 
     test("DisableIf should be passed", () => {
-      controller["_disableIf"] = { input: disableIfController };
+      privateController["_disableIf"] = { input: disableIfController };
+      const context = getControllerProviderContext<Form>();
 
       render(
-        <FieldContainer
-          controller={controller}
-          disableIf={disableIfPassed}
-          fieldType="input"
-          name="input"
-        />
+        <context.Provider value={privateController}>
+          <FieldContainer
+            controller={controller}
+            disableIf={disableIfPassed}
+            fieldType="input"
+            name="input"
+          />
+        </context.Provider>
       );
 
       expect(passedValues.disableIf).toEqual(disableIfPassed);
     });
 
     test("Get disableIf from controller", () => {
-      controller["_disableIf"] = { input: disableIfController };
+      privateController["_disableIf"] = { input: disableIfController };
+      const context = getControllerProviderContext<Form>();
 
       render(
-        <FieldContainer
-          controller={controller}
-          fieldType="input"
-          name="input"
-        />
+        <context.Provider value={privateController}>
+          <FieldContainer
+            controller={controller}
+            fieldType="input"
+            name="input"
+          />
+        </context.Provider>
       );
 
       expect(passedValues.disableIf).toEqual(disableIfController);
     });
 
     test("Get disableIf from provider", () => {
-      controller["_disableIf"] = { input: disableIfController };
+      privateController["_disableIf"] = { input: disableIfController };
+      const context = getControllerProviderContext<Form>();
 
       render(
-        <ValidationProvider disableIf={disableIfProvider}>
-          <FieldContainer
-            controller={controller}
-            fieldType="input"
-            name="input"
-          />
-        </ValidationProvider>
+        <context.Provider value={privateController}>
+          <ValidationProvider disableIf={disableIfProvider}>
+            <FieldContainer
+              controller={controller}
+              fieldType="input"
+              name="input"
+            />
+          </ValidationProvider>
+        </context.Provider>
       );
 
       expect(passedValues.disableIf).toEqual(disableIfProvider);
@@ -328,45 +353,54 @@ describe("Field", () => {
     const hideIfProvider = jest.fn();
 
     test("HideIf should be passed", () => {
-      controller["_hideIf"] = { input: hideIfController };
+      privateController["_hideIf"] = { input: hideIfController };
+      const context = getControllerProviderContext<Form>();
 
       render(
-        <FieldContainer
-          controller={controller}
-          fieldType="input"
-          hideIf={hideIfPassed}
-          name="input"
-        />
+        <context.Provider value={privateController}>
+          <FieldContainer
+            controller={controller}
+            fieldType="input"
+            hideIf={hideIfPassed}
+            name="input"
+          />
+        </context.Provider>
       );
 
       expect(passedValues.hideIf).toEqual(hideIfPassed);
     });
 
     test("Get hideIf from controller", () => {
-      controller["_hideIf"] = { input: hideIfController };
+      privateController["_hideIf"] = { input: hideIfController };
+      const context = getControllerProviderContext<Form>();
 
       render(
-        <FieldContainer
-          controller={controller}
-          fieldType="input"
-          name="input"
-        />
+        <context.Provider value={privateController}>
+          <FieldContainer
+            controller={controller}
+            fieldType="input"
+            name="input"
+          />
+        </context.Provider>
       );
 
       expect(passedValues.hideIf).toEqual(hideIfController);
     });
 
     test("Get hideIf from provider", () => {
-      controller["_hideIf"] = { input: hideIfController };
+      privateController["_hideIf"] = { input: hideIfController };
+      const context = getControllerProviderContext<Form>();
 
       render(
-        <ValidationProvider hideIf={hideIfProvider}>
-          <FieldContainer
-            controller={controller}
-            fieldType="input"
-            name="input"
-          />
-        </ValidationProvider>
+        <context.Provider value={privateController}>
+          <ValidationProvider hideIf={hideIfProvider}>
+            <FieldContainer
+              controller={controller}
+              fieldType="input"
+              name="input"
+            />
+          </ValidationProvider>
+        </context.Provider>
       );
 
       expect(passedValues.hideIf).toEqual(hideIfProvider);
@@ -379,45 +413,54 @@ describe("Field", () => {
     const validationProvider = jest.fn();
 
     test("HideIf should be passed", () => {
-      controller["_validation"] = { input: validationController };
+      privateController["_validation"] = { input: validationController };
+      const context = getControllerProviderContext<Form>();
 
       render(
-        <FieldContainer
-          controller={controller}
-          fieldType="input"
-          name="input"
-          validation={validationPassed}
-        />
+        <context.Provider value={privateController}>
+          <FieldContainer
+            controller={controller}
+            fieldType="input"
+            name="input"
+            validation={validationPassed}
+          />
+        </context.Provider>
       );
 
       expect(passedValues.validation).toEqual(validationPassed);
     });
 
     test("Get hideIf from controller", () => {
-      controller["_validation"] = { input: validationController };
+      privateController["_validation"] = { input: validationController };
+      const context = getControllerProviderContext<Form>();
 
       render(
-        <FieldContainer
-          controller={controller}
-          fieldType="input"
-          name="input"
-        />
+        <context.Provider value={privateController}>
+          <FieldContainer
+            controller={controller}
+            fieldType="input"
+            name="input"
+          />
+        </context.Provider>
       );
 
       expect(passedValues.validation).toEqual(validationController);
     });
 
     test("Get validation from provider", () => {
-      controller["_validation"] = { input: validationController };
+      privateController["_validation"] = { input: validationController };
+      const context = getControllerProviderContext<Form>();
 
       render(
-        <ValidationProvider validation={validationProvider}>
-          <FieldContainer
-            controller={controller}
-            fieldType="input"
-            name="input"
-          />
-        </ValidationProvider>
+        <context.Provider value={privateController}>
+          <ValidationProvider validation={validationProvider}>
+            <FieldContainer
+              controller={controller}
+              fieldType="input"
+              name="input"
+            />
+          </ValidationProvider>
+        </context.Provider>
       );
 
       expect(passedValues.validation).toEqual(validationProvider);
@@ -426,12 +469,16 @@ describe("Field", () => {
 
   describe("initialState", () => {
     test("Default", () => {
+      const context = getControllerProviderContext<Form>();
+
       render(
-        <FieldContainer
-          controller={controller}
-          fieldType="input"
-          name="input"
-        />
+        <context.Provider value={privateController}>
+          <FieldContainer
+            controller={controller}
+            fieldType="input"
+            name="input"
+          />
+        </context.Provider>
       );
 
       expect(passedValues.initialState).toEqual({
@@ -442,13 +489,17 @@ describe("Field", () => {
     });
 
     test("IsDisabled", () => {
+      const context = getControllerProviderContext<Form>();
+
       render(
-        <FieldContainer
-          controller={controller}
-          disableIf={() => true}
-          fieldType="input"
-          name="input"
-        />
+        <context.Provider value={privateController}>
+          <FieldContainer
+            controller={controller}
+            disableIf={() => true}
+            fieldType="input"
+            name="input"
+          />
+        </context.Provider>
       );
 
       expect(passedValues.initialState).toEqual({
@@ -459,13 +510,17 @@ describe("Field", () => {
     });
 
     test("IsValid - from validation", () => {
+      const context = getControllerProviderContext<Form>();
+
       render(
-        <FieldContainer
-          controller={controller}
-          fieldType="input"
-          name="input"
-          validation={() => false}
-        />
+        <context.Provider value={privateController}>
+          <FieldContainer
+            controller={controller}
+            fieldType="input"
+            name="input"
+            validation={() => false}
+          />
+        </context.Provider>
       );
 
       expect(passedValues.initialState).toEqual({
@@ -477,7 +532,7 @@ describe("Field", () => {
     });
 
     test("IsValid - from controller", () => {
-      controller["_fields"].input = {
+      privateController["_fields"].input = {
         isDisabled: false,
         isValid: false,
         isValidated: true,
@@ -488,12 +543,16 @@ describe("Field", () => {
         value: undefined
       };
 
+      const context = getControllerProviderContext<Form>();
+
       render(
-        <FieldContainer
-          controller={controller}
-          fieldType="input"
-          name="input"
-        />
+        <context.Provider value={privateController}>
+          <FieldContainer
+            controller={controller}
+            fieldType="input"
+            name="input"
+          />
+        </context.Provider>
       );
 
       expect(passedValues.initialState).toEqual({
@@ -504,13 +563,17 @@ describe("Field", () => {
     });
 
     test("IsVisible", () => {
+      const context = getControllerProviderContext<Form>();
+
       render(
-        <FieldContainer
-          controller={controller}
-          fieldType="input"
-          hideIf={() => true}
-          name="input"
-        />
+        <context.Provider value={privateController}>
+          <FieldContainer
+            controller={controller}
+            fieldType="input"
+            hideIf={() => true}
+            name="input"
+          />
+        </context.Provider>
       );
 
       expect(passedValues.initialState).toEqual({
@@ -523,13 +586,17 @@ describe("Field", () => {
 
   describe("initialValidation", () => {
     test("Default", () => {
+      const context = getControllerProviderContext<Form>();
+
       render(
-        <FieldContainer
-          controller={controller}
-          initialValidation
-          fieldType="input"
-          name="input"
-        />
+        <context.Provider value={privateController}>
+          <FieldContainer
+            controller={controller}
+            initialValidation
+            fieldType="input"
+            name="input"
+          />
+        </context.Provider>
       );
 
       expect(passedValues.initialState).toEqual({
