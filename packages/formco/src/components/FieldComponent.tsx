@@ -20,6 +20,7 @@ export const FieldComponent = <
   name,
   onValidation,
   privateController,
+  provideValue,
   validation,
   ...rest
 }: React.PropsWithChildren<React.ComponentProps<FieldType<T, K, IComponent>>> &
@@ -119,14 +120,29 @@ export const FieldComponent = <
       name,
       onBlur: onBlur.current,
       onChange: (
-        event: React.ChangeEvent<{ checked: boolean; value: string }>
-      ) =>
+        event: React.ChangeEvent<{
+          checked: boolean;
+          type: string;
+          value: string;
+        }>
+      ) => {
         privateController.setFieldValue({
           id,
           isTouched: true,
           key: name,
-          value: event.currentTarget.value
-        }),
+          value:
+            event.target.type === "checkbox"
+              ? event.target.checked
+              : event.target.value
+        });
+
+        if (provideValue) {
+          setProps((prevProps: typeof rest) => ({
+            ...prevProps,
+            value: event.target.value
+          }));
+        }
+      },
       onKeyDown: (event: React.KeyboardEvent) => {
         if (event.key === "Enter") {
           privateController.submit();

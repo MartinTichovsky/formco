@@ -123,7 +123,7 @@ export interface KeyType<T> {
 }
 
 export type MapFields<T> = {
-  [K in keyof T]: Number | String | Boolean | undefined;
+  [K in keyof T]: Boolean | Number | String | undefined;
 };
 
 export interface OnDisable<T> {
@@ -271,4 +271,4 @@ export type ValidatorResultAction = (
   submitAction: boolean
 ) => void;
 
-export type Value = string | boolean | undefined;
+export type Value = boolean | number | string | undefined;

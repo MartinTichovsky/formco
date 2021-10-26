@@ -477,9 +477,7 @@ export function FormFieldComponent<
             isTouched: true,
             key: name,
             value:
-              type === "checkbox"
-                ? event.currentTarget.checked
-                : event.currentTarget.value
+              type === "checkbox" ? event.target.checked : event.target.value
           })
         }
         onKeyDown={(event: React.KeyboardEvent) => {
