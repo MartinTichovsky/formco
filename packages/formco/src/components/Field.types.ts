@@ -21,6 +21,7 @@ export interface FieldType<
     id,
     name,
     onValidation,
+    provideValue,
     validation,
     ...rest
   }: React.PropsWithChildren<{
@@ -33,6 +34,7 @@ export interface FieldType<
       setProps: React.Dispatch<React.SetStateAction<typeof rest>>,
       validationInProgress: boolean
     ) => void;
+    provideValue?: boolean;
     validation?: (
       value: T[K] | undefined,
       fields: Partial<T>

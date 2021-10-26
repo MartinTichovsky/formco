@@ -27,27 +27,29 @@ export const api = async ({
 }: Api) => {
   fetchController.current = new AbortController();
 
-  const response = await fetch(
-    url,
-    getFetchInit(body, fetchController.current.signal)
-  );
+  try {
+    const response = await fetch(
+      url,
+      getFetchInit(body, fetchController.current.signal)
+    );
 
-  fetchController.current = undefined;
+    fetchController.current = undefined;
 
-  const responseBody = await response.json();
-  const isValid = responseBody.isValid;
+    const responseBody = await response.json();
+    const isValid = responseBody.isValid;
 
-  resolve({
-    content: isValid ? (
-      <CheckIcon
-        data-testid={`${id}-valid`}
-        sx={{ color: validColor, fontSize: 16 }}
-      />
-    ) : (
-      <span data-testid={`${id}-invalid`}>{errorMessage}</span>
-    ),
-    isValid
-  });
+    resolve({
+      content: isValid ? (
+        <CheckIcon
+          data-testid={`${id}-valid`}
+          sx={{ color: validColor, fontSize: 16 }}
+        />
+      ) : (
+        <span data-testid={`${id}-invalid`}>{errorMessage}</span>
+      ),
+      isValid
+    });
+  } catch {}
 };
 
 export const registerFetch = async (email: string, username: string) => {

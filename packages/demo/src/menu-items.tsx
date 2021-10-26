@@ -47,7 +47,7 @@ import {
   TextFieldValidationDependencies,
   TextFieldValidationTimeout
 } from "examples";
-import { Gmail, Register } from "examples-featured";
+import { Gmail, MaterialUI, Register } from "examples-featured";
 import React from "react";
 import { ContentWithColoredInputs } from "./App.styles";
 import { Info } from "./Info";
@@ -80,6 +80,10 @@ const menuItems: MenuItems = {
     {
       label: "Gmail",
       render: () => <Gmail />
+    },
+    {
+      label: "Material UI",
+      render: () => <MaterialUI />
     },
     {
       label: "Register",
