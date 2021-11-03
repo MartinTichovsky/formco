@@ -190,11 +190,13 @@ export class PrivateController<T extends FormFields<T>> {
     }
   }
 
-  public canFieldBeValidated(key: keyof T) {
-    return (
+  public canFieldBeValidated(key: keyof T, includeOnBlur?: boolean) {
+    return !!(
       this._fields[key]?.validateOnChange ||
       this._validateOnChange ||
-      this.isSubmitted
+      this.isSubmitted ||
+      (includeOnBlur &&
+        (this._validateOnBlur || this._fields[key]?.validateOnBlur))
     );
   }
 
@@ -796,7 +798,7 @@ export class PrivateController<T extends FormFields<T>> {
     }
   }
 
-  public setFieldValue<K extends keyof T>({
+  public setFieldValue({
     id,
     isTouched,
     isValid,
@@ -840,7 +842,6 @@ export class PrivateController<T extends FormFields<T>> {
         action: () => {
           this.validateActions(key, this._fields[key]?.validationContent);
           this.validateAllDependencies(key, silent);
-          this.validationListeners(key);
           this.onChange(key);
           this.validationListeners(key);
         },
@@ -1244,6 +1245,7 @@ export class PrivateController<T extends FormFields<T>> {
           onSuccess: (result) => {
             this.onChange(key);
             this.validateActions(key, result.content, true);
+            this.validationListeners(key);
           },
           promise: validationResult.promise,
           wait: validationResult.wait
@@ -1322,6 +1324,7 @@ export class PrivateController<T extends FormFields<T>> {
           ) {
             this.onChange(key);
             this.validateActions(key, result.content);
+            this.validationListeners(key);
           }
         },
         promise: validationResult.promise,
@@ -1373,21 +1376,15 @@ export class PrivateController<T extends FormFields<T>> {
       !this._fields[key]!.validationInProgress
     ) {
       this.registerQueueId(key);
-      this.validateAll(
-        key,
-        !(
-          this._validateOnBlur ||
-          this._fields[key]!.validateOnBlur ||
-          this.canFieldBeValidated(key)
-        ),
-        true
-      );
+      this.validateAll(key, !this.canFieldBeValidated(key, true), true);
+      this.validationListeners(key);
     } else if (
       this._fields[key]!.isValidated &&
       (this._validateOnBlur || this._fields[key]!.validateOnBlur)
     ) {
       this.onChange(key);
       this.validateActions(key, this._fields[key]!.validationContent);
+      this.validationListeners(key);
     }
   }
 
