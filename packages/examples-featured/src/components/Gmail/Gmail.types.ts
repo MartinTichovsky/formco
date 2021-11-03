@@ -1,7 +1,7 @@
 export interface GmailForm {
-  givenName: string;
+  firstName: string;
+  lastName: string;
   password: string;
   passwordConfirm: string;
-  surname: string;
   username: string;
 }

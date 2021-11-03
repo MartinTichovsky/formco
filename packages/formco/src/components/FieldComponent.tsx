@@ -90,19 +90,24 @@ export const FieldComponent = <
         }
       });
 
-    const action = () => {
-      onValidationAction(
-        privateController.isFieldValid(name) === true,
-        setProps,
-        privateController.isFieldValidationInProgress(name) === true ||
-          privateController.isFieldValidationToBeExecuted(name) === true
-      );
+    const listener = {
+      action: () => {
+        if (privateController.canFieldBeValidated(name, true)) {
+          onValidationAction(
+            privateController.isFieldValid(name) === true,
+            setProps,
+            privateController.isFieldValidationInProgress(name) === true ||
+              privateController.isFieldValidationToBeExecuted(name) === true
+          );
+        }
+      },
+      key: name
     };
 
-    privateController.subscribeOnChange(action, name);
+    privateController.subscribeOnValidation(listener);
 
     return () => {
-      privateController.unsubscribeOnChange(action, name);
+      privateController.unsubscribeOnValidation(listener);
     };
   }, [privateController, name, onValidation, setProps]);
 

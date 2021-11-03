@@ -39,9 +39,9 @@ export const MaterialUI = () => {
                 id="age"
                 label="Age"
                 name="age"
-                provideValue={true}
+                provideValue
                 validation={(value) => value === 30}
-                value={""}
+                value=""
               >
                 <MenuItem value={10}>Ten</MenuItem>
                 <MenuItem value={20}>Twenty</MenuItem>
