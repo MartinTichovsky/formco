@@ -33,14 +33,13 @@ export interface ControllerProps<T extends FormFields<T>> {
   >;
   validateOnBlur?: boolean;
   validateOnChange?: boolean;
-  validation?:
-    | {
-        [key in keyof T]?: (
-          value: T[key] | undefined,
-          fields: Partial<T>,
-          props: unknown
-        ) => ValidationResult;
-      };
+  validation?: {
+    [key in keyof T]?: (
+      value: T[key] | undefined,
+      fields: Partial<T>,
+      props: unknown
+    ) => ValidationResult;
+  };
 }
 
 export type DefaultActiveRadioId<T> = { [key in keyof T]?: string };

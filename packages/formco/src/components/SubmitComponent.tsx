@@ -25,12 +25,10 @@ export const SubmitComponent = <
       >
     ) =>
       ButtonComponent && typeof ButtonComponent === "function" ? (
-        <ButtonComponent
-          {...({
-            ...rest,
-            ...props
-          } as React.ComponentProps<React.ElementType>)}
-        />
+        React.createElement(ButtonComponent, {
+          ...rest,
+          ...props
+        } as React.ComponentProps<React.ElementType>)
       ) : (
         <button {...props} type="button">
           {props.children}

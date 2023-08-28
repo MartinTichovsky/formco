@@ -33,7 +33,7 @@ const mockResponse = (response: any, waitTimeout?: number) => {
       blob: () => Promise.resolve(new Blob()),
       body: {} as ReadableStream,
       bodyUsed: false,
-      clone: () => ({} as Response),
+      clone: () => ({}) as Response,
       formData: () => Promise.resolve(new FormData()),
       headers: (init?.headers || {}) as Headers,
       json: () => Promise.resolve(response),

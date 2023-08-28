@@ -375,13 +375,9 @@ export function FieldComponent<
     (props: React.ComponentProps<React.ElementType>) =>
       fieldType === "select" ? (
         Component ? (
-          <Component
-            {...restProps}
-            {...props}
-            controller={controller}
-            onBlur={onBlur.current}
-            ref={ref}
-          >
+          React.createElement(
+            Component,
+            { ...restProps, ...props, controller, onBlur: onBlur.current, ref },
             <SelectProvider
               id={rest.id}
               name={name as string}
@@ -389,7 +385,7 @@ export function FieldComponent<
             >
               {children}
             </SelectProvider>
-          </Component>
+          )
         ) : (
           <select {...restProps} {...props} onBlur={onBlur.current} ref={ref}>
             <SelectProvider
@@ -402,15 +398,11 @@ export function FieldComponent<
           </select>
         )
       ) : Component ? (
-        <Component
-          {...restProps}
-          {...props}
-          controller={controller}
-          onBlur={onBlur.current}
-          ref={ref}
-        >
-          {children}
-        </Component>
+        React.createElement(
+          Component,
+          { ...restProps, ...props, controller, onBlur: onBlur.current, ref },
+          children
+        )
       ) : fieldType === "textarea" ? (
         <textarea {...restProps} {...props} onBlur={onBlur.current} ref={ref} />
       ) : (
@@ -426,15 +418,15 @@ export function FieldComponent<
       ...props
     }: React.PropsWithChildren<React.HTMLProps<HTMLElement>>) =>
       MessageComponent ? (
-        <MessageComponent
-          {...({
+        React.createElement(
+          MessageComponent,
+          {
             ...restProps,
             ...props,
             controller
-          } as React.ComponentProps<React.ElementType>)}
-        >
-          {children}
-        </MessageComponent>
+          } as React.ComponentProps<React.ElementType>,
+          children
+        )
       ) : (
         <span {...props}>{children}</span>
       ),

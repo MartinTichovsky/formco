@@ -46,8 +46,8 @@ import {
   TextFieldMessageComponent,
   TextFieldValidationDependencies,
   TextFieldValidationTimeout
-} from "examples";
-import { Register } from "examples-featured";
+} from "@formco/examples";
+import { Register } from "@formco/examples-featured";
 import React from "react";
 import { ContentWithColoredInputs } from "./App.styles";
 import { Info } from "./Info";
