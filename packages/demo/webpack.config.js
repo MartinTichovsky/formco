@@ -121,14 +121,7 @@ module.exports = (env = {}, argv = {}) => {
       ),
       new webpack.DefinePlugin({ "process.env": {} }),
       !isEnvProduction && new webpack.HotModuleReplacementPlugin(),
-      !isEnvProduction &&
-        new ReactRefreshWebpackPlugin({
-          overlay: {
-            entry: require.resolve("react-dev-utils/webpackHotDevClient"),
-            module: require.resolve("react-dev-utils/refreshOverlayInterop"),
-            sockIntegration: false
-          }
-        }),
+      !isEnvProduction && new ReactRefreshWebpackPlugin(),
       {
         apply: (compiler) => {
           compiler.hooks.afterEmit.tap("AfterEmitPlugin", () => {

@@ -1,5 +1,5 @@
 {
-  "name": "examples-featured",
+  "name": "@formco/examples-featured",
   "version": "0.6.0",
   "private": true,
   "main": "lib/index.js",
@@ -16,6 +16,7 @@
     "@emotion/styled": "11.3.0",
     "@mui/icons-material": "5.0.4",
     "@mui/material": "5.0.4",
+    "formco": "workspace:packages/formco",
     "lodash.debounce": "4.0.8",
     "mobx": "6.3.5",
     "mobx-react-lite": "3.2.1"
@@ -29,9 +30,8 @@
     "@types/lodash.debounce": "4.0.6",
     "@types/react": "17.0.30",
     "@types/react-dom": "17.0.9",
-    "formco": "workspace:packages/formco",
     "jest": "27.2.5",
-    "jest-collector": "1.0.2",
+    "jest-collector": "1.1.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "rimraf": "3.0.2",
