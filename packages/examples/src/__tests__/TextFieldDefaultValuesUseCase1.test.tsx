@@ -1,65 +1,65 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import React from "react";
+import * as React from "react";
 import { TextFieldDefaultValuesUseCase1 } from "../components/TextFieldDefaultValuesUseCase1";
+import { DataTestId, TestingContent } from "../enums";
 import { testInvalidMessage } from "./utils/selectors";
 
-console.log = jest.fn();
+describe("TextFieldDefaultValuesUseCase1.tsx", () => {
+    beforeAll(() => {
+        console.log = jest.fn();
+    });
 
-const givenNameTestId = "givenName";
-const resetTestId = "reset";
-const submitTestId = "submit";
-const surnameTestId = "surname";
+    test("Basic", async () => {
+        const { container } = render(<TextFieldDefaultValuesUseCase1 />);
 
-test("TextFieldDefaultValuesUseCase1", async () => {
-  const { container } = render(<TextFieldDefaultValuesUseCase1 />);
+        // the inputs must have default values
+        expect(screen.getByTestId(DataTestId.GivenName)).toHaveValue(TestingContent.James);
+        expect(screen.getByTestId(DataTestId.Surname)).toHaveValue(TestingContent.Bond);
 
-  // the inputs must have default values
-  expect(screen.getByTestId(givenNameTestId)).toHaveValue("James");
-  expect(screen.getByTestId(surnameTestId)).toHaveValue("Bond");
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // submit valid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-  // submit valid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        // check the onSubmit action
+        expect(console.log).toBeCalledTimes(1);
+        expect(console.log).lastCalledWith({
+            givenName: TestingContent.James,
+            surname: TestingContent.Bond
+        });
 
-  // check the onSubmit action
-  expect(console.log).toBeCalledTimes(1);
-  expect(console.log).lastCalledWith({
-    givenName: "James",
-    surname: "Bond"
-  });
+        // input an empty value should show an error
+        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+            target: { value: "" }
+        });
 
-  // input an empty value should show an error
-  fireEvent.change(screen.getByTestId(givenNameTestId), {
-    target: { value: "" }
-  });
+        // one error should be shown
+        testInvalidMessage(container, 1);
 
-  // one error should be shown
-  testInvalidMessage(container, 1);
+        // input an empty value should show an error
+        fireEvent.change(screen.getByTestId(DataTestId.Surname), {
+            target: { value: "" }
+        });
 
-  // input an empty value should show an error
-  fireEvent.change(screen.getByTestId(surnameTestId), {
-    target: { value: "" }
-  });
+        // two errors should be shown
+        testInvalidMessage(container, 2);
 
-  // two errors should be shown
-  testInvalidMessage(container, 2);
+        // submit the form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-  // submit the form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        expect(console.log).toBeCalledTimes(1);
 
-  expect(console.log).toBeCalledTimes(1);
+        // reset the form
+        fireEvent.click(screen.getByTestId(DataTestId.Reset));
 
-  // reset the form
-  fireEvent.click(screen.getByTestId(resetTestId));
-
-  // the inputs must have default values
-  expect(screen.getByTestId(givenNameTestId)).toHaveValue("James");
-  expect(screen.getByTestId(surnameTestId)).toHaveValue("Bond");
+        // the inputs must have default values
+        expect(screen.getByTestId(DataTestId.GivenName)).toHaveValue(TestingContent.James);
+        expect(screen.getByTestId(DataTestId.Surname)).toHaveValue(TestingContent.Bond);
+    });
 });

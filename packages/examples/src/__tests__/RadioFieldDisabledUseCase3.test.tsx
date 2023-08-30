@@ -1,213 +1,207 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import React from "react";
+import * as React from "react";
 import { RadioFieldDisabledUseCase3 } from "../components/RadioFieldDisabledUseCase3";
+import { DataTestId, TestingContent } from "../enums";
 import { testInvalidMessage } from "./utils/selectors";
 
-console.log = jest.fn();
+describe("RadioFieldDisabledUseCase3.tsx", () => {
+    beforeAll(() => {
+        console.log = jest.fn();
+    });
 
-const radio11TestId = "radio-1-1";
-const radio12TestId = "radio-1-2";
-const radio13TestId = "radio-1-3";
-const radio21TestId = "radio-2-1";
-const radio22TestId = "radio-2-2";
-const radio31TestId = "radio-3-1";
-const radio32TestId = "radio-3-2";
-const radio33TestId = "radio-3-3";
-const resetTestId = "reset";
-const submitTestId = "submit";
+    test("Basic", async () => {
+        const { container } = render(<RadioFieldDisabledUseCase3 />);
 
-test("RadioFieldDisabledUseCase2", async () => {
-  const { container } = render(<RadioFieldDisabledUseCase3 />);
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // the first and the second option of radio volume 1 and 3 must be disabled
+        expect(screen.getByTestId(DataTestId.Radio11)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio12)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio13)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio21)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio22)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio31)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio32)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio33)).not.toBeDisabled();
 
-  // the first and the second option of radio volume 1 and 3 must be disabled
-  expect(screen.getByTestId(radio11TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio12TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio13TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio21TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio22TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio31TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio32TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio33TestId)).not.toBeDisabled();
+        // submit invalid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-  // submit invalid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        // three errors should be shown
+        testInvalidMessage(container, 3);
 
-  // three errors should be shown
-  testInvalidMessage(container, 3);
+        // select all needed options
+        fireEvent.click(screen.getByTestId(DataTestId.Radio13));
+        fireEvent.click(screen.getByTestId(DataTestId.Radio21));
+        fireEvent.click(screen.getByTestId(DataTestId.Radio33));
 
-  // select all needed options
-  fireEvent.click(screen.getByTestId(radio13TestId));
-  fireEvent.click(screen.getByTestId(radio21TestId));
-  fireEvent.click(screen.getByTestId(radio33TestId));
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // submit valid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-  // submit valid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        // check the onSubmit action
+        expect(console.log).toBeCalledTimes(1);
+        expect(console.log).lastCalledWith({
+            radioVolume1: TestingContent.CaptionOption13,
+            radioVolume2: TestingContent.CaptionOption21,
+            radioVolume3: TestingContent.CaptionOption33
+        });
 
-  // check the onSubmit action
-  expect(console.log).toBeCalledTimes(1);
-  expect(console.log).lastCalledWith({
-    radioVolume1: "Option 1-3",
-    radioVolume2: "Option 2-1",
-    radioVolume3: "Option 3-3"
-  });
+        // the first option of radio volume 2 should not be disabled
+        expect(screen.getByTestId(DataTestId.Radio11)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio12)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio13)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio21)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio22)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio31)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio32)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio33)).not.toBeDisabled();
 
-  // the first option of radio volume 2 should not be disabled
-  expect(screen.getByTestId(radio11TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio12TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio13TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio21TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio22TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio31TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio32TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio33TestId)).not.toBeDisabled();
+        // select the second option of radio volume 2
+        fireEvent.click(screen.getByTestId(DataTestId.Radio22));
 
-  // select the second option of radio volume 2
-  fireEvent.click(screen.getByTestId(radio22TestId));
+        // the second option of radio volume 2 should not be disabled
+        expect(screen.getByTestId(DataTestId.Radio11)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio12)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio13)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio21)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio22)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio31)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio32)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio33)).not.toBeDisabled();
 
-  // the second option of radio volume 2 should not be disabled
-  expect(screen.getByTestId(radio11TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio12TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio13TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio21TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio22TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio31TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio32TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio33TestId)).not.toBeDisabled();
+        // the third option of radio volume 1 and 3 should be still selected
+        expect(screen.getByTestId(DataTestId.Radio13)).toBeChecked();
+        expect(screen.getByTestId(DataTestId.Radio33)).toBeChecked();
 
-  // the third option of radio volume 1 and 3 should be still selected
-  expect(screen.getByTestId(radio13TestId)).toBeChecked();
-  expect(screen.getByTestId(radio33TestId)).toBeChecked();
+        // submit valid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-  // submit valid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        // check the onSubmit action
+        expect(console.log).toBeCalledTimes(2);
+        expect(console.log).lastCalledWith({
+            radioVolume1: TestingContent.CaptionOption13,
+            radioVolume2: TestingContent.CaptionOption22,
+            radioVolume3: TestingContent.CaptionOption33
+        });
 
-  // check the onSubmit action
-  expect(console.log).toBeCalledTimes(2);
-  expect(console.log).lastCalledWith({
-    radioVolume1: "Option 1-3",
-    radioVolume2: "Option 2-2",
-    radioVolume3: "Option 3-3"
-  });
+        // select the first option of radio volume 3
+        fireEvent.click(screen.getByTestId(DataTestId.Radio32));
 
-  // select the first option of radio volume 3
-  fireEvent.click(screen.getByTestId(radio32TestId));
+        // the second option of radio volume 1 and 3 should not be disabled
+        expect(screen.getByTestId(DataTestId.Radio11)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio12)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio13)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio21)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio22)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio31)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio32)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio33)).not.toBeDisabled();
 
-  // the second option of radio volume 1 and 3 should not be disabled
-  expect(screen.getByTestId(radio11TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio12TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio13TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio21TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio22TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio31TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio32TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio33TestId)).not.toBeDisabled();
+        // submit valid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-  // submit valid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        // check the onSubmit action
+        expect(console.log).toBeCalledTimes(3);
+        expect(console.log).lastCalledWith({
+            radioVolume1: TestingContent.CaptionOption13,
+            radioVolume2: TestingContent.CaptionOption22,
+            radioVolume3: TestingContent.CaptionOption32
+        });
 
-  // check the onSubmit action
-  expect(console.log).toBeCalledTimes(3);
-  expect(console.log).lastCalledWith({
-    radioVolume1: "Option 1-3",
-    radioVolume2: "Option 2-2",
-    radioVolume3: "Option 3-2"
-  });
+        // select the second option of radio volume 1
+        fireEvent.click(screen.getByTestId(DataTestId.Radio12));
 
-  // select the second option of radio volume 1
-  fireEvent.click(screen.getByTestId(radio12TestId));
+        // submit valid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-  // submit valid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        // check the onSubmit action
+        expect(console.log).toBeCalledTimes(4);
+        expect(console.log).lastCalledWith({
+            radioVolume1: TestingContent.CaptionOption12,
+            radioVolume2: TestingContent.CaptionOption22,
+            radioVolume3: TestingContent.CaptionOption32
+        });
 
-  // check the onSubmit action
-  expect(console.log).toBeCalledTimes(4);
-  expect(console.log).lastCalledWith({
-    radioVolume1: "Option 1-2",
-    radioVolume2: "Option 2-2",
-    radioVolume3: "Option 3-2"
-  });
+        // select the first option of radio volume 2
+        fireEvent.click(screen.getByTestId(DataTestId.Radio21));
 
-  // select the first option of radio volume 2
-  fireEvent.click(screen.getByTestId(radio21TestId));
+        // the first and the second option of radio volume 1 must be disabled, the second option of radio volume 3 must be disabled
+        expect(screen.getByTestId(DataTestId.Radio11)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio12)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio13)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio21)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio22)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio31)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio32)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio33)).not.toBeDisabled();
 
-  // the first and the second option of radio volume 1 must be disabled, the second option of radio volume 3 must be disabled
-  expect(screen.getByTestId(radio11TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio12TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio13TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio21TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio22TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio31TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio32TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio33TestId)).not.toBeDisabled();
+        // no options should be checked except for the first option of radio volume 2
+        expect(screen.getByTestId(DataTestId.Radio11)).not.toBeChecked();
+        expect(screen.getByTestId(DataTestId.Radio12)).not.toBeChecked();
+        expect(screen.getByTestId(DataTestId.Radio13)).not.toBeChecked();
+        expect(screen.getByTestId(DataTestId.Radio31)).not.toBeChecked();
+        expect(screen.getByTestId(DataTestId.Radio32)).not.toBeChecked();
+        expect(screen.getByTestId(DataTestId.Radio33)).not.toBeChecked();
 
-  // no options should be checked except for the first option of radio volume 2
-  expect(screen.getByTestId(radio11TestId)).not.toBeChecked();
-  expect(screen.getByTestId(radio12TestId)).not.toBeChecked();
-  expect(screen.getByTestId(radio13TestId)).not.toBeChecked();
-  expect(screen.getByTestId(radio31TestId)).not.toBeChecked();
-  expect(screen.getByTestId(radio32TestId)).not.toBeChecked();
-  expect(screen.getByTestId(radio33TestId)).not.toBeChecked();
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // submit invalid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-  // submit invalid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        // two errros should be shown
+        testInvalidMessage(container, 2);
 
-  // two errros should be shown
-  testInvalidMessage(container, 2);
+        // select the first option of radio volume 3
+        fireEvent.click(screen.getByTestId(DataTestId.Radio31));
 
-  // select the first option of radio volume 3
-  fireEvent.click(screen.getByTestId(radio31TestId));
+        // one errro should be shown
+        testInvalidMessage(container, 1);
 
-  // one errro should be shown
-  testInvalidMessage(container, 1);
+        // select the first option of radio volume 1
+        fireEvent.click(screen.getByTestId(DataTestId.Radio11));
 
-  // select the first option of radio volume 1
-  fireEvent.click(screen.getByTestId(radio11TestId));
+        // submit valid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-  // submit valid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        // check the onSubmit action
+        expect(console.log).toBeCalledTimes(5);
+        expect(console.log).lastCalledWith({
+            radioVolume1: TestingContent.CaptionOption11,
+            radioVolume2: TestingContent.CaptionOption21,
+            radioVolume3: TestingContent.CaptionOption31
+        });
 
-  // check the onSubmit action
-  expect(console.log).toBeCalledTimes(5);
-  expect(console.log).lastCalledWith({
-    radioVolume1: "Option 1-1",
-    radioVolume2: "Option 2-1",
-    radioVolume3: "Option 3-1"
-  });
+        // reset the form
+        fireEvent.click(screen.getByTestId(DataTestId.Reset));
 
-  // reset the form
-  fireEvent.click(screen.getByTestId(resetTestId));
-
-  // the first and the second option of radio volume 1 and 3 must be disabled
-  expect(screen.getByTestId(radio11TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio12TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio13TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio21TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio22TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio31TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio32TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio33TestId)).not.toBeDisabled();
+        // the first and the second option of radio volume 1 and 3 must be disabled
+        expect(screen.getByTestId(DataTestId.Radio11)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio12)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio13)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio21)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio22)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio31)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio32)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio33)).not.toBeDisabled();
+    });
 });

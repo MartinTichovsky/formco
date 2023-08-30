@@ -1,81 +1,65 @@
-import { FormController, Input, Submit } from "formco";
-import React from "react";
+import { FC, FormController } from "formco";
+import * as React from "react";
+import { DataTestId } from "../enums";
 import { LogStore } from "../store";
-import { Template } from "./Template/Template";
+import { FieldRow, FieldRowButtons, Info, ResetButton, Template } from "./Template/Template";
 
-type MyForm = {
-  givenName: string;
-  surname: string;
-};
+interface MyForm {
+    givenName: string;
+    surname: string;
+}
 
-export const GeneralValidationUseCase2 = (
-  props: Partial<React.ComponentProps<typeof FormController>>
-) => {
-  const store = new LogStore();
+export const GeneralValidationUseCase2 = (props: Partial<React.ComponentProps<typeof FormController>>) => {
+    const store = new LogStore();
 
-  return (
-    <Template store={store}>
-      <FormController<MyForm>
-        validateOnChange
-        validation={{
-          givenName: (value) =>
-            (value === undefined ||
-              (typeof value === "string" && !value.trim())) &&
-            "Provide a valid given name",
-          surname: (value) =>
-            (value === undefined ||
-              (typeof value === "string" && !value.trim())) &&
-            "Provide a valid surname"
-        }}
-        {...props}
-        onSubmit={(fields) => console.log(fields)}
-      >
-        {(controller) => (
-          <>
-            <div className="field-row">
-              <Input
-                controller={controller}
-                data-testid="givenName"
-                name="givenName"
-                placeholder="Input a given name"
-              />
-            </div>
-            <div className="field-row">
-              <Input
-                controller={controller}
-                data-testid="surname"
-                name="surname"
-                placeholder="Input a surname"
-              />
-            </div>
-
-            <div className="field-row buttons">
-              <Submit
-                data-testid="submit"
-                controller={controller}
-                onSubmit={(fields, controller) =>
-                  store.onSubmit(fields, controller)
-                }
-              >
-                Submit
-              </Submit>
-              <button
-                data-testid="reset"
-                onClick={() => {
-                  controller.resetForm();
-                  store.reset();
+    return (
+        <Template store={store}>
+            <FormController<MyForm>
+                validateOnChange
+                validation={{
+                    givenName: (value) =>
+                        (value === undefined || (typeof value === "string" && !value.trim())) &&
+                        "Provide a valid given name",
+                    surname: (value) =>
+                        (value === undefined || (typeof value === "string" && !value.trim())) &&
+                        "Provide a valid surname"
                 }}
-                type="button"
-              >
-                Reset
-              </button>
-            </div>
-            <div className="info">
-              * Providing the validation from the form controller
-            </div>
-          </>
-        )}
-      </FormController>
-    </Template>
-  );
+                {...props}
+                onSubmit={(fields) => console.log(fields)}
+            >
+                {(controller) => (
+                    <>
+                        <FieldRow>
+                            <FC.Input
+                                $controller={controller}
+                                $name="givenName"
+                                data-testid={DataTestId.GivenName}
+                                placeholder="Input a given name"
+                            />
+                        </FieldRow>
+                        <FieldRow>
+                            <FC.Input
+                                $controller={controller}
+                                $name="surname"
+                                data-testid={DataTestId.Surname}
+                                placeholder="Input a surname"
+                            />
+                        </FieldRow>
+
+                        <FieldRowButtons>
+                            <FC.Submit
+                                $controller={controller}
+                                $onSubmit={(fields, controller) => store.onSubmit(fields, controller)}
+                                data-testid={DataTestId.Submit}
+                            >
+                                Submit
+                            </FC.Submit>
+                            <ResetButton controller={controller} store={store} />
+                        </FieldRowButtons>
+                        <Info>* Providing the validation from the form controller</Info>
+                    </>
+                )}
+            </FormController>
+        </Template>
+    );
 };

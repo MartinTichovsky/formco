@@ -1,23 +1,33 @@
-import React from "react";
+import * as React from "react";
 import { FormFields } from "../private-controller.types";
 import { ValidationProvider } from "../providers";
 import { ValidationProps } from "./Validation.types";
 
 export const Validation = <T extends FormFields<T>>({
-  children,
-  disableIf,
-  hideIf,
-  validation,
-  ...sharedProps
+    children,
+    disableIf,
+    hideIf,
+    hideMessage,
+    hideRequiredStar,
+    required,
+    requiredComponent,
+    requiredInvalidMessage,
+    requiredValidMessage,
+    validation
 }: ValidationProps<T>) => {
-  return (
-    <ValidationProvider
-      {...sharedProps}
-      disableIf={disableIf}
-      hideIf={hideIf}
-      validation={validation}
-    >
-      {children}
-    </ValidationProvider>
-  );
+    return (
+        <ValidationProvider
+            hideMessage={hideMessage}
+            hideRequiredStar={hideRequiredStar}
+            disableIf={disableIf}
+            hideIf={hideIf}
+            required={required}
+            requiredComponent={requiredComponent}
+            requiredInvalidMessage={requiredInvalidMessage}
+            requiredValidMessage={requiredValidMessage}
+            validation={validation}
+        >
+            {children}
+        </ValidationProvider>
+    );
 };

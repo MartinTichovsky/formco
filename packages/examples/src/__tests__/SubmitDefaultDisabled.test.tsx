@@ -1,114 +1,113 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import React from "react";
+import * as React from "react";
 import { SubmitDefaultDisabled } from "../components/SubmitDefaultDisabled";
+import { DataTestId, TestingContent } from "../enums";
 import { testInvalidMessage } from "./utils/selectors";
 
-console.log = jest.fn();
+describe("SubmitDefaultDisabled.tsx", () => {
+    beforeAll(() => {
+        console.log = jest.fn();
+    });
 
-const givenNameTestId = "givenName";
-const resetTestId = "reset";
-const submitBottomTestId = "submit-bottom";
-const submitTopTestId = "submit-top";
-const surnameTestId = "surname";
+    test("Basic", async () => {
+        const { container } = render(<SubmitDefaultDisabled />);
 
-test("SubmitDefaultDisabled", async () => {
-  const { container } = render(<SubmitDefaultDisabled />);
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // the buttons must be disabled
+        expect(screen.getByTestId(DataTestId.SubmitBottom)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.SubmitTop)).toBeDisabled();
 
-  // the buttons must be disabled
-  expect(screen.getByTestId(submitBottomTestId)).toBeDisabled();
-  expect(screen.getByTestId(submitTopTestId)).toBeDisabled();
+        // input an empty value should show an error
+        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+            target: { value: " " }
+        });
 
-  // input an empty value should show an error
-  fireEvent.change(screen.getByTestId(givenNameTestId), {
-    target: { value: " " }
-  });
+        // one error should be shown
+        testInvalidMessage(container, 1);
 
-  // one error should be shown
-  testInvalidMessage(container, 1);
+        // the buttons must be disabled
+        expect(screen.getByTestId(DataTestId.SubmitBottom)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.SubmitTop)).toBeDisabled();
 
-  // the buttons must be disabled
-  expect(screen.getByTestId(submitBottomTestId)).toBeDisabled();
-  expect(screen.getByTestId(submitTopTestId)).toBeDisabled();
+        // input an empty value should show an error
+        fireEvent.change(screen.getByTestId(DataTestId.Surname), {
+            target: { value: " " }
+        });
 
-  // input an empty value should show an error
-  fireEvent.change(screen.getByTestId(surnameTestId), {
-    target: { value: " " }
-  });
+        // two errors should be shown
+        testInvalidMessage(container, 2);
 
-  // two errors should be shown
-  testInvalidMessage(container, 2);
+        // the buttons must be disabled
+        expect(screen.getByTestId(DataTestId.SubmitBottom)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.SubmitTop)).toBeDisabled();
 
-  // the buttons must be disabled
-  expect(screen.getByTestId(submitBottomTestId)).toBeDisabled();
-  expect(screen.getByTestId(submitTopTestId)).toBeDisabled();
+        // input a valid text
+        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+            target: { value: "J" }
+        });
 
-  // input a valid text
-  fireEvent.change(screen.getByTestId(givenNameTestId), {
-    target: { value: "J" }
-  });
+        // one error should be shown
+        testInvalidMessage(container, 1);
 
-  // one error should be shown
-  testInvalidMessage(container, 1);
+        // input an empty value
+        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+            target: { value: "" }
+        });
 
-  // input an empty value
-  fireEvent.change(screen.getByTestId(givenNameTestId), {
-    target: { value: "" }
-  });
+        // two errors should be shown
+        testInvalidMessage(container, 2);
 
-  // two errors should be shown
-  testInvalidMessage(container, 2);
+        // input a valid text
+        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+            target: { value: TestingContent.James }
+        });
 
-  // input a valid text
-  fireEvent.change(screen.getByTestId(givenNameTestId), {
-    target: { value: "James" }
-  });
+        // one error should be shown
+        testInvalidMessage(container, 1);
 
-  // one error should be shown
-  testInvalidMessage(container, 1);
+        // the buttons must be disabled
+        expect(screen.getByTestId(DataTestId.SubmitBottom)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.SubmitTop)).toBeDisabled();
 
-  // the buttons must be disabled
-  expect(screen.getByTestId(submitBottomTestId)).toBeDisabled();
-  expect(screen.getByTestId(submitTopTestId)).toBeDisabled();
+        // input a valid text
+        fireEvent.change(screen.getByTestId(DataTestId.Surname), {
+            target: { value: TestingContent.Bond }
+        });
 
-  // input a valid text
-  fireEvent.change(screen.getByTestId(surnameTestId), {
-    target: { value: "Bond" }
-  });
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // the buttons must not be disabled
+        expect(screen.getByTestId(DataTestId.SubmitBottom)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.SubmitTop)).not.toBeDisabled();
 
-  // the buttons must not be disabled
-  expect(screen.getByTestId(submitBottomTestId)).not.toBeDisabled();
-  expect(screen.getByTestId(submitTopTestId)).not.toBeDisabled();
+        // submit valid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.SubmitTop));
+        });
 
-  // submit valid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTopTestId));
-  });
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // check the onSubmit action
+        expect(console.log).toBeCalledTimes(1);
+        expect(console.log).lastCalledWith({ givenName: TestingContent.James, surname: TestingContent.Bond });
 
-  // check the onSubmit action
-  expect(console.log).toBeCalledTimes(1);
-  expect(console.log).lastCalledWith({ givenName: "James", surname: "Bond" });
+        // submit valid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.SubmitBottom));
+        });
 
-  // submit valid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitBottomTestId));
-  });
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // check the onSubmit action
+        expect(console.log).toBeCalledTimes(2);
+        expect(console.log).lastCalledWith({ givenName: TestingContent.James, surname: TestingContent.Bond });
 
-  // check the onSubmit action
-  expect(console.log).toBeCalledTimes(2);
-  expect(console.log).lastCalledWith({ givenName: "James", surname: "Bond" });
-
-  fireEvent.click(screen.getByTestId(resetTestId));
+        fireEvent.click(screen.getByTestId(DataTestId.Reset));
+    });
 });

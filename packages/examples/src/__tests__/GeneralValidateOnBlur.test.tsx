@@ -1,108 +1,104 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import React from "react";
+import * as React from "react";
 import { GeneralValidateOnBlur } from "../components/GeneralValidateOnBlur";
+import { DataTestId, TestingContent } from "../enums";
 import { testInvalidMessage } from "./utils/selectors";
 
-console.log = jest.fn();
+describe("GeneralValidateOnBlur.tsx", () => {
+    const testSuite = async (container: HTMLElement) => {
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-const givenNameTestId = "givenName";
-const resetTestId = "reset";
-const submitTestId = "submit";
-const surnameTestId = "surname";
+        // blur on the input
+        fireEvent.blur(screen.getByTestId(DataTestId.GivenName));
 
-const testSuite = async (container: HTMLElement) => {
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // one error should be shown
+        testInvalidMessage(container, 1);
 
-  // blur on the input
-  fireEvent.blur(screen.getByTestId(givenNameTestId));
+        // blur on the input
+        fireEvent.blur(screen.getByTestId(DataTestId.Surname));
 
-  // one error should be shown
-  testInvalidMessage(container, 1);
+        // two errors should be shown
+        testInvalidMessage(container, 2);
 
-  // blur on the input
-  fireEvent.blur(screen.getByTestId(surnameTestId));
+        // reset the form
+        fireEvent.click(screen.getByTestId(DataTestId.Reset));
 
-  // two errors should be shown
-  testInvalidMessage(container, 2);
+        // input an empty value
+        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+            target: { value: " " }
+        });
 
-  // reset the form
-  fireEvent.click(screen.getByTestId(resetTestId));
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // input an empty value
-  fireEvent.change(screen.getByTestId(givenNameTestId), {
-    target: { value: " " }
-  });
+        // input an empty value
+        fireEvent.change(screen.getByTestId(DataTestId.Surname), {
+            target: { value: " " }
+        });
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // input an empty value
-  fireEvent.change(screen.getByTestId(surnameTestId), {
-    target: { value: " " }
-  });
+        // reset the form
+        fireEvent.click(screen.getByTestId(DataTestId.Reset));
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // input valid text
+        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+            target: { value: TestingContent.James }
+        });
 
-  // reset the form
-  fireEvent.click(screen.getByTestId(resetTestId));
+        // blur on the input
+        fireEvent.blur(screen.getByTestId(DataTestId.GivenName));
 
-  // input valid text
-  fireEvent.change(screen.getByTestId(givenNameTestId), {
-    target: { value: "James" }
-  });
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // blur on the input
-  fireEvent.blur(screen.getByTestId(givenNameTestId));
+        // input a valid text
+        fireEvent.change(screen.getByTestId(DataTestId.Surname), {
+            target: { value: TestingContent.Bond }
+        });
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // blur on the input
+        fireEvent.blur(screen.getByTestId(DataTestId.Surname));
 
-  // input a valid text
-  fireEvent.change(screen.getByTestId(surnameTestId), {
-    target: { value: "Bond" }
-  });
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // blur on the input
-  fireEvent.blur(screen.getByTestId(surnameTestId));
+        // submit valid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // check the onSubmit action
+        expect(console.log).toBeCalledTimes(1);
+        expect(console.log).lastCalledWith({
+            givenName: TestingContent.James,
+            surname: TestingContent.Bond
+        });
 
-  // submit valid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        // reset the form
+        fireEvent.click(screen.getByTestId(DataTestId.Reset));
+    };
 
-  // check the onSubmit action
-  expect(console.log).toBeCalledTimes(1);
-  expect(console.log).lastCalledWith({ givenName: "James", surname: "Bond" });
+    beforeAll(() => {
+        console.log = jest.fn();
+    });
 
-  // reset the form
-  fireEvent.click(screen.getByTestId(resetTestId));
-};
+    beforeEach(() => {
+        jest.resetAllMocks();
+    });
 
-beforeEach(() => {
-  jest.resetAllMocks();
-});
+    test("Field", async () => {
+        const { container } = render(<GeneralValidateOnBlur inputValidateOnBlur={true} validateOnBlur={false} />);
 
-describe("GeneralValidateOnBlur", () => {
-  test("Field", async () => {
-    const { container } = render(
-      <GeneralValidateOnBlur
-        inputValidateOnBlur={true}
-        validateOnBlur={false}
-      />
-    );
+        await testSuite(container);
+    });
 
-    await testSuite(container);
-  });
+    test("FormController", async () => {
+        const { container } = render(<GeneralValidateOnBlur />);
 
-  test("FormController", async () => {
-    const { container } = render(<GeneralValidateOnBlur />);
-
-    await testSuite(container);
-  });
+        await testSuite(container);
+    });
 });

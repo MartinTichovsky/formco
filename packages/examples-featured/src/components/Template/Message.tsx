@@ -1,20 +1,20 @@
 import { observer } from "mobx-react-lite";
-import React from "react";
+import * as React from "react";
 import { MessageStore } from "../../store";
 
 export const Message = observer(function Message({
-  store,
-  ...rest
+    store,
+    ...rest
 }: {
-  store: MessageStore;
+    store: MessageStore;
 } & React.HTMLProps<HTMLElement>) {
-  if (!store.message) {
-    return null;
-  }
+    if (!store.message) {
+        return null;
+    }
 
-  return (
-    <span className="message" {...rest}>
-      {store.message}
-    </span>
-  );
+    return (
+        <span className="message" {...rest}>
+            {store.message}
+        </span>
+    );
 });

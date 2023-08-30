@@ -1,95 +1,88 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import React from "react";
+import * as React from "react";
 import { GeneralValidateOnChange } from "../components/GeneralValidateOnChange";
+import { DataTestId, TestingContent } from "../enums";
 import { testInvalidMessage } from "./utils/selectors";
 
-console.log = jest.fn();
+describe("GeneralValidateOnChange.tsx", () => {
+    const testSuite = async (container: HTMLElement) => {
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-const givenNameTestId = "givenName";
-const resetTestId = "reset";
-const submitTestId = "submit";
-const surnameTestId = "surname";
+        // blur on the input
+        fireEvent.blur(screen.getByTestId(DataTestId.GivenName));
 
-const testSuite = async (container: HTMLElement) => {
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // blur on the input
-  fireEvent.blur(screen.getByTestId(givenNameTestId));
+        // input an empty value should show an error
+        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+            target: { value: " " }
+        });
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // one error should be shown
+        testInvalidMessage(container, 1);
 
-  // input an empty value should show an error
-  fireEvent.change(screen.getByTestId(givenNameTestId), {
-    target: { value: " " }
-  });
+        // blur on the input
+        fireEvent.blur(screen.getByTestId(DataTestId.Surname));
 
-  // one error should be shown
-  testInvalidMessage(container, 1);
+        // one error should be shown
+        testInvalidMessage(container, 1);
 
-  // blur on the input
-  fireEvent.blur(screen.getByTestId(surnameTestId));
+        // input an empty value should show an error
+        fireEvent.change(screen.getByTestId(DataTestId.Surname), {
+            target: { value: " " }
+        });
 
-  // one error should be shown
-  testInvalidMessage(container, 1);
+        // two errors should be shown
+        testInvalidMessage(container, 2);
 
-  // input an empty value should show an error
-  fireEvent.change(screen.getByTestId(surnameTestId), {
-    target: { value: " " }
-  });
+        // input valid text
+        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+            target: { value: TestingContent.James }
+        });
 
-  // two errors should be shown
-  testInvalidMessage(container, 2);
+        // one error should be shown
+        testInvalidMessage(container, 1);
 
-  // input valid text
-  fireEvent.change(screen.getByTestId(givenNameTestId), {
-    target: { value: "James" }
-  });
+        // input a valid text
+        fireEvent.change(screen.getByTestId(DataTestId.Surname), {
+            target: { value: TestingContent.Bond }
+        });
 
-  // one error should be shown
-  testInvalidMessage(container, 1);
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // input a valid text
-  fireEvent.change(screen.getByTestId(surnameTestId), {
-    target: { value: "Bond" }
-  });
+        // submit valid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // check the onSubmit action
+        expect(console.log).toBeCalledTimes(1);
+        expect(console.log).lastCalledWith({ givenName: TestingContent.James, surname: TestingContent.Bond });
 
-  // submit valid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        fireEvent.click(screen.getByTestId(DataTestId.Reset));
+    };
 
-  // check the onSubmit action
-  expect(console.log).toBeCalledTimes(1);
-  expect(console.log).lastCalledWith({ givenName: "James", surname: "Bond" });
+    beforeAll(() => {
+        console.log = jest.fn();
+    });
 
-  fireEvent.click(screen.getByTestId(resetTestId));
-};
+    beforeEach(() => {
+        jest.resetAllMocks();
+    });
 
-beforeEach(() => {
-  jest.resetAllMocks();
-});
+    test("Field", async () => {
+        const { container } = render(<GeneralValidateOnChange inputValidateOnChange={true} validateOnChange={false} />);
 
-describe("GeneralValidateOnChange", () => {
-  test("Field", async () => {
-    const { container } = render(
-      <GeneralValidateOnChange
-        inputValidateOnChange={true}
-        validateOnChange={false}
-      />
-    );
+        await testSuite(container);
+    });
 
-    await testSuite(container);
-  });
+    test("FormController", async () => {
+        const { container } = render(<GeneralValidateOnChange />);
 
-  test("FormController", async () => {
-    const { container } = render(<GeneralValidateOnChange />);
-
-    await testSuite(container);
-  });
+        await testSuite(container);
+    });
 });

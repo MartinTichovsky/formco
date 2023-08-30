@@ -1,102 +1,81 @@
-import React from "react";
+import * as React from "react";
 import { CommonFormFieldProps } from "./components/FormField.types";
 import { PrivateController } from "./private-controller";
 import { FormFields } from "./private-controller.types";
-import {
-  OnChangeCondition,
-  SelectProviderProps,
-  ValidationAction,
-  ValidationProviderProps
-} from "./providers.types";
+import { OnChangeCondition, SelectProviderProps, ValidationAction, ValidationProviderProps } from "./providers.types";
 
 export const commonPropsContext = React.createContext<CommonFormFieldProps>({});
 
-export const disableIfContext = React.createContext<
-  OnChangeCondition | undefined
->(undefined);
+export const disableIfContext = React.createContext<OnChangeCondition | undefined>(undefined);
 
-export const hideIfContext = React.createContext<OnChangeCondition | undefined>(
-  undefined
-);
+export const hideIfContext = React.createContext<OnChangeCondition | undefined>(undefined);
 
-export const privateControllerContext = React.createContext<
-  PrivateController<{}> | undefined
->(undefined);
+export const privateControllerContext = React.createContext<PrivateController<{}> | undefined>(undefined);
 
-export const selectContext = React.createContext<
-  SelectProviderProps | undefined
->(undefined);
+export const selectContext = React.createContext<SelectProviderProps | undefined>(undefined);
 
-export const validationContext = React.createContext<
-  ValidationAction | undefined
->(undefined);
+export const validationContext = React.createContext<ValidationAction | undefined>(undefined);
 
 export const getControllerProviderContext = <T extends FormFields<T>>() =>
-  privateControllerContext as React.Context<PrivateController<T> | undefined>;
+    privateControllerContext as React.Context<PrivateController<T> | undefined>;
 
-export const usePrivateController = <
-  T extends FormFields<T>
->(): PrivateController<T> => {
-  const controller = React.useContext<PrivateController<T> | undefined>(
-    getControllerProviderContext<T>()
-  );
+export const usePrivateController = <T extends FormFields<T>>(): PrivateController<T> => {
+    const controller = React.useContext<PrivateController<T> | undefined>(getControllerProviderContext<T>());
 
-  if (!controller) {
-    throw Error(
-      "Controller is not provided. Every component from formco must be inside FormController."
-    );
-  }
+    if (!controller) {
+        throw Error("Controller is not provided. Every component from formco must be inside FormController.");
+    }
 
-  return controller;
+    return controller;
 };
 
-export const SelectProvider = ({
-  children,
-  ...rest
-}: React.PropsWithChildren<SelectProviderProps>) => {
-  return (
-    <selectContext.Provider value={rest}>{children}</selectContext.Provider>
-  );
+export const SelectProvider = ({ children, ...rest }: React.PropsWithChildren<SelectProviderProps>) => {
+    return <selectContext.Provider value={rest}>{children}</selectContext.Provider>;
 };
 
 export const ValidationProvider = ({
-  children,
-  disableIf,
-  hideIf,
-  validation,
-  ...commonProps
+    children,
+    disableIf,
+    hideIf,
+    validation,
+    ...commonProps
 }: React.PropsWithChildren<ValidationProviderProps>) => {
-  let result = <>{children}</>;
+    let result = <>{children}</>;
 
-  if (Object.keys(commonProps).length > 0) {
-    result = (
-      <commonPropsContext.Provider value={commonProps}>
-        {result}
-      </commonPropsContext.Provider>
-    );
-  }
+    if (Object.keys(commonProps).length > 0) {
+        const commonPropsMemo = React.useMemo(
+            () => ({
+                $hideMessage: commonProps.hideMessage,
+                $hideRequiredStar: commonProps.hideRequiredStar,
+                $required: commonProps.required,
+                $requiredComponent: commonProps.requiredComponent,
+                $requiredInvalidMessage: commonProps.requiredInvalidMessage,
+                $requiredValidMessage: commonProps.requiredValidMessage
+            }),
+            [
+                commonProps.hideMessage,
+                commonProps.hideRequiredStar,
+                commonProps.required,
+                commonProps.requiredComponent,
+                commonProps.requiredInvalidMessage,
+                commonProps.requiredValidMessage
+            ]
+        );
 
-  if (disableIf) {
-    result = (
-      <disableIfContext.Provider value={disableIf}>
-        {result}
-      </disableIfContext.Provider>
-    );
-  }
+        result = <commonPropsContext.Provider value={commonPropsMemo}>{result}</commonPropsContext.Provider>;
+    }
 
-  if (hideIf) {
-    result = (
-      <hideIfContext.Provider value={hideIf}>{result}</hideIfContext.Provider>
-    );
-  }
+    if (disableIf) {
+        result = <disableIfContext.Provider value={disableIf}>{result}</disableIfContext.Provider>;
+    }
 
-  if (validation) {
-    result = (
-      <validationContext.Provider value={validation}>
-        {result}
-      </validationContext.Provider>
-    );
-  }
+    if (hideIf) {
+        result = <hideIfContext.Provider value={hideIf}>{result}</hideIfContext.Provider>;
+    }
 
-  return result;
+    if (validation) {
+        result = <validationContext.Provider value={validation}>{result}</validationContext.Provider>;
+    }
+
+    return result;
 };

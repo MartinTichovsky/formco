@@ -1,106 +1,86 @@
-import { Controller, FormController, Input } from "formco";
-import React from "react";
+import { Controller, FC, FormController } from "formco";
+import * as React from "react";
+import { DataTestId, TestingContent } from "../enums";
 import { LogStore } from "../store";
-import { Template } from "./Template/Template";
+import { FieldRow, FieldRowButtons, Info, ResetButton, Template } from "./Template/Template";
 
-type MyForm = {
-  givenName: string;
-  surname: string;
-};
+interface MyForm {
+    givenName: string;
+    surname: string;
+}
 
-const CustomSubmitComponent = ({
-  controller,
-  store
-}: {
-  controller: Controller<MyForm>;
-  store: LogStore;
-}) => {
-  const [pending, setPending] = React.useState(false);
-  const isMounted = React.useRef(true);
+const CustomSubmitComponent = ({ controller, store }: { controller: Controller<MyForm>; store: LogStore }) => {
+    const [pending, setPending] = React.useState(false);
+    const isMounted = React.useRef(true);
 
-  React.useEffect(() => {
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
+    React.useEffect(() => {
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
 
-  const handleClick = () => {
-    controller.submit();
-    store.onSubmit(controller.fields, controller);
+    const handleClick = () => {
+        controller.submit();
+        store.onSubmit(controller.fields, controller);
 
-    if (controller.isValid) {
-      console.log(controller.fields);
+        if (controller.isValid) {
+            console.log(controller.fields);
 
-      setPending(true);
+            setPending(true);
 
-      // simulate HTTML request / delay
-      setTimeout(() => {
-        if (isMounted.current) {
-          setPending(false);
+            // simulate HTTML request / delay
+            setTimeout(() => {
+                if (isMounted.current) {
+                    setPending(false);
+                }
+            }, 2000);
         }
-      }, 2000);
-    }
-  };
+    };
 
-  return (
-    <button data-testid="submit" onClick={handleClick}>
-      {pending ? "pending..." : "Submit"}
-    </button>
-  );
+    return (
+        <button data-testid="submit" onClick={handleClick}>
+            {pending ? TestingContent.Pending : "Submit"}
+        </button>
+    );
 };
 
-export const SubmitCustom = (
-  props: Partial<React.ComponentProps<typeof FormController>>
-) => {
-  const store = new LogStore();
+export const SubmitCustom = (props: Partial<React.ComponentProps<typeof FormController>>) => {
+    const store = new LogStore();
 
-  return (
-    <Template store={store}>
-      <FormController<MyForm> validateOnChange {...props} onSubmit={() => {}}>
-        {(controller) => (
-          <>
-            <div className="field-row">
-              <Input
-                controller={controller}
-                data-testid="givenName"
-                name="givenName"
-                placeholder="Input a given name"
-                validation={(value) =>
-                  !value?.trim() && "Provide a valid given name"
-                }
-              />
-            </div>
-            <div className="field-row">
-              <Input
-                controller={controller}
-                data-testid="surname"
-                name="surname"
-                placeholder="Input a surname"
-                validation={(value) =>
-                  !value?.trim() && "Provide a valid surname"
-                }
-              />
-            </div>
-            <div className="field-row buttons">
-              <CustomSubmitComponent controller={controller} store={store} />
-              <button
-                data-testid="reset"
-                onClick={() => {
-                  controller.resetForm();
-                  store.reset();
-                }}
-                type="button"
-              >
-                Reset
-              </button>
-            </div>
-            <div className="info">
-              * This example shows how to provide your own submit button,
-              without using the formco Submit.
-            </div>
-          </>
-        )}
-      </FormController>
-    </Template>
-  );
+    return (
+        <Template store={store}>
+            <FormController<MyForm> validateOnChange {...props} onSubmit={() => {}}>
+                {(controller) => (
+                    <>
+                        <FieldRow>
+                            <FC.Input
+                                $controller={controller}
+                                $name="givenName"
+                                $validation={(value) => !value?.trim() && "Provide a valid given name"}
+                                data-testid={DataTestId.GivenName}
+                                placeholder="Input a given name"
+                            />
+                        </FieldRow>
+                        <FieldRow>
+                            <FC.Input
+                                $controller={controller}
+                                $name="surname"
+                                $validation={(value) => !value?.trim() && "Provide a valid surname"}
+                                data-testid={DataTestId.Surname}
+                                placeholder="Input a surname"
+                            />
+                        </FieldRow>
+
+                        <FieldRowButtons>
+                            <CustomSubmitComponent controller={controller} store={store} />
+                            <ResetButton controller={controller} store={store} />
+                        </FieldRowButtons>
+                        <Info>
+                            * This example shows how to provide your own submit button, without using the formco Submit.
+                        </Info>
+                    </>
+                )}
+            </FormController>
+        </Template>
+    );
 };

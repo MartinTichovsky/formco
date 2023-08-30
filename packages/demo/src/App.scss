@@ -72,11 +72,6 @@ label {
     cursor: default;
   }
 
-  .re-render button {
-    background: #c52c2c;
-    width: 215px;
-  }
-
   input[type="submit"]:hover,
   input[type="button"]:hover,
   button:hover {
@@ -90,16 +85,6 @@ label {
   input[disabled],
   select option[disabled] {
     color: #aaa;
-  }
-
-  .re-render {
-    border-bottom: 2px solid #dcdcdc;
-    padding-bottom: 15px;
-    width: 500px;
-  }
-
-  .re-render button:hover {
-    background: #b11a1a;
   }
 
   .required {
@@ -162,4 +147,22 @@ label {
   .console-log pre {
     margin-top: 5px;
   }
+}
+
+.re-render button {
+  background: #c52c2c;
+  border: none;
+  color: #fff;
+  padding: 8px 15px 8px 15px;
+  width: 215px;
+}
+
+.re-render {
+  border-bottom: 2px solid #dcdcdc;
+  padding-bottom: 15px;
+  width: 500px;
+}
+
+.re-render button:hover {
+  background: #b11a1a;
 }

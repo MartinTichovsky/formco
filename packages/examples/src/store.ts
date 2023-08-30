@@ -4,31 +4,26 @@ import { action, makeObservable, observable } from "mobx";
 const defaultValue = `> submitted: false`;
 
 export class LogStore {
-  constructor() {
-    makeObservable(this);
-  }
+    constructor() {
+        makeObservable(this);
+    }
 
-  @observable
-  log = defaultValue;
+    @observable
+    log = defaultValue;
 
-  @action
-  onSubmit<T extends FormFields<T>>(
-    fields: unknown,
-    controller: Controller<T>
-  ) {
-    this.log = `> submitted: true\n> isValid: ${
-      controller.isValid
-    }\n> result: ${JSON.stringify(fields)}
+    @action
+    onSubmit<T extends FormFields<T>>(fields: unknown, controller: Controller<T>) {
+        this.log = `> submitted: true\n> isValid: ${controller.isValid}\n> result: ${JSON.stringify(fields)}
     `;
-  }
+    }
 
-  @action
-  submitted() {
-    this.log = this.log.replace(defaultValue, "> submitted: true");
-  }
+    @action
+    submitted() {
+        this.log = this.log.replace(defaultValue, "> submitted: true");
+    }
 
-  @action
-  reset() {
-    this.log = defaultValue;
-  }
+    @action
+    reset() {
+        this.log = defaultValue;
+    }
 }

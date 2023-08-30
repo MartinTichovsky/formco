@@ -1,116 +1,112 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import React from "react";
+import * as React from "react";
 import { RadioFieldHiddenUseCase1 } from "../components/RadioFieldHiddenUseCase1";
+import { DataTestId, TestingContent } from "../enums";
 import { testInvalidMessage } from "./utils/selectors";
 
-console.log = jest.fn();
+describe("RadioFieldHiddenUseCase1.tsx", () => {
+    beforeAll(() => {
+        console.log = jest.fn();
+    });
 
-const radio11TestId = "radio-1-1";
-const radio12TestId = "radio-1-2";
-const radio21TestId = "radio-2-1";
-const radio22TestId = "radio-2-2";
-const radio31TestId = "radio-3-1";
-const radio32TestId = "radio-3-2";
-const resetTestId = "reset";
-const submitTestId = "submit";
+    test("Basic", async () => {
+        const { container } = render(<RadioFieldHiddenUseCase1 />);
 
-test("RadioFieldHiddenUseCase1", async () => {
-  const { container } = render(<RadioFieldHiddenUseCase1 />);
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // the radio volume 1 and 3 must be hidden
+        expect(() => screen.getByTestId(DataTestId.Radio11)).toThrowError();
+        expect(() => screen.getByTestId(DataTestId.Radio12)).toThrowError();
+        expect(screen.getByTestId(DataTestId.Radio21)).toBeTruthy();
+        expect(screen.getByTestId(DataTestId.Radio22)).toBeTruthy();
+        expect(() => screen.getByTestId(DataTestId.Radio31)).toThrowError();
+        expect(() => screen.getByTestId(DataTestId.Radio32)).toThrowError();
 
-  // the radio volume 1 and 3 must be hidden
-  expect(() => screen.getByTestId(radio11TestId)).toThrowError();
-  expect(() => screen.getByTestId(radio12TestId)).toThrowError();
-  expect(screen.getByTestId(radio21TestId)).toBeTruthy();
-  expect(screen.getByTestId(radio22TestId)).toBeTruthy();
-  expect(() => screen.getByTestId(radio31TestId)).toThrowError();
-  expect(() => screen.getByTestId(radio32TestId)).toThrowError();
+        // submit invalid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-  // submit invalid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        // one error should be shown
+        testInvalidMessage(container, 1);
 
-  // one error should be shown
-  testInvalidMessage(container, 1);
+        // click on the first option of the radio volume 2
+        fireEvent.click(screen.getByTestId(DataTestId.Radio21));
 
-  // click on the first option of the radio volume 2
-  fireEvent.click(screen.getByTestId(radio21TestId));
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // the radio volume 1 must be hidden
+        expect(() => screen.getByTestId(DataTestId.Radio11)).toThrowError();
+        expect(() => screen.getByTestId(DataTestId.Radio12)).toThrowError();
+        expect(screen.getByTestId(DataTestId.Radio21)).toBeTruthy();
+        expect(screen.getByTestId(DataTestId.Radio22)).toBeTruthy();
+        expect(screen.getByTestId(DataTestId.Radio31)).toBeTruthy();
+        expect(screen.getByTestId(DataTestId.Radio32)).toBeTruthy();
 
-  // the radio volume 1 must be hidden
-  expect(() => screen.getByTestId(radio11TestId)).toThrowError();
-  expect(() => screen.getByTestId(radio12TestId)).toThrowError();
-  expect(screen.getByTestId(radio21TestId)).toBeTruthy();
-  expect(screen.getByTestId(radio22TestId)).toBeTruthy();
-  expect(screen.getByTestId(radio31TestId)).toBeTruthy();
-  expect(screen.getByTestId(radio32TestId)).toBeTruthy();
+        // submit invalid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-  // submit invalid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        // one error should be shown
+        testInvalidMessage(container, 1);
 
-  // one error should be shown
-  testInvalidMessage(container, 1);
+        // click on the second option of the radio volume 3
+        fireEvent.click(screen.getByTestId(DataTestId.Radio32));
 
-  // click on the second option of the radio volume 3
-  fireEvent.click(screen.getByTestId(radio32TestId));
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // all inputs must not be hidden
+        expect(screen.getByTestId(DataTestId.Radio11)).toBeTruthy();
+        expect(screen.getByTestId(DataTestId.Radio12)).toBeTruthy();
+        expect(screen.getByTestId(DataTestId.Radio21)).toBeTruthy();
+        expect(screen.getByTestId(DataTestId.Radio22)).toBeTruthy();
+        expect(screen.getByTestId(DataTestId.Radio31)).toBeTruthy();
+        expect(screen.getByTestId(DataTestId.Radio32)).toBeTruthy();
 
-  // all inputs must not be hidden
-  expect(screen.getByTestId(radio11TestId)).toBeTruthy();
-  expect(screen.getByTestId(radio12TestId)).toBeTruthy();
-  expect(screen.getByTestId(radio21TestId)).toBeTruthy();
-  expect(screen.getByTestId(radio22TestId)).toBeTruthy();
-  expect(screen.getByTestId(radio31TestId)).toBeTruthy();
-  expect(screen.getByTestId(radio32TestId)).toBeTruthy();
+        // submit invalid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-  // submit invalid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        // one error should be shown
+        testInvalidMessage(container, 1);
 
-  // one error should be shown
-  testInvalidMessage(container, 1);
+        // click on the second option of the radio volume 1
+        fireEvent.click(screen.getByTestId(DataTestId.Radio12));
 
-  // click on the second option of the radio volume 1
-  fireEvent.click(screen.getByTestId(radio12TestId));
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // submit valid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-  // submit valid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        // check the onSubmit action
+        expect(console.log).toBeCalledTimes(1);
+        expect(console.log).lastCalledWith({
+            radioVolume1: TestingContent.CaptionOption12,
+            radioVolume2: TestingContent.CaptionOption21,
+            radioVolume3: TestingContent.CaptionOption32
+        });
 
-  // check the onSubmit action
-  expect(console.log).toBeCalledTimes(1);
-  expect(console.log).lastCalledWith({
-    radioVolume1: "Option 1-2",
-    radioVolume2: "Option 2-1",
-    radioVolume3: "Option 3-2"
-  });
+        // reset the form
+        fireEvent.click(screen.getByTestId(DataTestId.Reset));
 
-  // reset the form
-  fireEvent.click(screen.getByTestId(resetTestId));
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
-
-  // the radio volume 1 and 3 must be hidden
-  expect(() => screen.getByTestId(radio11TestId)).toThrowError();
-  expect(() => screen.getByTestId(radio12TestId)).toThrowError();
-  expect(screen.getByTestId(radio21TestId)).toBeTruthy();
-  expect(screen.getByTestId(radio22TestId)).toBeTruthy();
-  expect(() => screen.getByTestId(radio31TestId)).toThrowError();
-  expect(() => screen.getByTestId(radio32TestId)).toThrowError();
+        // the radio volume 1 and 3 must be hidden
+        expect(() => screen.getByTestId(DataTestId.Radio11)).toThrowError();
+        expect(() => screen.getByTestId(DataTestId.Radio12)).toThrowError();
+        expect(screen.getByTestId(DataTestId.Radio21)).toBeTruthy();
+        expect(screen.getByTestId(DataTestId.Radio22)).toBeTruthy();
+        expect(() => screen.getByTestId(DataTestId.Radio31)).toThrowError();
+        expect(() => screen.getByTestId(DataTestId.Radio32)).toThrowError();
+    });
 });

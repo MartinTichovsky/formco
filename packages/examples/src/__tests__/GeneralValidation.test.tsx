@@ -1,88 +1,88 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import React from "react";
+import * as React from "react";
 import { GeneralValidationUseCase1 } from "../components/GeneralValidationUseCase1";
 import { GeneralValidationUseCase2 } from "../components/GeneralValidationUseCase2";
+import { DataTestId, TestingContent } from "../enums";
 import { testInvalidMessage } from "./utils/selectors";
 
-console.log = jest.fn();
+describe("GeneralValidationUseCase", () => {
+    const testWorkflow = async (container: HTMLElement) => {
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-const givenNameTestId = "givenName";
-const resetTestId = "reset";
-const submitTestId = "submit";
-const surnameTestId = "surname";
+        // submit invalid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-const testWorkflow = async (container: HTMLElement) => {
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        testInvalidMessage(container, 2);
 
-  // submit invalid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        // reset the form
+        fireEvent.click(screen.getByTestId(DataTestId.Reset));
 
-  testInvalidMessage(container, 2);
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // reset the form
-  fireEvent.click(screen.getByTestId(resetTestId));
+        // input an empty value should show an error
+        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+            target: { value: " " }
+        });
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // one error should be shown
+        testInvalidMessage(container, 1);
 
-  // input an empty value should show an error
-  fireEvent.change(screen.getByTestId(givenNameTestId), {
-    target: { value: " " }
-  });
+        // input an empty value should show an error
+        fireEvent.change(screen.getByTestId(DataTestId.Surname), {
+            target: { value: " " }
+        });
 
-  // one error should be shown
-  testInvalidMessage(container, 1);
+        // two errors should be shown
+        testInvalidMessage(container, 2);
 
-  // input an empty value should show an error
-  fireEvent.change(screen.getByTestId(surnameTestId), {
-    target: { value: " " }
-  });
+        // input a valid text
+        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+            target: { value: TestingContent.James }
+        });
 
-  // two errors should be shown
-  testInvalidMessage(container, 2);
+        // one error should be shown
+        testInvalidMessage(container, 1);
 
-  // input a valid text
-  fireEvent.change(screen.getByTestId(givenNameTestId), {
-    target: { value: "James" }
-  });
+        // input a valid text
+        fireEvent.change(screen.getByTestId(DataTestId.Surname), {
+            target: { value: TestingContent.Bond }
+        });
 
-  // one error should be shown
-  testInvalidMessage(container, 1);
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // input a valid text
-  fireEvent.change(screen.getByTestId(surnameTestId), {
-    target: { value: "Bond" }
-  });
+        // submit valid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // check the onSubmit action
+        expect(console.log).toBeCalledTimes(1);
+        expect(console.log).lastCalledWith({ givenName: TestingContent.James, surname: TestingContent.Bond });
+    };
 
-  // submit valid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+    beforeAll(() => {
+        console.log = jest.fn();
+    });
 
-  // check the onSubmit action
-  expect(console.log).toBeCalledTimes(1);
-  expect(console.log).lastCalledWith({ givenName: "James", surname: "Bond" });
-};
+    afterEach(() => {
+        jest.resetAllMocks();
+    });
 
-afterEach(() => {
-  jest.resetAllMocks();
-});
+    test("GeneralValidationUseCase1.tsx", async () => {
+        const { container } = render(<GeneralValidationUseCase1 />);
 
-test("GeneralValidationUseCase1", async () => {
-  const { container } = render(<GeneralValidationUseCase1 />);
+        await testWorkflow(container);
+    });
 
-  await testWorkflow(container);
-});
+    test("GeneralValidationUseCase2.tsx", async () => {
+        const { container } = render(<GeneralValidationUseCase2 />);
 
-test("GeneralValidationUseCase2", async () => {
-  const { container } = render(<GeneralValidationUseCase2 />);
-
-  await testWorkflow(container);
+        await testWorkflow(container);
+    });
 });

@@ -1,90 +1,72 @@
-import { FormController, Input, Submit, Validation } from "formco";
-import React from "react";
+import { FC, FormController, Validation } from "formco";
+import * as React from "react";
+import { DataTestId, TestingContent } from "../enums";
 import { LogStore } from "../store";
-import { Template } from "./Template/Template";
+import { FieldRow, FieldRowButtons, Info, ResetButton, Template } from "./Template/Template";
 
-type MyForm = {
-  radio: string;
-};
+interface MyForm {
+    radio: string;
+}
 
-export const RadioField = (
-  props: Partial<React.ComponentProps<typeof FormController>>
-) => {
-  const store = new LogStore();
+export const RadioField = (props: Partial<React.ComponentProps<typeof FormController>>) => {
+    const store = new LogStore();
 
-  return (
-    <Template store={store}>
-      <FormController<MyForm>
-        {...props}
-        onSubmit={(fields) => console.log(fields)}
-      >
-        {(controller) => (
-          <>
-            <Validation
-              validation={(value) =>
-                value === undefined && (
-                  <span style={{ color: "red" }}>Choose an option</span>
-                )
-              }
-            >
-              <div className="field-row">
-                <Input
-                  controller={controller}
-                  data-testid="radio-1"
-                  label="Option 1"
-                  name="radio"
-                  type="radio"
-                  value="Option 1"
-                />
-              </div>
-              <div className="field-row">
-                <Input
-                  controller={controller}
-                  data-testid="radio-2"
-                  label="Option 2"
-                  name="radio"
-                  type="radio"
-                  value="Option 2"
-                />
-              </div>
-              <div className="field-row">
-                <Input
-                  controller={controller}
-                  data-testid="radio-3"
-                  label="Option 3"
-                  name="radio"
-                  type="radio"
-                  value="Option 3"
-                />
-              </div>
-            </Validation>
-            <div className="field-row buttons">
-              <Submit
-                controller={controller}
-                data-testid="submit"
-                onSubmit={(fields, controller) =>
-                  store.onSubmit(fields, controller)
-                }
-              >
-                Submit
-              </Submit>
-              <button
-                data-testid="reset"
-                onClick={() => {
-                  controller.resetForm();
-                  store.reset();
-                }}
-                type="button"
-              >
-                Reset
-              </button>
-            </div>
-            <div className="info">
-              * Basic radio field functionality, one option must be selected
-            </div>
-          </>
-        )}
-      </FormController>
-    </Template>
-  );
+    return (
+        <Template store={store}>
+            <FormController<MyForm> {...props} onSubmit={(fields) => console.log(fields)}>
+                {(controller) => (
+                    <>
+                        <Validation
+                            validation={(value) =>
+                                value === undefined && <span style={{ color: "red" }}>Choose an option</span>
+                            }
+                        >
+                            <FieldRow>
+                                <FC.Input
+                                    $controller={controller}
+                                    $label={TestingContent.CaptionOption1}
+                                    $name="radio"
+                                    $type="radio"
+                                    $value={TestingContent.CaptionOption1}
+                                    data-testid={DataTestId.Radio1}
+                                />
+                            </FieldRow>
+                            <FieldRow>
+                                <FC.Input
+                                    $controller={controller}
+                                    $label={TestingContent.CaptionOption2}
+                                    $name="radio"
+                                    $type="radio"
+                                    $value={TestingContent.CaptionOption2}
+                                    data-testid={DataTestId.Radio2}
+                                />
+                            </FieldRow>
+                            <FieldRow>
+                                <FC.Input
+                                    $controller={controller}
+                                    $label={TestingContent.CaptionOption3}
+                                    $name="radio"
+                                    $type="radio"
+                                    $value={TestingContent.CaptionOption3}
+                                    data-testid={DataTestId.Radio3}
+                                />
+                            </FieldRow>
+                        </Validation>
+
+                        <FieldRowButtons>
+                            <FC.Submit
+                                $controller={controller}
+                                $onSubmit={(fields, controller) => store.onSubmit(fields, controller)}
+                                data-testid={DataTestId.Submit}
+                            >
+                                Submit
+                            </FC.Submit>
+                            <ResetButton controller={controller} store={store} />
+                        </FieldRowButtons>
+                        <Info>* Basic radio field functionality, one option must be selected</Info>
+                    </>
+                )}
+            </FormController>
+        </Template>
+    );
 };

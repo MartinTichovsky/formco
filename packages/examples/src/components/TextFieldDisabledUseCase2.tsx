@@ -1,90 +1,72 @@
-import { FormController, Input, Submit } from "formco";
-import React from "react";
+import { FC, FormController } from "formco";
+import * as React from "react";
+import { DataTestId } from "../enums";
 import { LogStore } from "../store";
-import { Template } from "./Template/Template";
+import { FieldRow, FieldRowButtons, Info, ResetButton, Template } from "./Template/Template";
 
-type MyForm = {
-  givenName: string;
-  salutation: string;
-  surname: string;
-};
+interface MyForm {
+    givenName: string;
+    salutation: string;
+    surname: string;
+}
 
-export const TextFieldDisabledUseCase2 = (
-  props: Partial<React.ComponentProps<typeof FormController>>
-) => {
-  const store = new LogStore();
+export const TextFieldDisabledUseCase2 = (props: Partial<React.ComponentProps<typeof FormController>>) => {
+    const store = new LogStore();
 
-  return (
-    <Template store={store}>
-      <FormController<MyForm>
-        validateOnChange
-        {...props}
-        onSubmit={(fields) => console.log(fields)}
-      >
-        {(controller) => (
-          <>
-            <div className="field-row">
-              <Input
-                controller={controller}
-                data-testid="salutation"
-                disableIf={(fields) => !fields.surname?.trim()}
-                name="salutation"
-                placeholder="Input salutation"
-              />
-            </div>
-            <div className="field-row">
-              <Input
-                controller={controller}
-                data-testid="givenName"
-                name="givenName"
-                placeholder="Input a given name"
-              />
-            </div>
-            <div className="field-row">
-              <Input
-                controller={controller}
-                data-testid="surname"
-                disableIf={(fields) => !fields.givenName?.trim()}
-                name="surname"
-                placeholder="Input a surname"
-                validation={(value) =>
-                  !value?.trim() && "Provide a valid surname"
-                }
-              />
-            </div>
-            <div className="field-row buttons">
-              <Submit
-                controller={controller}
-                data-testid="submit"
-                disableIfNotValid
-                disabledByDefault
-                onSubmit={(fields, controller) =>
-                  store.onSubmit(fields, controller)
-                }
-              >
-                Submit
-              </Submit>
-              <button
-                data-testid="reset"
-                onClick={() => {
-                  controller.resetForm();
-                  store.reset();
-                }}
-                type="button"
-              >
-                Reset
-              </button>
-            </div>
-            <div className="info">
-              * The form is valid because `Given Name` field doesn't have a
-              validation. You can submit an empty form. After typing your given
-              name, you must fill your surname, otherwise is form invalid.
-              Salutation is optional and it is disabled until given name and
-              surname are not filled.
-            </div>
-          </>
-        )}
-      </FormController>
-    </Template>
-  );
+    return (
+        <Template store={store}>
+            <FormController<MyForm> validateOnChange {...props} onSubmit={(fields) => console.log(fields)}>
+                {(controller) => (
+                    <>
+                        <FieldRow>
+                            <FC.Input
+                                $controller={controller}
+                                $disableIf={(fields) => !fields.surname?.trim()}
+                                $name="salutation"
+                                data-testid={DataTestId.Salutation}
+                                placeholder="Input salutation"
+                            />
+                        </FieldRow>
+                        <FieldRow>
+                            <FC.Input
+                                $controller={controller}
+                                $name="givenName"
+                                data-testid={DataTestId.GivenName}
+                                placeholder="Input a given name"
+                            />
+                        </FieldRow>
+                        <FieldRow>
+                            <FC.Input
+                                $controller={controller}
+                                $disableIf={(fields) => !fields.givenName?.trim()}
+                                $name="surname"
+                                $validation={(value) => !value?.trim() && "Provide a valid surname"}
+                                data-testid={DataTestId.Surname}
+                                placeholder="Input a surname"
+                            />
+                        </FieldRow>
+
+                        <FieldRowButtons>
+                            <FC.Submit
+                                $controller={controller}
+                                $disableIfNotValid
+                                $disabledByDefault
+                                $onSubmit={(fields, controller) => store.onSubmit(fields, controller)}
+                                data-testid={DataTestId.Submit}
+                            >
+                                Submit
+                            </FC.Submit>
+                            <ResetButton controller={controller} store={store} />
+                        </FieldRowButtons>
+                        <Info>
+                            * The form is valid because `Given Name` field doesn't have a validation. You can submit an
+                            empty form. After typing your given name, you must fill your surname, otherwise is form
+                            invalid. Salutation is optional and it is disabled until given name and surname are not
+                            filled.
+                        </Info>
+                    </>
+                )}
+            </FormController>
+        </Template>
+    );
 };

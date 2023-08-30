@@ -1,64 +1,62 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import React from "react";
+import * as React from "react";
 import { TextFieldComponent } from "../components/TextFieldComponent";
+import { DataTestId, TestingContent } from "../enums";
 import { testInvalidMessage } from "./utils/selectors";
 
-console.log = jest.fn();
+describe("TextFieldComponent.tsx", () => {
+    beforeAll(() => {
+        console.log = jest.fn();
+    });
 
-const classInputId = "class-input";
-const functionalInputId = "functional-input";
-const givenNameTestId = "givenName";
-const resetTestId = "reset";
-const submitTestId = "submit";
-const surnameTestId = "surname";
+    test("Basic", async () => {
+        const { container } = render(<TextFieldComponent />);
 
-test("TextFieldComponent", async () => {
-  const { container } = render(<TextFieldComponent />);
+        // the inputs with this id must be in the document
+        expect(container.querySelector(`#${DataTestId.ClassInput}`)).toBeTruthy();
+        expect(container.querySelector(`#${DataTestId.FunctionalInput}`)).toBeTruthy();
 
-  // the inputs with this id must be in the document
-  expect(container.querySelector(`#${classInputId}`)).toBeTruthy();
-  expect(container.querySelector(`#${functionalInputId}`)).toBeTruthy();
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // submit invalid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-  // submit invalid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        // two errors must be shown
+        testInvalidMessage(container, 2);
 
-  // two errors must be shown
-  testInvalidMessage(container, 2);
+        // input a valid text
+        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+            target: { value: TestingContent.James }
+        });
 
-  // input a valid text
-  fireEvent.change(screen.getByTestId(givenNameTestId), {
-    target: { value: "James" }
-  });
+        // one error must be shown
+        testInvalidMessage(container, 1);
 
-  // one error must be shown
-  testInvalidMessage(container, 1);
+        // input a valid text
+        fireEvent.change(screen.getByTestId(DataTestId.Surname), {
+            target: { value: TestingContent.Bond }
+        });
 
-  // input a valid text
-  fireEvent.change(screen.getByTestId(surnameTestId), {
-    target: { value: "Bond" }
-  });
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // submit valid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-  // submit valid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        // check the onSubmit action
+        expect(console.log).toBeCalledTimes(1);
+        expect(console.log).lastCalledWith({
+            givenName: TestingContent.James,
+            surname: TestingContent.Bond
+        });
 
-  // check the onSubmit action
-  expect(console.log).toBeCalledTimes(1);
-  expect(console.log).lastCalledWith({
-    givenName: "James",
-    surname: "Bond"
-  });
-
-  // reset the form
-  fireEvent.click(screen.getByTestId(resetTestId));
+        // reset the form
+        fireEvent.click(screen.getByTestId(DataTestId.Reset));
+    });
 });

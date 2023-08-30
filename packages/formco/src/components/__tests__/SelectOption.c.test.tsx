@@ -1,14 +1,14 @@
 import "@testing-library/jest-dom";
 import { act, render, screen, waitFor } from "@testing-library/react";
-import React from "react";
+import * as React from "react";
 import { Controller } from "../../controller";
 import { PrivateController } from "../../private-controller";
 import { getControllerProviderContext, SelectProvider } from "../../providers";
-import { SelectOption } from "../SelectOption";
+import { SelectOption } from "../fields/SelectOption";
 
 type Form = {
-  input: string;
-  select: string;
+    input: string;
+    select: string;
 };
 
 let controller: Controller<Form>;
@@ -20,335 +20,310 @@ const testId = "test-id";
 const testText = "Test text";
 
 beforeEach(() => {
-  collector.reset();
-  jest.resetAllMocks();
+    collector.reset();
+    jest.resetAllMocks();
 
-  privateController = new PrivateController<Form>({ setController: jest.fn() });
-  controller = new Controller(privateController);
-  selectRef = {
-    current: { value: defaultValue }
-  } as React.MutableRefObject<HTMLSelectElement | undefined>;
+    privateController = new PrivateController<Form>({
+        setController: jest.fn()
+    });
+    controller = new Controller(privateController);
+    selectRef = {
+        current: { value: defaultValue }
+    } as React.MutableRefObject<HTMLSelectElement | undefined>;
 });
 
 const checkUseEffectActions = () => {
-  // useEffect should be called one times
-  expect(
-    collector
-      .getReactHooks(SelectOption.name, {
-        dataTestId: testId
-      })
-      ?.getHooksByType("useEffect")
-      ?.get(1)?.action
-  ).toBeCalledTimes(1);
+    // useEffect should be called one times
+    expect(
+        collector
+            .getReactHooks(SelectOption.name, {
+                dataTestId: testId
+            })
+            ?.getHooksByType("useEffect")
+            ?.get(1)?.action
+    ).toBeCalledTimes(1);
 };
 
 describe("SelectOption", () => {
-  test("Context is not provided", () => {
-    const context = getControllerProviderContext<Form>();
+    test("Context is not provided", () => {
+        const context = getControllerProviderContext<Form>();
 
-    render(
-      <context.Provider value={privateController}>
-        <SelectOption controller={controller} data-testid={testId}>
-          {testText}
-        </SelectOption>
-      </context.Provider>
-    );
+        render(
+            <context.Provider value={privateController}>
+                <SelectOption $controller={controller} data-testid={testId}>
+                    {testText}
+                </SelectOption>
+            </context.Provider>
+        );
 
-    // option should not be in the document
-    expect(() => screen.getByTestId(testId)).toThrowError();
-  });
-
-  test("Default functionality", () => {
-    const context = getControllerProviderContext<Form>();
-
-    render(
-      <context.Provider value={privateController}>
-        <SelectProvider name="select" selectRef={selectRef}>
-          <SelectOption controller={controller} data-testid={testId}>
-            {testText}
-          </SelectOption>
-        </SelectProvider>
-      </context.Provider>
-    );
-
-    // option should not be disabled
-    expect(screen.getByTestId(testId)).not.toBeDisabled();
-    expect(privateController.getFieldValue("select")).toBeUndefined();
-
-    // the component should be rendered one times
-    expect(
-      collector.getCallCount(SelectOption.name, { dataTestId: testId })
-    ).toBe(1);
-
-    checkUseEffectActions();
-
-    // manually run onChange
-    privateController.onChange();
-
-    // the component should be rendered one times
-    expect(
-      collector.getCallCount(SelectOption.name, { dataTestId: testId })
-    ).toBe(1);
-
-    checkUseEffectActions();
-
-    // option should not be disabled
-    expect(screen.getByTestId(testId)).not.toBeDisabled();
-    expect(privateController.getFieldValue("select")).toBeUndefined();
-  });
-
-  test("DisableIf", async () => {
-    const context = getControllerProviderContext<Form>();
-
-    render(
-      <context.Provider value={privateController}>
-        <SelectProvider name="select" selectRef={selectRef}>
-          <SelectOption
-            controller={controller}
-            data-testid={testId}
-            disableIf={(fields) => !fields.input?.trim()}
-          >
-            {testText}
-          </SelectOption>
-        </SelectProvider>
-      </context.Provider>
-    );
-
-    // option should be disabled
-    expect(screen.getByTestId(testId)).toBeDisabled();
-
-    // the component should be rendered one times
-    expect(
-      collector.getCallCount(SelectOption.name, { dataTestId: testId })
-    ).toBe(1);
-
-    checkUseEffectActions();
-
-    // set input value
-    act(() => {
-      privateController.setFieldValue({ key: "input", value: "some text" });
+        // option should not be in the document
+        expect(() => screen.getByTestId(testId)).toThrowError();
     });
 
-    // check the render count
-    expect(
-      collector.getCallCount(SelectOption.name, { dataTestId: testId })
-    ).toBe(2);
+    test("Default functionality", () => {
+        const context = getControllerProviderContext<Form>();
 
-    checkUseEffectActions();
+        render(
+            <context.Provider value={privateController}>
+                <SelectProvider name="select" selectRef={selectRef}>
+                    <SelectOption $controller={controller} data-testid={testId}>
+                        {testText}
+                    </SelectOption>
+                </SelectProvider>
+            </context.Provider>
+        );
 
-    // option should not be disabled
-    expect(screen.getByTestId(testId)).not.toBeDisabled();
+        // option should not be disabled
+        expect(screen.getByTestId(testId)).not.toBeDisabled();
+        expect(privateController.getFieldValue("select")).toBeUndefined();
 
-    // set select value
-    act(() => {
-      privateController.setFieldValue({ key: "select", value: testText });
+        // the component should be rendered one times
+        expect(collector.getCallCount(SelectOption.name, { dataTestId: testId })).toBe(1);
+
+        checkUseEffectActions();
+
+        // manually run onChange
+        privateController.onChange();
+
+        // the component should be rendered one times
+        expect(collector.getCallCount(SelectOption.name, { dataTestId: testId })).toBe(1);
+
+        checkUseEffectActions();
+
+        // option should not be disabled
+        expect(screen.getByTestId(testId)).not.toBeDisabled();
+        expect(privateController.getFieldValue("select")).toBeUndefined();
     });
 
-    // check the render count
-    expect(
-      collector.getCallCount(SelectOption.name, { dataTestId: testId })
-    ).toBe(2);
+    test("DisableIf", async () => {
+        const context = getControllerProviderContext<Form>();
 
-    // set input value
-    act(() => {
-      privateController.setFieldValue({ key: "input", value: "" });
+        render(
+            <context.Provider value={privateController}>
+                <SelectProvider name="select" selectRef={selectRef}>
+                    <SelectOption
+                        $controller={controller}
+                        data-testid={testId}
+                        $disableIf={(fields) => !fields.input?.trim()}
+                    >
+                        {testText}
+                    </SelectOption>
+                </SelectProvider>
+            </context.Provider>
+        );
+
+        // option should be disabled
+        expect(screen.getByTestId(testId)).toBeDisabled();
+
+        // the component should be rendered one times
+        expect(collector.getCallCount(SelectOption.name, { dataTestId: testId })).toBe(1);
+
+        checkUseEffectActions();
+
+        // set input value
+        act(() => {
+            privateController.setFieldValue({
+                key: "input",
+                value: "some text"
+            });
+        });
+
+        // check the render count
+        expect(collector.getCallCount(SelectOption.name, { dataTestId: testId })).toBe(2);
+
+        checkUseEffectActions();
+
+        // option should not be disabled
+        expect(screen.getByTestId(testId)).not.toBeDisabled();
+
+        // set select value
+        act(() => {
+            privateController.setFieldValue({ key: "select", value: testText });
+        });
+
+        // check the render count
+        expect(collector.getCallCount(SelectOption.name, { dataTestId: testId })).toBe(2);
+
+        // set input value
+        act(() => {
+            privateController.setFieldValue({ key: "input", value: "" });
+        });
+
+        // option should be disabled
+        expect(screen.getByTestId(testId)).toBeDisabled();
+
+        // check the render count
+        expect(collector.getCallCount(SelectOption.name, { dataTestId: testId })).toBe(3);
+
+        await waitFor(async () => {
+            expect(privateController.getFieldValue("select")).toBe(defaultValue);
+        });
     });
 
-    // option should be disabled
-    expect(screen.getByTestId(testId)).toBeDisabled();
+    test("HideIf", async () => {
+        const context = getControllerProviderContext<Form>();
 
-    // check the render count
-    expect(
-      collector.getCallCount(SelectOption.name, { dataTestId: testId })
-    ).toBe(3);
+        render(
+            <context.Provider value={privateController}>
+                <SelectProvider name="select" selectRef={selectRef}>
+                    <SelectOption
+                        $controller={controller}
+                        data-testid={testId}
+                        $hideIf={(fields) => !fields.input?.trim()}
+                    >
+                        {testText}
+                    </SelectOption>
+                </SelectProvider>
+            </context.Provider>
+        );
 
-    await waitFor(async () => {
-      expect(privateController.getFieldValue("select")).toBe(defaultValue);
-    });
-  });
+        // option should not be in the document
+        expect(() => screen.getByTestId(testId)).toThrowError();
 
-  test("HideIf", async () => {
-    const context = getControllerProviderContext<Form>();
+        // the component should be rendered one times
+        expect(collector.getCallCount(SelectOption.name, { dataTestId: testId })).toBe(1);
 
-    render(
-      <context.Provider value={privateController}>
-        <SelectProvider name="select" selectRef={selectRef}>
-          <SelectOption
-            controller={controller}
-            data-testid={testId}
-            hideIf={(fields) => !fields.input?.trim()}
-          >
-            {testText}
-          </SelectOption>
-        </SelectProvider>
-      </context.Provider>
-    );
+        checkUseEffectActions();
 
-    // option should not be in the document
-    expect(() => screen.getByTestId(testId)).toThrowError();
+        // set input value
+        act(() => {
+            privateController.setFieldValue({
+                key: "input",
+                value: "some text"
+            });
+        });
 
-    // the component should be rendered one times
-    expect(
-      collector.getCallCount(SelectOption.name, { dataTestId: testId })
-    ).toBe(1);
+        // check the render count
+        expect(collector.getCallCount(SelectOption.name, { dataTestId: testId })).toBe(2);
 
-    checkUseEffectActions();
+        checkUseEffectActions();
 
-    // set input value
-    act(() => {
-      privateController.setFieldValue({ key: "input", value: "some text" });
-    });
+        // option should be in the document
+        expect(screen.getByTestId(testId)).toBeTruthy();
 
-    // check the render count
-    expect(
-      collector.getCallCount(SelectOption.name, { dataTestId: testId })
-    ).toBe(2);
+        // set select value
+        act(() => {
+            privateController.setFieldValue({ key: "select", value: testText });
+        });
 
-    checkUseEffectActions();
+        // check the render count
+        expect(collector.getCallCount(SelectOption.name, { dataTestId: testId })).toBe(2);
 
-    // option should be in the document
-    expect(screen.getByTestId(testId)).toBeTruthy();
+        // set input value
+        act(() => {
+            privateController.setFieldValue({ key: "input", value: "" });
+        });
 
-    // set select value
-    act(() => {
-      privateController.setFieldValue({ key: "select", value: testText });
-    });
+        // option should not be in the document
+        expect(() => screen.getByTestId(testId)).toThrowError();
 
-    // check the render count
-    expect(
-      collector.getCallCount(SelectOption.name, { dataTestId: testId })
-    ).toBe(2);
+        // check the render count
+        expect(collector.getCallCount(SelectOption.name, { dataTestId: testId })).toBe(3);
 
-    // set input value
-    act(() => {
-      privateController.setFieldValue({ key: "input", value: "" });
+        await waitFor(async () => {
+            expect(privateController.getFieldValue("select")).toBe(defaultValue);
+        });
     });
 
-    // option should not be in the document
-    expect(() => screen.getByTestId(testId)).toThrowError();
+    test("registerAfterAll with more options", () => {
+        const originSetFieldValue = privateController.setFieldValue;
+        const context = getControllerProviderContext<Form>();
 
-    // check the render count
-    expect(
-      collector.getCallCount(SelectOption.name, { dataTestId: testId })
-    ).toBe(3);
+        privateController.setFieldValue = jest.fn((...props) => originSetFieldValue.call(privateController, ...props));
 
-    await waitFor(async () => {
-      expect(privateController.getFieldValue("select")).toBe(defaultValue);
-    });
-  });
+        render(
+            <context.Provider value={privateController}>
+                <SelectProvider name="select" selectRef={selectRef}>
+                    <select ref={selectRef as React.RefObject<HTMLSelectElement>}>
+                        <option></option>
+                        <SelectOption $controller={controller} $hideIf={(fields) => !fields.input}>
+                            Option 1
+                        </SelectOption>
+                        <SelectOption $controller={controller} $hideIf={(fields) => !fields.input}>
+                            {testText}
+                        </SelectOption>
+                    </select>
+                </SelectProvider>
+            </context.Provider>
+        );
 
-  test("registerAfterAll with more options", () => {
-    const originSetFieldValue = privateController.setFieldValue;
-    const context = getControllerProviderContext<Form>();
+        expect(privateController.setFieldValue).toBeCalledTimes(0);
 
-    privateController.setFieldValue = jest.fn((...props) =>
-      originSetFieldValue.call(privateController, ...props)
-    );
+        act(() => {
+            originSetFieldValue.call(privateController, {
+                key: "input",
+                value: "value"
+            });
+        });
 
-    render(
-      <context.Provider value={privateController}>
-        <SelectProvider name="select" selectRef={selectRef}>
-          <select ref={selectRef as React.RefObject<HTMLSelectElement>}>
-            <option></option>
-            <SelectOption
-              controller={controller}
-              hideIf={(fields) => !fields.input}
-            >
-              Option 1
-            </SelectOption>
-            <SelectOption
-              controller={controller}
-              hideIf={(fields) => !fields.input}
-            >
-              {testText}
-            </SelectOption>
-          </select>
-        </SelectProvider>
-      </context.Provider>
-    );
+        expect(privateController.setFieldValue).toHaveBeenCalledTimes(1);
+        expect(privateController.setFieldValue).lastCalledWith({
+            key: "select",
+            silent: true,
+            value: ""
+        });
 
-    expect(privateController.setFieldValue).toBeCalledTimes(0);
+        act(() => {
+            originSetFieldValue.call(privateController, {
+                key: "input",
+                value: ""
+            });
+        });
 
-    act(() => {
-      originSetFieldValue.call(privateController, {
-        key: "input",
-        value: "value"
-      });
-    });
-
-    expect(privateController.setFieldValue).toHaveBeenCalledTimes(1);
-    expect(privateController.setFieldValue).lastCalledWith({
-      key: "select",
-      silent: true,
-      value: ""
+        expect(privateController.setFieldValue).toHaveBeenCalledTimes(2);
+        expect(privateController.setFieldValue).lastCalledWith({
+            isValid: true,
+            key: "select",
+            value: ""
+        });
     });
 
-    act(() => {
-      originSetFieldValue.call(privateController, {
-        key: "input",
-        value: ""
-      });
+    test("registerAfterAll with single option", () => {
+        const originSetFieldValue = privateController.setFieldValue;
+        const context = getControllerProviderContext<Form>();
+
+        privateController.setFieldValue = jest.fn((...props) => originSetFieldValue.call(privateController, ...props));
+
+        render(
+            <context.Provider value={privateController}>
+                <SelectProvider name="select" selectRef={selectRef}>
+                    <select ref={selectRef as React.RefObject<HTMLSelectElement>}>
+                        <SelectOption $controller={controller} $hideIf={(fields) => !fields.input}>
+                            {testText}
+                        </SelectOption>
+                    </select>
+                </SelectProvider>
+            </context.Provider>
+        );
+
+        expect(privateController.setFieldValue).toBeCalledTimes(0);
+
+        act(() => {
+            originSetFieldValue.call(privateController, {
+                key: "input",
+                value: "value"
+            });
+        });
+
+        expect(privateController.setFieldValue).toHaveBeenCalledTimes(1);
+        expect(privateController.setFieldValue).lastCalledWith({
+            key: "select",
+            silent: true,
+            value: testText
+        });
+
+        act(() => {
+            originSetFieldValue.call(privateController, {
+                key: "input",
+                value: ""
+            });
+        });
+
+        expect(privateController.setFieldValue).toHaveBeenCalledTimes(2);
+        expect(privateController.setFieldValue).lastCalledWith({
+            isValid: true,
+            key: "select",
+            value: ""
+        });
     });
-
-    expect(privateController.setFieldValue).toHaveBeenCalledTimes(2);
-    expect(privateController.setFieldValue).lastCalledWith({
-      isValid: true,
-      key: "select",
-      value: ""
-    });
-  });
-
-  test("registerAfterAll with single option", () => {
-    const originSetFieldValue = privateController.setFieldValue;
-    const context = getControllerProviderContext<Form>();
-
-    privateController.setFieldValue = jest.fn((...props) =>
-      originSetFieldValue.call(privateController, ...props)
-    );
-
-    render(
-      <context.Provider value={privateController}>
-        <SelectProvider name="select" selectRef={selectRef}>
-          <select ref={selectRef as React.RefObject<HTMLSelectElement>}>
-            <SelectOption
-              controller={controller}
-              hideIf={(fields) => !fields.input}
-            >
-              {testText}
-            </SelectOption>
-          </select>
-        </SelectProvider>
-      </context.Provider>
-    );
-
-    expect(privateController.setFieldValue).toBeCalledTimes(0);
-
-    act(() => {
-      originSetFieldValue.call(privateController, {
-        key: "input",
-        value: "value"
-      });
-    });
-
-    expect(privateController.setFieldValue).toHaveBeenCalledTimes(1);
-    expect(privateController.setFieldValue).lastCalledWith({
-      key: "select",
-      silent: true,
-      value: testText
-    });
-
-    act(() => {
-      originSetFieldValue.call(privateController, {
-        key: "input",
-        value: ""
-      });
-    });
-
-    expect(privateController.setFieldValue).toHaveBeenCalledTimes(2);
-    expect(privateController.setFieldValue).lastCalledWith({
-      isValid: true,
-      key: "select",
-      value: ""
-    });
-  });
 });

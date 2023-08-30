@@ -1,189 +1,161 @@
-import {
-  FormController,
-  Input,
-  Select,
-  Submit,
-  Textarea,
-  Validation
-} from "formco";
-import React from "react";
+import { FC, FormController, Validation } from "formco";
+import * as React from "react";
+import { DataTestId, TestingContent } from "../enums";
 import { LogStore } from "../store";
-import { Template } from "./Template/Template";
+import { FieldRow, FieldRowButtons, Info, ResetButton, Template } from "./Template/Template";
 
-type MyForm = {
-  description: string;
-  givenName: string;
-  radio: string;
-  select: string;
-  surname: string;
-};
+interface MyForm {
+    description: string;
+    givenName: string;
+    radio: string;
+    select: string;
+    surname: string;
+}
 
 const RequiredInvalidMessage = (props: { className: string }) => (
-  <span {...props} style={{ color: "red", verticalAlign: "top" }}>
-    This Field is required
-  </span>
+    <span {...props} style={{ color: "red", verticalAlign: "top" }}>
+        This Field is required
+    </span>
 );
 
 const RequiredValidMessage = (props: { className: string }) => (
-  <span
-    {...props}
-    style={{ color: "green", fontSize: ".8em", verticalAlign: "top" }}
-  >
-    &#10003;
-  </span>
+    <span {...props} style={{ color: "green", fontSize: ".8em", verticalAlign: "top" }}>
+        &#10003;
+    </span>
 );
 
-export const GeneralRequiredCommonMessage = (
-  props: Partial<React.ComponentProps<typeof FormController>> & {
-    disableIfNotValid?: boolean;
-    disabledByDefault?: boolean;
-  }
-) => {
-  const store = new LogStore();
+export const invalidFieldClassName = "invalid-field";
+export const invalidGlobalClassName = "invalid-global";
+export const validFieldClassName = "valid-field";
+export const validGlobalClassName = "valid-global";
+export const validValidationClassName = "valid-validation";
 
-  return (
-    <Template store={store}>
-      <FormController<MyForm>
-        validateOnChange={true}
-        {...props}
-        onSubmit={(fields) => console.log(fields)}
-        requiredInvalidMessage={
-          <RequiredInvalidMessage className="invalid-global" />
-        }
-        requiredValidMessage={<RequiredValidMessage className="valid-global" />}
-      >
-        {(controller) => (
-          <>
-            <div className="g-label-120">
-              <div data-testid="input-field-row-1" className="field-row">
-                <Input
-                  controller={controller}
-                  data-testid="givenName"
-                  label="Given name"
-                  name="givenName"
-                  placeholder="Input a given name"
-                  required
-                />
-              </div>
-              <div data-testid="input-field-row-2" className="field-row">
-                <Input
-                  controller={controller}
-                  data-testid="surname"
-                  label="Surname"
-                  name="surname"
-                  placeholder="Input a surname"
-                  required
-                />
-              </div>
-            </div>
-            <Validation
-              required
-              requiredInvalidMessage={
-                <RequiredInvalidMessage className="invalid-validation" />
-              }
-              requiredValidMessage={
-                <RequiredValidMessage className="valid-validation" />
-              }
+export const GeneralRequiredCommonMessage = (
+    props: Partial<React.ComponentProps<typeof FormController>> & {
+        disableIfNotValid?: boolean;
+        disabledByDefault?: boolean;
+    }
+) => {
+    const store = new LogStore();
+
+    return (
+        <Template store={store}>
+            <FormController<MyForm>
+                validateOnChange={true}
+                {...props}
+                onSubmit={(fields) => console.log(fields)}
+                requiredInvalidMessage={<RequiredInvalidMessage className={invalidGlobalClassName} />}
+                requiredValidMessage={<RequiredValidMessage className="valid-global" />}
             >
-              <div className="field-row" data-testid="radio-field-row-1">
-                <Input
-                  controller={controller}
-                  data-testid="radio-1"
-                  hideIf={(fields) => !fields.givenName?.trim()}
-                  label="Option 1"
-                  name="radio"
-                  type="radio"
-                  value="Option 1"
-                />
-              </div>
-              <div className="field-row">
-                <Input
-                  controller={controller}
-                  data-testid="radio-2"
-                  label="Option 2"
-                  name="radio"
-                  type="radio"
-                  value="Option 2"
-                />
-              </div>
-              <div className="field-row">
-                <Input
-                  controller={controller}
-                  data-testid="radio-3"
-                  label="Option 3"
-                  name="radio"
-                  type="radio"
-                  value="Option 3"
-                />
-              </div>
-            </Validation>
-            <div
-              data-testid="select-field-row"
-              className="field-row g-label-120"
-            >
-              <Select
-                controller={controller}
-                data-testid="select"
-                label="Select"
-                name="select"
-                required
-              >
-                <option></option>
-                <option>Option 1</option>
-                <option>Option 2</option>
-                <option value="option-3">Option 3</option>
-              </Select>
-            </div>
-            <div data-testid="textarea-field-row" className="field-row">
-              <Textarea
-                controller={controller}
-                data-testid="textarea"
-                name="description"
-                placeholder="Input a text"
-                required
-                requiredInvalidMessage={
-                  <RequiredInvalidMessage className="invalid-field" />
-                }
-                requiredValidMessage={
-                  <RequiredValidMessage className="valid-field" />
-                }
-                style={{ width: 339 }}
-              />
-            </div>
-            <div className="field-row buttons">
-              <Submit
-                controller={controller}
-                data-testid="submit"
-                disabledByDefault={props.disabledByDefault || true}
-                disableIfNotValid={props.disableIfNotValid || true}
-                onSubmit={(fields, controller) =>
-                  store.onSubmit(fields, controller)
-                }
-              >
-                Submit
-              </Submit>
-              <button
-                data-testid="reset"
-                onClick={() => {
-                  controller.resetForm();
-                  store.reset();
-                }}
-                type="button"
-              >
-                Reset
-              </button>
-            </div>
-            <div className="info">
-              * All fields are required. The star is provided on first input
-              with default way, the second input is consuming the star as a
-              element. The fields have red border, if they are not valid and
-              green if they are valid. Some fields show an error message if they
-              are invalid. The submit button is disabled until the form is not
-              valid.
-            </div>
-          </>
-        )}
-      </FormController>
-    </Template>
-  );
+                {(controller) => (
+                    <>
+                        <div className="g-label-120">
+                            <FieldRow data-testid={DataTestId.InputFieldRow1}>
+                                <FC.Input
+                                    $controller={controller}
+                                    $label={TestingContent.GivenName}
+                                    $name="givenName"
+                                    $required
+                                    data-testid={DataTestId.GivenName}
+                                    placeholder="Input a given name"
+                                />
+                            </FieldRow>
+                            <FieldRow data-testid={DataTestId.InputFieldRow2}>
+                                <FC.Input
+                                    $controller={controller}
+                                    $label={TestingContent.Surname}
+                                    $name="surname"
+                                    $required
+                                    data-testid={DataTestId.Surname}
+                                    placeholder="Input a surname"
+                                />
+                            </FieldRow>
+                        </div>
+                        <Validation
+                            required
+                            requiredInvalidMessage={<RequiredInvalidMessage className="invalid-validation" />}
+                            requiredValidMessage={<RequiredValidMessage className="valid-validation" />}
+                        >
+                            <FieldRow data-testid={DataTestId.RadioFieldRow1}>
+                                <FC.Input
+                                    $controller={controller}
+                                    $hideIf={(fields) => !fields.givenName?.trim()}
+                                    $label={TestingContent.CaptionOption1}
+                                    $name="radio"
+                                    $type="radio"
+                                    $value={TestingContent.CaptionOption1}
+                                    data-testid={DataTestId.Radio1}
+                                />
+                            </FieldRow>
+                            <FieldRow>
+                                <FC.Input
+                                    $controller={controller}
+                                    $label={TestingContent.CaptionOption2}
+                                    $name="radio"
+                                    $type="radio"
+                                    $value={TestingContent.CaptionOption2}
+                                    data-testid={DataTestId.Radio2}
+                                />
+                            </FieldRow>
+                            <FieldRow>
+                                <FC.Input
+                                    $controller={controller}
+                                    $label={TestingContent.CaptionOption3}
+                                    $name="radio"
+                                    $type="radio"
+                                    $value={TestingContent.CaptionOption3}
+                                    data-testid={DataTestId.Radio3}
+                                />
+                            </FieldRow>
+                        </Validation>
+                        <FieldRow data-testid={DataTestId.SelectFieldRow} className="g-label-120">
+                            <FC.Select
+                                $controller={controller}
+                                $label="Select"
+                                $name="select"
+                                $required
+                                data-testid={DataTestId.Select}
+                            >
+                                <option></option>
+                                <option>{TestingContent.CaptionOption1}</option>
+                                <option>{TestingContent.CaptionOption2}</option>
+                                <option value={TestingContent.ValueOption3}>{TestingContent.CaptionOption3}</option>
+                            </FC.Select>
+                        </FieldRow>
+                        <FieldRow data-testid={DataTestId.TextareaFieldRow}>
+                            <FC.Textarea
+                                $controller={controller}
+                                $name="description"
+                                $required
+                                $requiredInvalidMessage={<RequiredInvalidMessage className="invalid-field" />}
+                                $requiredValidMessage={<RequiredValidMessage className="valid-field" />}
+                                data-testid={DataTestId.Textarea}
+                                placeholder="Input a text"
+                                style={{ width: 339 }}
+                            />
+                        </FieldRow>
+
+                        <FieldRowButtons>
+                            <FC.Submit
+                                $controller={controller}
+                                $disabledByDefault={props.disabledByDefault || true}
+                                $disableIfNotValid={props.disableIfNotValid || true}
+                                $onSubmit={(fields, controller) => store.onSubmit(fields, controller)}
+                                data-testid={DataTestId.Submit}
+                            >
+                                Submit
+                            </FC.Submit>
+                            <ResetButton controller={controller} store={store} />
+                        </FieldRowButtons>
+                        <Info>
+                            * All fields are required. The star is provided on first input with default way, the second
+                            input is consuming the star as a element. The fields have red border, if they are not valid
+                            and green if they are valid. Some fields show an error message if they are invalid. The
+                            submit button is disabled until the form is not valid.
+                        </Info>
+                    </>
+                )}
+            </FormController>
+        </Template>
+    );
 };

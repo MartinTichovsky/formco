@@ -1,41 +1,43 @@
 import Button from "@mui/material/Button";
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
-import { Field, FormController, Submit } from "formco";
-import React from "react";
+import { FC, FormController } from "formco";
+import * as React from "react";
 import { wait } from "../../utils/utils";
+import { FieldRow } from "../Template/Template";
 import { GmailForm } from "./Gmail.types";
 
 export const Gmail = () => {
-  return (
-    <FormController<GmailForm>>
-      {(controller) => (
-        <>
-          <div className="field-row">
-            <Field
-              controller={controller}
-              component={TextField}
-              data-testid="firstName"
-              label="First name"
-              name="firstName"
-              size="small"
-              validation={(value) => !value?.trim()}
-              variant="outlined"
-              validateOnBlur
-            />
-            <Field
-              controller={controller}
-              component={TextField}
-              data-testid="lastName"
-              label="Last name"
-              name="lastName"
-              size="small"
-              style={{ marginLeft: 10 }}
-              validation={(value) => !value?.trim()}
-              variant="outlined"
-              validateOnChange
-            />
-            {/* <Condition
+    return (
+        <FormController<GmailForm>>
+            {(controller) => (
+                <>
+                    <FieldRow>
+                        <FC.CustomField
+                            $component={TextField}
+                            $controller={controller}
+                            $name="firstName"
+                            $validation={(value) => !value?.trim()}
+                            $validateOnBlur
+                            data-testid="firstName"
+                            label="First name"
+                            size="small"
+                            variant="outlined"
+                        />
+                        <FC.CustomField
+                            $controller={controller}
+                            $component={TextField}
+                            $name="lastName"
+                            $validateOnChange
+                            $validation={(value) => !value?.trim()}
+                            data-testid="lastName"
+                            label="Last name"
+                            size="small"
+                            style={{ marginLeft: 10 }}
+                            variant="outlined"
+                        />
+                        <TextField />
+                        {/* <Condition
               controller={controller}
               showIf={() =>
                 controller.isFieldValidationInProgress("lastName") === true
@@ -43,43 +45,41 @@ export const Gmail = () => {
             >
               pending
             </Condition> */}
-          </div>
-          <div className="field-row">
-            <Field
-              controller={controller}
-              component={TextField}
-              data-testid="username"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">@gmail.com</InputAdornment>
-                )
-              }}
-              label="Username"
-              name="username"
-              size="small"
-              style={{ marginLeft: 10 }}
-              validation={(value) => ({
-                promise: async () => {
-                  await wait(1500);
-                  return { isValid: !!value?.trim() };
-                },
-                wait: 1500
-              })}
-              variant="outlined"
-            />
-          </div>
-          <div className="field-row">
-            <Submit
-              component={Button}
-              controller={controller}
-              onSubmit={() => console.log(controller.isValid)}
-              variant="outlined"
-            >
-              Submit
-            </Submit>
-          </div>
-        </>
-      )}
-    </FormController>
-  );
+                    </FieldRow>
+                    <FieldRow>
+                        <FC.CustomField
+                            $controller={controller}
+                            $component={TextField}
+                            $name="username"
+                            $validation={(value) => ({
+                                promise: async () => {
+                                    await wait(1500);
+                                    return { isValid: !!value?.trim() };
+                                },
+                                wait: 1500
+                            })}
+                            data-testid="username"
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">@gmail.com</InputAdornment>
+                            }}
+                            label="Username"
+                            size="small"
+                            style={{ marginLeft: 10 }}
+                            variant="outlined"
+                        />
+                    </FieldRow>
+                    <FieldRow>
+                        <FC.Submit
+                            $component={Button}
+                            $controller={controller}
+                            $onSubmit={() => console.log(controller.isValid)}
+                            variant="outlined"
+                        >
+                            Submit
+                        </FC.Submit>
+                    </FieldRow>
+                </>
+            )}
+        </FormController>
+    );
 };

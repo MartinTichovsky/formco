@@ -1,250 +1,238 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import React from "react";
+import * as React from "react";
 import { TextFieldValidationDependencies } from "../components/TextFieldValidationDependencies";
+import { DataTestId, TestingContent } from "../enums";
 import { testInvalidMessage } from "./utils/selectors";
 
-console.log = jest.fn();
-console.warn = jest.fn();
+describe("TextFieldValidationDependencies.tsx", () => {
+    const testSuite = async (container: HTMLElement, submitForValidation: boolean = true) => {
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-const error1TestId = "error-1";
-const error2TestId = "error-2";
-const error3TestId = "error-3";
+        // errors should not be shown
+        expect(() => screen.getByTestId(DataTestId.Error1)).toThrowError();
+        expect(() => screen.getByTestId(DataTestId.Error2)).toThrowError();
+        expect(() => screen.getByTestId(DataTestId.Error3)).toThrowError();
 
-const givenNameTestId = "givenName";
-const middleNameTestId = "middleName";
-const resetTestId = "reset";
-const submitTestId = "submit";
-const surnameTestId = "surname";
+        if (submitForValidation) {
+            // submit invalid form
+            await waitFor(async () => {
+                fireEvent.click(screen.getByTestId(DataTestId.Submit));
+            });
 
-const testSuite = async (
-  container: HTMLElement,
-  submitForValidation: boolean = true
-) => {
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+            // check the onSubmit action
+            expect(console.warn).not.toBeCalled();
 
-  // errors should not be shown
-  expect(() => screen.getByTestId(error1TestId)).toThrowError();
-  expect(() => screen.getByTestId(error2TestId)).toThrowError();
-  expect(() => screen.getByTestId(error3TestId)).toThrowError();
+            // three errors should be shown
+            testInvalidMessage(container, 3);
 
-  if (submitForValidation) {
-    // submit invalid form
-    await waitFor(async () => {
-      fireEvent.click(screen.getByTestId(submitTestId));
+            // all errors should be shown
+            expect(screen.getByTestId(DataTestId.Error1)).toBeTruthy();
+            expect(screen.getByTestId(DataTestId.Error2)).toBeTruthy();
+            expect(screen.getByTestId(DataTestId.Error3)).toBeTruthy();
+        }
+
+        // input a text
+        fireEvent.change(screen.getByTestId(DataTestId.Surname), {
+            target: { value: TestingContent.Bond }
+        });
+
+        // three errors should be shown
+        testInvalidMessage(container, 3);
+
+        // all errors should be shown
+        expect(screen.getByTestId(DataTestId.Error1)).toBeTruthy();
+        expect(screen.getByTestId(DataTestId.Error2)).toBeTruthy();
+        expect(screen.getByTestId(DataTestId.Error3)).toBeTruthy();
+
+        // submit invalid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
+
+        // check the onSubmit action
+        expect(console.warn).not.toBeCalled();
+
+        // input a text
+        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+            target: { value: TestingContent.James }
+        });
+
+        // one error should be shown
+        testInvalidMessage(container, 1);
+
+        // first error should be shown
+        expect(screen.getByTestId(DataTestId.Error1)).toBeTruthy();
+        expect(() => screen.getByTestId(DataTestId.Error2)).toThrowError();
+        expect(() => screen.getByTestId(DataTestId.Error3)).toThrowError();
+
+        // submit invalid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
+
+        // check the onSubmit action
+        expect(console.warn).not.toBeCalled();
+
+        // input a text
+        fireEvent.change(screen.getByTestId(DataTestId.Middlename), {
+            target: { value: TestingContent.Ronald }
+        });
+
+        // errors should not be shown
+        testInvalidMessage(container, 0);
+
+        // errors should not be shown
+        expect(() => screen.getByTestId(DataTestId.Error1)).toThrowError();
+        expect(() => screen.getByTestId(DataTestId.Error2)).toThrowError();
+        expect(() => screen.getByTestId(DataTestId.Error3)).toThrowError();
+
+        // submit valid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
+
+        // check the onSubmit action
+        expect(console.log).toBeCalledTimes(1);
+        expect(console.log).lastCalledWith({
+            givenName: TestingContent.James,
+            middleName: TestingContent.Ronald,
+            surname: TestingContent.Bond
+        });
+
+        // reset the form
+        fireEvent.click(screen.getByTestId(DataTestId.Reset));
+
+        // errors should not be shown
+        testInvalidMessage(container, 0);
+
+        // errors should not be shown
+        expect(() => screen.getByTestId(DataTestId.Error1)).toThrowError();
+        expect(() => screen.getByTestId(DataTestId.Error2)).toThrowError();
+        expect(() => screen.getByTestId(DataTestId.Error3)).toThrowError();
+
+        if (submitForValidation) {
+            // submit invalid form
+            await waitFor(async () => {
+                fireEvent.click(screen.getByTestId(DataTestId.Submit));
+            });
+
+            // three errors should be shown
+            testInvalidMessage(container, 3);
+
+            // all errors should be shown
+            expect(screen.getByTestId(DataTestId.Error1)).toBeTruthy();
+            expect(screen.getByTestId(DataTestId.Error2)).toBeTruthy();
+            expect(screen.getByTestId(DataTestId.Error3)).toBeTruthy();
+        }
+
+        // input a text
+        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+            target: { value: TestingContent.James }
+        });
+
+        // two errors should be shown
+        testInvalidMessage(container, 2);
+
+        // two errors should  be shown
+        expect(screen.getByTestId(DataTestId.Error1)).toBeTruthy();
+        expect(screen.getByTestId(DataTestId.Error2)).toBeTruthy();
+        expect(() => screen.getByTestId(DataTestId.Error3)).toThrowError();
+
+        // input a text
+        fireEvent.change(screen.getByTestId(DataTestId.Middlename), {
+            target: { value: TestingContent.Ronald }
+        });
+
+        // one error should be shown
+        testInvalidMessage(container, 1);
+
+        // one error should  be shown
+        expect(() => screen.getByTestId(DataTestId.Error1)).toThrowError();
+        expect(screen.getByTestId(DataTestId.Error2)).toBeTruthy();
+        expect(() => screen.getByTestId(DataTestId.Error3)).toThrowError();
+
+        // input a text
+        fireEvent.change(screen.getByTestId(DataTestId.Surname), {
+            target: { value: TestingContent.Bond }
+        });
+
+        // errors should not be shown
+        testInvalidMessage(container, 0);
+
+        // errors should not be shown
+        expect(() => screen.getByTestId(DataTestId.Error1)).toThrowError();
+        expect(() => screen.getByTestId(DataTestId.Error2)).toThrowError();
+        expect(() => screen.getByTestId(DataTestId.Error3)).toThrowError();
+
+        // reset the form
+        fireEvent.click(screen.getByTestId(DataTestId.Reset));
+
+        if (submitForValidation) {
+            // submit invalid form
+            await waitFor(async () => {
+                fireEvent.click(screen.getByTestId(DataTestId.Submit));
+            });
+        }
+
+        // input a text
+        fireEvent.change(screen.getByTestId(DataTestId.Middlename), {
+            target: { value: TestingContent.Ronald }
+        });
+
+        // two errors should  be shown
+        testInvalidMessage(container, 2);
+
+        // two errors should  be shown
+        expect(() => screen.getByTestId(DataTestId.Error1)).toThrowError();
+        expect(screen.getByTestId(DataTestId.Error2)).toBeTruthy();
+        expect(screen.getByTestId(DataTestId.Error3)).toBeTruthy();
+
+        // input a text
+        fireEvent.change(screen.getByTestId(DataTestId.Surname), {
+            target: { value: TestingContent.Bond }
+        });
+
+        // two errors should  be shown
+        testInvalidMessage(container, 2);
+
+        // two errors should  be shown
+        expect(() => screen.getByTestId(DataTestId.Error1)).toThrowError();
+        expect(screen.getByTestId(DataTestId.Error2)).toBeTruthy();
+        expect(screen.getByTestId(DataTestId.Error3)).toBeTruthy();
+
+        // input a text
+        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+            target: { value: TestingContent.James }
+        });
+
+        // errors should not be shown
+        testInvalidMessage(container, 0);
+
+        // errors should not be shown
+        expect(() => screen.getByTestId(DataTestId.Error1)).toThrowError();
+        expect(() => screen.getByTestId(DataTestId.Error2)).toThrowError();
+        expect(() => screen.getByTestId(DataTestId.Error3)).toThrowError();
+    };
+
+    beforeAll(() => {
+        console.log = jest.fn();
+        console.warn = jest.fn();
     });
 
-    // check the onSubmit action
-    expect(console.warn).not.toBeCalled();
-
-    // three errors should be shown
-    testInvalidMessage(container, 3);
-
-    // all errors should be shown
-    expect(screen.getByTestId(error1TestId)).toBeTruthy();
-    expect(screen.getByTestId(error2TestId)).toBeTruthy();
-    expect(screen.getByTestId(error3TestId)).toBeTruthy();
-  }
-
-  // input a text
-  fireEvent.change(screen.getByTestId(surnameTestId), {
-    target: { value: "Bond" }
-  });
-
-  // three errors should be shown
-  testInvalidMessage(container, 3);
-
-  // all errors should be shown
-  expect(screen.getByTestId(error1TestId)).toBeTruthy();
-  expect(screen.getByTestId(error2TestId)).toBeTruthy();
-  expect(screen.getByTestId(error3TestId)).toBeTruthy();
-
-  // submit invalid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
-
-  // check the onSubmit action
-  expect(console.warn).not.toBeCalled();
-
-  // input a text
-  fireEvent.change(screen.getByTestId(givenNameTestId), {
-    target: { value: "James" }
-  });
-
-  // one error should be shown
-  testInvalidMessage(container, 1);
-
-  // first error should be shown
-  expect(screen.getByTestId(error1TestId)).toBeTruthy();
-  expect(() => screen.getByTestId(error2TestId)).toThrowError();
-  expect(() => screen.getByTestId(error3TestId)).toThrowError();
-
-  // submit invalid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
-
-  // check the onSubmit action
-  expect(console.warn).not.toBeCalled();
-
-  // input a text
-  fireEvent.change(screen.getByTestId(middleNameTestId), {
-    target: { value: "Ronald" }
-  });
-
-  // errors should not be shown
-  testInvalidMessage(container, 0);
-
-  // errors should not be shown
-  expect(() => screen.getByTestId(error1TestId)).toThrowError();
-  expect(() => screen.getByTestId(error2TestId)).toThrowError();
-  expect(() => screen.getByTestId(error3TestId)).toThrowError();
-
-  // submit valid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
-
-  // check the onSubmit action
-  expect(console.log).toBeCalledTimes(1);
-  expect(console.log).lastCalledWith({
-    givenName: "James",
-    middleName: "Ronald",
-    surname: "Bond"
-  });
-
-  // reset the form
-  fireEvent.click(screen.getByTestId(resetTestId));
-
-  // errors should not be shown
-  testInvalidMessage(container, 0);
-
-  // errors should not be shown
-  expect(() => screen.getByTestId(error1TestId)).toThrowError();
-  expect(() => screen.getByTestId(error2TestId)).toThrowError();
-  expect(() => screen.getByTestId(error3TestId)).toThrowError();
-
-  if (submitForValidation) {
-    // submit invalid form
-    await waitFor(async () => {
-      fireEvent.click(screen.getByTestId(submitTestId));
+    beforeEach(() => {
+        jest.resetAllMocks();
     });
 
-    // three errors should be shown
-    testInvalidMessage(container, 3);
-
-    // all errors should be shown
-    expect(screen.getByTestId(error1TestId)).toBeTruthy();
-    expect(screen.getByTestId(error2TestId)).toBeTruthy();
-    expect(screen.getByTestId(error3TestId)).toBeTruthy();
-  }
-
-  // input a text
-  fireEvent.change(screen.getByTestId(givenNameTestId), {
-    target: { value: "James" }
-  });
-
-  // two errors should be shown
-  testInvalidMessage(container, 2);
-
-  // two errors should  be shown
-  expect(screen.getByTestId(error1TestId)).toBeTruthy();
-  expect(screen.getByTestId(error2TestId)).toBeTruthy();
-  expect(() => screen.getByTestId(error3TestId)).toThrowError();
-
-  // input a text
-  fireEvent.change(screen.getByTestId(middleNameTestId), {
-    target: { value: "Ronald" }
-  });
-
-  // one error should be shown
-  testInvalidMessage(container, 1);
-
-  // one error should  be shown
-  expect(() => screen.getByTestId(error1TestId)).toThrowError();
-  expect(screen.getByTestId(error2TestId)).toBeTruthy();
-  expect(() => screen.getByTestId(error3TestId)).toThrowError();
-
-  // input a text
-  fireEvent.change(screen.getByTestId(surnameTestId), {
-    target: { value: "Bond" }
-  });
-
-  // errors should not be shown
-  testInvalidMessage(container, 0);
-
-  // errors should not be shown
-  expect(() => screen.getByTestId(error1TestId)).toThrowError();
-  expect(() => screen.getByTestId(error2TestId)).toThrowError();
-  expect(() => screen.getByTestId(error3TestId)).toThrowError();
-
-  // reset the form
-  fireEvent.click(screen.getByTestId(resetTestId));
-
-  if (submitForValidation) {
-    // submit invalid form
-    await waitFor(async () => {
-      fireEvent.click(screen.getByTestId(submitTestId));
+    test("Validation on submit", async () => {
+        const { container } = render(<TextFieldValidationDependencies />);
+        await testSuite(container);
     });
-  }
 
-  // input a text
-  fireEvent.change(screen.getByTestId(middleNameTestId), {
-    target: { value: "Ronald" }
-  });
+    test("Validation on change", async () => {
+        const { container } = render(<TextFieldValidationDependencies validateOnChange />);
 
-  // two errors should  be shown
-  testInvalidMessage(container, 2);
-
-  // two errors should  be shown
-  expect(() => screen.getByTestId(error1TestId)).toThrowError();
-  expect(screen.getByTestId(error2TestId)).toBeTruthy();
-  expect(screen.getByTestId(error3TestId)).toBeTruthy();
-
-  // input a text
-  fireEvent.change(screen.getByTestId(surnameTestId), {
-    target: { value: "Bond" }
-  });
-
-  // two errors should  be shown
-  testInvalidMessage(container, 2);
-
-  // two errors should  be shown
-  expect(() => screen.getByTestId(error1TestId)).toThrowError();
-  expect(screen.getByTestId(error2TestId)).toBeTruthy();
-  expect(screen.getByTestId(error3TestId)).toBeTruthy();
-
-  // input a text
-  fireEvent.change(screen.getByTestId(givenNameTestId), {
-    target: { value: "James" }
-  });
-
-  // errors should not be shown
-  testInvalidMessage(container, 0);
-
-  // errors should not be shown
-  expect(() => screen.getByTestId(error1TestId)).toThrowError();
-  expect(() => screen.getByTestId(error2TestId)).toThrowError();
-  expect(() => screen.getByTestId(error3TestId)).toThrowError();
-};
-
-beforeEach(() => {
-  jest.resetAllMocks();
-});
-
-describe("TextFieldValidationDependencies", () => {
-  test("Validation on submit", async () => {
-    const { container } = render(<TextFieldValidationDependencies />);
-    await testSuite(container);
-  });
-
-  test("Validation on change", async () => {
-    const { container } = render(
-      <TextFieldValidationDependencies validateOnChange />
-    );
-
-    await testSuite(container, false);
-  });
+        await testSuite(container, false);
+    });
 });

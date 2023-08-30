@@ -1,19 +1,13 @@
 import { Controller } from "../controller";
-import {
-  FormFields,
-  ValidationContentResult
-} from "../private-controller.types";
+import { FormFields, ValidationContentResult } from "../private-controller.types";
 
-export type MessageForProps<
-  T extends FormFields<T>,
-  K extends keyof T
-> = React.PropsWithChildren<{
-  controller: Controller<T>;
-  isValid?: boolean;
-  name: K;
+export type MessageForProps<T extends FormFields<T>, K extends keyof T> = React.PropsWithChildren<{
+    controller: Controller<T>;
+    isValid?: boolean;
+    name: K;
 }>;
 
 export interface MessageForState {
-  isVisible: boolean;
-  message: ValidationContentResult;
+    isVisible: boolean;
+    message: ValidationContentResult;
 }

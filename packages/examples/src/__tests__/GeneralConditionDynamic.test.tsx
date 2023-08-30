@@ -1,136 +1,111 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import React from "react";
+import * as React from "react";
 import { GeneralConditionDynamic } from "../components/GeneralConditionDynamic";
+import { DataTestId, TestingContent } from "../enums";
 
-console.log = jest.fn();
+describe("GeneralConditionDynamic.tsx", () => {
+    const getTestedGivenNameText = (name: string) => `Your given name is: ${name}`.trim();
+    const getTesteSurnameText = (name: string) => `Your surname is: ${name}`.trim();
 
-const dynamicContentTestId = "dynamic-content";
-const dynamicContextTestId = "dynamic-context";
-const givenNameTestId = "givenName";
-const resetTestId = "reset";
-const submitTestId = "submit";
-const surnameTestId = "surname";
+    beforeAll(() => {
+        console.log = jest.fn();
+    });
 
-const getTestedGivenNameText = (name: string) =>
-  `Your given name is: ${name}`.trim();
-const getTesteSurnameText = (name: string) => `Your surname is: ${name}`.trim();
+    test("Basic", async () => {
+        render(<GeneralConditionDynamic />);
 
-test("GeneralConditionDynamic", async () => {
-  render(<GeneralConditionDynamic />);
+        // the default text should be visible
+        expect(screen.getByTestId(DataTestId.DynamicContent)).toHaveTextContent(getTestedGivenNameText(""));
+        expect(screen.getByTestId(DataTestId.DynamicComponent)).toHaveTextContent(getTesteSurnameText(""));
 
-  // the default text should be visible
-  expect(screen.getByTestId(dynamicContentTestId)).toHaveTextContent(
-    getTestedGivenNameText("")
-  );
-  expect(screen.getByTestId(dynamicContextTestId)).toHaveTextContent(
-    getTesteSurnameText("")
-  );
+        // click on the submit button
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-  // click on the submit button
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        // check the onSubmit action
+        expect(console.log).toBeCalledTimes(1);
+        expect(console.log).lastCalledWith({});
 
-  // check the onSubmit action
-  expect(console.log).toBeCalledTimes(1);
-  expect(console.log).lastCalledWith({});
+        // input a valid text
+        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+            target: { value: "J" }
+        });
 
-  // input a valid text
-  fireEvent.change(screen.getByTestId(givenNameTestId), {
-    target: { value: "J" }
-  });
+        // test expected text
+        expect(screen.getByTestId(DataTestId.DynamicContent)).toHaveTextContent(getTestedGivenNameText("J"));
+        expect(screen.getByTestId(DataTestId.DynamicComponent)).toHaveTextContent(getTesteSurnameText(""));
 
-  // test expected text
-  expect(screen.getByTestId(dynamicContentTestId)).toHaveTextContent(
-    getTestedGivenNameText("J")
-  );
-  expect(screen.getByTestId(dynamicContextTestId)).toHaveTextContent(
-    getTesteSurnameText("")
-  );
+        // input a valid text
+        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+            target: { value: "Ja" }
+        });
 
-  // input a valid text
-  fireEvent.change(screen.getByTestId(givenNameTestId), {
-    target: { value: "Ja" }
-  });
+        // test expected text
+        expect(screen.getByTestId(DataTestId.DynamicContent)).toHaveTextContent(getTestedGivenNameText("Ja"));
+        expect(screen.getByTestId(DataTestId.DynamicComponent)).toHaveTextContent(getTesteSurnameText(""));
 
-  // test expected text
-  expect(screen.getByTestId(dynamicContentTestId)).toHaveTextContent(
-    getTestedGivenNameText("Ja")
-  );
-  expect(screen.getByTestId(dynamicContextTestId)).toHaveTextContent(
-    getTesteSurnameText("")
-  );
+        // input a valid text
+        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+            target: { value: TestingContent.James }
+        });
 
-  // input a valid text
-  fireEvent.change(screen.getByTestId(givenNameTestId), {
-    target: { value: "James" }
-  });
+        // test expected text
+        expect(screen.getByTestId(DataTestId.DynamicContent)).toHaveTextContent(
+            getTestedGivenNameText(TestingContent.James)
+        );
+        expect(screen.getByTestId(DataTestId.DynamicComponent)).toHaveTextContent(getTesteSurnameText(""));
 
-  // test expected text
-  expect(screen.getByTestId(dynamicContentTestId)).toHaveTextContent(
-    getTestedGivenNameText("James")
-  );
-  expect(screen.getByTestId(dynamicContextTestId)).toHaveTextContent(
-    getTesteSurnameText("")
-  );
+        // click on the submit button
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-  // click on the submit button
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        // check the onSubmit action
+        expect(console.log).toBeCalledTimes(2);
+        expect(console.log).lastCalledWith({ givenName: TestingContent.James });
 
-  // check the onSubmit action
-  expect(console.log).toBeCalledTimes(2);
-  expect(console.log).lastCalledWith({ givenName: "James" });
+        // input a valid text
+        fireEvent.change(screen.getByTestId(DataTestId.Surname), {
+            target: { value: "B" }
+        });
 
-  // input a valid text
-  fireEvent.change(screen.getByTestId(surnameTestId), {
-    target: { value: "B" }
-  });
+        // test expected text
+        expect(screen.getByTestId(DataTestId.DynamicContent)).toHaveTextContent(
+            getTestedGivenNameText(TestingContent.James)
+        );
+        expect(screen.getByTestId(DataTestId.DynamicComponent)).toHaveTextContent(getTesteSurnameText("B"));
 
-  // test expected text
-  expect(screen.getByTestId(dynamicContentTestId)).toHaveTextContent(
-    getTestedGivenNameText("James")
-  );
-  expect(screen.getByTestId(dynamicContextTestId)).toHaveTextContent(
-    getTesteSurnameText("B")
-  );
+        // input a valid text
+        fireEvent.change(screen.getByTestId(DataTestId.Surname), {
+            target: { value: "Bo" }
+        });
 
-  // input a valid text
-  fireEvent.change(screen.getByTestId(surnameTestId), {
-    target: { value: "Bo" }
-  });
+        // test expected text
+        expect(screen.getByTestId(DataTestId.DynamicContent)).toHaveTextContent(
+            getTestedGivenNameText(TestingContent.James)
+        );
+        expect(screen.getByTestId(DataTestId.DynamicComponent)).toHaveTextContent(getTesteSurnameText("Bo"));
 
-  // test expected text
-  expect(screen.getByTestId(dynamicContentTestId)).toHaveTextContent(
-    getTestedGivenNameText("James")
-  );
-  expect(screen.getByTestId(dynamicContextTestId)).toHaveTextContent(
-    getTesteSurnameText("Bo")
-  );
+        // input a valid text
+        fireEvent.change(screen.getByTestId(DataTestId.Surname), {
+            target: { value: TestingContent.Bond }
+        });
 
-  // input a valid text
-  fireEvent.change(screen.getByTestId(surnameTestId), {
-    target: { value: "Bond" }
-  });
+        // test expected text
+        expect(screen.getByTestId(DataTestId.DynamicContent)).toHaveTextContent(
+            getTestedGivenNameText(TestingContent.James)
+        );
+        expect(screen.getByTestId(DataTestId.DynamicComponent)).toHaveTextContent(
+            getTesteSurnameText(TestingContent.Bond)
+        );
 
-  // test expected text
-  expect(screen.getByTestId(dynamicContentTestId)).toHaveTextContent(
-    getTestedGivenNameText("James")
-  );
-  expect(screen.getByTestId(dynamicContextTestId)).toHaveTextContent(
-    getTesteSurnameText("Bond")
-  );
+        // reset the form
+        fireEvent.click(screen.getByTestId(DataTestId.Reset));
 
-  // reset the form
-  fireEvent.click(screen.getByTestId(resetTestId));
-
-  // the default text should be visible
-  expect(screen.getByTestId(dynamicContentTestId)).toHaveTextContent(
-    getTestedGivenNameText("")
-  );
-  expect(screen.getByTestId(dynamicContextTestId)).toHaveTextContent(
-    getTesteSurnameText("")
-  );
+        // the default text should be visible
+        expect(screen.getByTestId(DataTestId.DynamicContent)).toHaveTextContent(getTestedGivenNameText(""));
+        expect(screen.getByTestId(DataTestId.DynamicComponent)).toHaveTextContent(getTesteSurnameText(""));
+    });
 });

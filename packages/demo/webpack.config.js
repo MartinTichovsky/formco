@@ -11,140 +11,135 @@ const port = 9000;
 let webOpened = false;
 
 module.exports = (env = {}, argv = {}) => {
-  const isEnvProduction = argv.mode !== "development";
+    const isEnvProduction = argv.mode !== "development";
 
-  return {
-    devtool: !isEnvProduction ? "source-map" : false,
-    devServer: {
-      static: {
-        directory: path.join(__dirname, "build")
-      },
-      compress: true,
-      port
-    },
-    entry: "./src/index",
-    mode: isEnvProduction ? "production" : "development",
-    resolve: {
-      extensions: [".js", ".json", ".ts", ".tsx"]
-    },
-    module: {
-      strictExportPresence: true,
-      rules: [
-        {
-          test: /\.js$/,
-          use: ["source-map-loader"],
-          enforce: "pre"
+    return {
+        devtool: !isEnvProduction ? "source-map" : false,
+        devServer: {
+            static: {
+                directory: path.join(__dirname, "build")
+            },
+            compress: true,
+            port
         },
-        {
-          oneOf: [
-            {
-              test: /\.tsx?$/,
-              exclude: /node_modules|\.d\.ts$/,
-              use: {
-                loader: "ts-loader",
-                options: {
-                  onlyCompileBundledFiles: true,
-                  transpileOnly: !isEnvProduction,
-                  configFile: "tsconfig.build.json",
-                  projectReferences: true
-                }
-              }
-            },
-            {
-              test: /\.css$/,
-              exclude: /\.module\.css$/,
-              use: [
-                isEnvProduction ? MiniCssExtractPlugin.loader : "style-loader",
+        entry: "./src/index",
+        mode: isEnvProduction ? "production" : "development",
+        resolve: {
+            extensions: [".js", ".json", ".ts", ".tsx"]
+        },
+        module: {
+            strictExportPresence: true,
+            rules: [
                 {
-                  loader: "css-loader",
-                  options: {
-                    importLoaders: 1,
-                    sourceMap: false
+                    test: /\.js$/,
+                    use: ["source-map-loader"],
+                    enforce: "pre"
+                },
+                {
+                    oneOf: [
+                        {
+                            test: /\.tsx?$/,
+                            exclude: /node_modules|\.d\.ts$/,
+                            use: {
+                                loader: "ts-loader",
+                                options: {
+                                    onlyCompileBundledFiles: true,
+                                    transpileOnly: !isEnvProduction,
+                                    configFile: "tsconfig.build.json",
+                                    projectReferences: true
+                                }
+                            }
+                        },
+                        {
+                            test: /\.css$/,
+                            exclude: /\.module\.css$/,
+                            use: [
+                                isEnvProduction ? MiniCssExtractPlugin.loader : "style-loader",
+                                {
+                                    loader: "css-loader",
+                                    options: {
+                                        importLoaders: 1,
+                                        sourceMap: false
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            test: /\.s[ac]ss$/i,
+                            use: [
+                                isEnvProduction ? MiniCssExtractPlugin.loader : "style-loader",
+                                "css-loader",
+                                "sass-loader"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        optimization: {
+            minimize: isEnvProduction,
+            ...(isEnvProduction
+                ? {
+                      splitChunks: {
+                          chunks: "all",
+                          name: false
+                      },
+                      runtimeChunk: {
+                          name: (entrypoint) => `runtime-${entrypoint.name}`
+                      }
                   }
-                }
-              ]
-            },
+                : {})
+        },
+        output: {
+            path: outDir,
+            filename: isEnvProduction ? "static/js/[name].[contenthash:8].js" : "static/js/bundle.js",
+            chunkFilename: isEnvProduction ? "static/js/[name].[contenthash:8].chunk.js" : "static/js/[name].chunk.js"
+        },
+        performance: false,
+        plugins: [
+            new MiniCssExtractPlugin(),
+            new HtmlWebpackPlugin(
+                Object.assign(
+                    {},
+                    {
+                        inject: true,
+                        template: path.resolve(__dirname, "public/index.html")
+                    },
+                    isEnvProduction
+                        ? {
+                              minify: {
+                                  removeComments: true,
+                                  collapseWhitespace: true,
+                                  removeRedundantAttributes: true,
+                                  useShortDoctype: true,
+                                  removeEmptyAttributes: true,
+                                  removeStyleLinkTypeAttributes: true,
+                                  keepClosingSlash: true,
+                                  minifyJS: true,
+                                  minifyCSS: true,
+                                  minifyURLs: true
+                              }
+                          }
+                        : undefined
+                )
+            ),
+            new webpack.DefinePlugin({ "process.env": {} }),
+            !isEnvProduction && new ReactRefreshWebpackPlugin(),
             {
-              test: /\.s[ac]ss$/i,
-              use: [
-                isEnvProduction ? MiniCssExtractPlugin.loader : "style-loader",
-                "css-loader",
-                "sass-loader"
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    optimization: {
-      minimize: isEnvProduction,
-      ...(isEnvProduction
-        ? {
-            splitChunks: {
-              chunks: "all",
-              name: false
-            },
-            runtimeChunk: {
-              name: (entrypoint) => `runtime-${entrypoint.name}`
-            }
-          }
-        : {})
-    },
-    output: {
-      path: outDir,
-      filename: isEnvProduction
-        ? "static/js/[name].[contenthash:8].js"
-        : "static/js/bundle.js",
-      chunkFilename: isEnvProduction
-        ? "static/js/[name].[contenthash:8].chunk.js"
-        : "static/js/[name].chunk.js"
-    },
-    performance: false,
-    plugins: [
-      new MiniCssExtractPlugin(),
-      new HtmlWebpackPlugin(
-        Object.assign(
-          {},
-          {
-            inject: true,
-            template: path.resolve(__dirname, "public/index.html")
-          },
-          isEnvProduction
-            ? {
-                minify: {
-                  removeComments: true,
-                  collapseWhitespace: true,
-                  removeRedundantAttributes: true,
-                  useShortDoctype: true,
-                  removeEmptyAttributes: true,
-                  removeStyleLinkTypeAttributes: true,
-                  keepClosingSlash: true,
-                  minifyJS: true,
-                  minifyCSS: true,
-                  minifyURLs: true
-                }
-              }
-            : undefined
-        )
-      ),
-      new webpack.DefinePlugin({ "process.env": {} }),
-      !isEnvProduction && new webpack.HotModuleReplacementPlugin(),
-      !isEnvProduction && new ReactRefreshWebpackPlugin(),
-      {
-        apply: (compiler) => {
-          compiler.hooks.afterEmit.tap("AfterEmitPlugin", () => {
-            fs.copySync(path.resolve(__dirname, "public"), outDir, {
-              dereference: true,
-              filter: (file) => !file.endsWith("index.html")
-            });
+                apply: (compiler) => {
+                    compiler.hooks.afterEmit.tap("AfterEmitPlugin", () => {
+                        fs.copySync(path.resolve(__dirname, "public"), outDir, {
+                            dereference: true,
+                            filter: (file) => !file.endsWith("index.html")
+                        });
 
-            if (!isEnvProduction && !webOpened) {
-              webOpened = true;
-              openBrowser(`http://localhost:${port}`);
+                        if (!isEnvProduction && !webOpened) {
+                            webOpened = true;
+                            openBrowser(`http://localhost:${port}`);
+                        }
+                    });
+                }
             }
-          });
-        }
-      }
-    ].filter(Boolean)
-  };
+        ].filter(Boolean)
+    };
 };

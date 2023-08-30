@@ -1,176 +1,172 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import React from "react";
+import * as React from "react";
 import { RadioFieldDisabledUseCase2 } from "../components/RadioFieldDisabledUseCase2";
+import { DataTestId, TestingContent } from "../enums";
 import { testInvalidMessage } from "./utils/selectors";
 
-console.log = jest.fn();
+describe("RadioFieldDisabledUseCase2.tsx", () => {
+    let expectedConsoleLogCallNumber = 0;
 
-const radio11TestId = "radio-1-1";
-const radio12TestId = "radio-1-2";
-const radio21TestId = "radio-2-1";
-const radio22TestId = "radio-2-2";
-const radio31TestId = "radio-3-1";
-const radio32TestId = "radio-3-2";
-const resetTestId = "reset";
-const submitTestId = "submit";
+    const testWorkflow = async (container: HTMLElement) => {
+        // the radio volume 1 and 3 must be disabled
+        expect(screen.getByTestId(DataTestId.Radio11)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio12)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio21)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio22)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio31)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio32)).toBeDisabled();
 
-let expectedConsoleLogCallNumber = 0;
+        // submit invalid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-const testWorkflow = async (container: HTMLElement) => {
-  // the radio volume 1 and 3 must be disabled
-  expect(screen.getByTestId(radio11TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio12TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio21TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio22TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio31TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio32TestId)).toBeDisabled();
+        // one error should be shown
+        testInvalidMessage(container, 1);
 
-  // submit invalid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        // click on the second option of the radio volume 2
+        fireEvent.click(screen.getByTestId(DataTestId.Radio22));
 
-  // one error should be shown
-  testInvalidMessage(container, 1);
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // click on the second option of the radio volume 2
-  fireEvent.click(screen.getByTestId(radio22TestId));
+        // the second option of the radio volume 3 should not be disabled
+        expect(screen.getByTestId(DataTestId.Radio11)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio12)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio21)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio22)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio31)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio32)).not.toBeDisabled();
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // submit invalid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-  // the second option of the radio volume 3 should not be disabled
-  expect(screen.getByTestId(radio11TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio12TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio21TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio22TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio31TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio32TestId)).not.toBeDisabled();
+        // one error should be shown
+        testInvalidMessage(container, 1);
 
-  // submit invalid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        // click on the second option of the radio volume 3
+        fireEvent.click(screen.getByTestId(DataTestId.Radio32));
 
-  // one error should be shown
-  testInvalidMessage(container, 1);
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // click on the second option of the radio volume 3
-  fireEvent.click(screen.getByTestId(radio32TestId));
+        // the second option of the radio volume 1 should not be disabled
+        expect(screen.getByTestId(DataTestId.Radio11)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio12)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio21)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio22)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio31)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio32)).not.toBeDisabled();
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // submit invalid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-  // the second option of the radio volume 1 should not be disabled
-  expect(screen.getByTestId(radio11TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio12TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio21TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio22TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio31TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio32TestId)).not.toBeDisabled();
+        // one error should be shown
+        testInvalidMessage(container, 1);
 
-  // submit invalid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        // click on the second option of the radio volume 1
+        fireEvent.click(screen.getByTestId(DataTestId.Radio12));
 
-  // one error should be shown
-  testInvalidMessage(container, 1);
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // click on the second option of the radio volume 1
-  fireEvent.click(screen.getByTestId(radio12TestId));
+        // submit valid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // check the onSubmit action
+        expect(console.log).toBeCalledTimes(expectedConsoleLogCallNumber++ + 1);
+        expect(console.log).lastCalledWith({
+            radioVolume1: TestingContent.CaptionOption12,
+            radioVolume2: TestingContent.CaptionOption22,
+            radioVolume3: TestingContent.CaptionOption32
+        });
 
-  // submit valid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        // click on the first option of the radio volume 2
+        fireEvent.click(screen.getByTestId(DataTestId.Radio21));
 
-  // check the onSubmit action
-  expect(console.log).toBeCalledTimes(expectedConsoleLogCallNumber++ + 1);
-  expect(console.log).lastCalledWith({
-    radioVolume1: "Option 1-2",
-    radioVolume2: "Option 2-2",
-    radioVolume3: "Option 3-2"
-  });
+        // no inputs must be checked
+        expect(screen.getByTestId(DataTestId.Radio11)).not.toBeChecked();
+        expect(screen.getByTestId(DataTestId.Radio12)).not.toBeChecked();
+        expect(screen.getByTestId(DataTestId.Radio31)).not.toBeChecked();
+        expect(screen.getByTestId(DataTestId.Radio32)).not.toBeChecked();
 
-  // click on the first option of the radio volume 2
-  fireEvent.click(screen.getByTestId(radio21TestId));
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // no inputs must be checked
-  expect(screen.getByTestId(radio11TestId)).not.toBeChecked();
-  expect(screen.getByTestId(radio12TestId)).not.toBeChecked();
-  expect(screen.getByTestId(radio31TestId)).not.toBeChecked();
-  expect(screen.getByTestId(radio32TestId)).not.toBeChecked();
+        // the first option of the radio volume 3 should not be disabled
+        expect(screen.getByTestId(DataTestId.Radio11)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio12)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio21)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio22)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio31)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio32)).toBeDisabled();
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // submit invalid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-  // the first option of the radio volume 3 should not be disabled
-  expect(screen.getByTestId(radio11TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio12TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio21TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio22TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio31TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio32TestId)).toBeDisabled();
+        // one error should be shown
+        testInvalidMessage(container, 1);
 
-  // submit invalid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        // click on the first option of the radio volume 3
+        fireEvent.click(screen.getByTestId(DataTestId.Radio31));
 
-  // one error should be shown
-  testInvalidMessage(container, 1);
+        // the first option of the radio volume 1 should not be disabled
+        expect(screen.getByTestId(DataTestId.Radio11)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio12)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio21)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio22)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio31)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.Radio32)).toBeDisabled();
 
-  // click on the first option of the radio volume 3
-  fireEvent.click(screen.getByTestId(radio31TestId));
+        // click on the first option of the radio volume 1
+        fireEvent.click(screen.getByTestId(DataTestId.Radio11));
 
-  // the first option of the radio volume 1 should not be disabled
-  expect(screen.getByTestId(radio11TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio12TestId)).toBeDisabled();
-  expect(screen.getByTestId(radio21TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio22TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio31TestId)).not.toBeDisabled();
-  expect(screen.getByTestId(radio32TestId)).toBeDisabled();
+        // submit valid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-  // click on the first option of the radio volume 1
-  fireEvent.click(screen.getByTestId(radio11TestId));
+        // check the onSubmit action
+        expect(console.log).toBeCalledTimes(expectedConsoleLogCallNumber++ + 1);
+        expect(console.log).lastCalledWith({
+            radioVolume1: TestingContent.CaptionOption11,
+            radioVolume2: TestingContent.CaptionOption21,
+            radioVolume3: TestingContent.CaptionOption31
+        });
 
-  // submit valid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        // click on the second option of the radio volume 2
+        fireEvent.click(screen.getByTestId(DataTestId.Radio22));
 
-  // check the onSubmit action
-  expect(console.log).toBeCalledTimes(expectedConsoleLogCallNumber++ + 1);
-  expect(console.log).lastCalledWith({
-    radioVolume1: "Option 1-1",
-    radioVolume2: "Option 2-1",
-    radioVolume3: "Option 3-1"
-  });
+        // errors should not be shown
+        testInvalidMessage(container, 0);
+    };
 
-  // click on the second option of the radio volume 2
-  fireEvent.click(screen.getByTestId(radio22TestId));
+    beforeAll(() => {
+        console.log = jest.fn();
+    });
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
-};
+    test("Basic", async () => {
+        const { container } = render(<RadioFieldDisabledUseCase2 />);
 
-test("RadioFieldDisabledUseCase2", async () => {
-  const { container } = render(<RadioFieldDisabledUseCase2 />);
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // first test
+        await testWorkflow(container);
 
-  // first test
-  await testWorkflow(container);
+        // reset the form
+        fireEvent.click(screen.getByTestId(DataTestId.Reset));
 
-  // reset the form
-  fireEvent.click(screen.getByTestId(resetTestId));
-
-  // second test
-  await testWorkflow(container);
+        // second test
+        await testWorkflow(container);
+    });
 });

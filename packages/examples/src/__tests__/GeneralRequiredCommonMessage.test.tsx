@@ -1,228 +1,192 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { CN } from "formco";
-import React from "react";
-import { GeneralRequiredCommonMessage } from "../components/GeneralRequiredCommonMessage";
+import * as React from "react";
+import {
+    GeneralRequiredCommonMessage,
+    invalidFieldClassName,
+    invalidGlobalClassName,
+    validFieldClassName,
+    validGlobalClassName,
+    validValidationClassName
+} from "../components/GeneralRequiredCommonMessage";
+import { DataTestId, TestingContent } from "../enums";
 import { testInvalidMessage } from "./utils/selectors";
 
-console.log = jest.fn();
+describe("GeneralRequiredCommonMessage.tsx", () => {
+    const checkStarCount = (container: HTMLElement) => {
+        expect(container.querySelectorAll(`.${CN.RequiredStar}`).length).toBe(5);
+    };
 
-const inputFieldRow1TestId = "input-field-row-1";
-const inputFieldRow2TestId = "input-field-row-2";
-const invalidFieldClassName = "invalid-field";
-const invalidGlobalClassName = "invalid-global";
-const givenNameTestId = "givenName";
-const radioFieldRow1TestId = "radio-field-row-1";
-const radio2TestId = "radio-2";
-const resetTestId = "reset";
-const selectFieldRowTestId = "select-field-row";
-const selectTestId = "select";
-const submitTestId = "submit";
-const surnameTestId = "surname";
-const textareaFieldrowTestId = "textarea-field-row";
-const textareaTestId = "textarea";
-const validFieldClassName = "valid-field";
-const validGlobalClassName = "valid-global";
-const validValidationClassName = "valid-validation";
+    beforeAll(() => {
+        console.log = jest.fn();
+    });
 
-const checkStarCount = (container: HTMLElement) => {
-  expect(container.querySelectorAll(`.${CN.RequiredStar}`).length).toBe(5);
-};
+    test("Basic", async () => {
+        const { container } = render(<GeneralRequiredCommonMessage />);
 
-test("GeneralRequiredCommonMessage", async () => {
-  const { container } = render(<GeneralRequiredCommonMessage />);
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // submit should be disabled
+        expect(screen.getByTestId(DataTestId.Submit)).toBeDisabled();
 
-  // submit should be disabled
-  expect(screen.getByTestId(submitTestId)).toBeDisabled();
+        checkStarCount(container);
 
-  checkStarCount(container);
+        // input an empty value should show an error
+        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+            target: { value: " " }
+        });
 
-  // input an empty value should show an error
-  fireEvent.change(screen.getByTestId(givenNameTestId), {
-    target: { value: " " }
-  });
+        // submit should be disabled
+        expect(screen.getByTestId(DataTestId.Submit)).toBeDisabled();
 
-  // submit should be disabled
-  expect(screen.getByTestId(submitTestId)).toBeDisabled();
+        // one error should be shown
+        testInvalidMessage(container, 1);
 
-  // one error should be shown
-  testInvalidMessage(container, 1);
+        // input should have global message
+        expect(screen.getByTestId(DataTestId.InputFieldRow1).querySelector(`.${invalidGlobalClassName}`)).toBeTruthy();
 
-  // input should have global message
-  expect(
-    screen
-      .getByTestId(inputFieldRow1TestId)
-      .querySelector(`.${invalidGlobalClassName}`)
-  ).toBeTruthy();
+        // input an empty value should show an error
+        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+            target: { value: TestingContent.James }
+        });
 
-  // input an empty value should show an error
-  fireEvent.change(screen.getByTestId(givenNameTestId), {
-    target: { value: "James" }
-  });
+        // submit should be disabled
+        expect(screen.getByTestId(DataTestId.Submit)).toBeDisabled();
 
-  // submit should be disabled
-  expect(screen.getByTestId(submitTestId)).toBeDisabled();
+        // no errors should be shown
+        testInvalidMessage(container, 0);
 
-  // no errors should be shown
-  testInvalidMessage(container, 0);
+        // input should have global message
+        expect(screen.getByTestId(DataTestId.InputFieldRow1).querySelector(`.${validGlobalClassName}`)).toBeTruthy();
 
-  // input should have global message
-  expect(
-    screen
-      .getByTestId(inputFieldRow1TestId)
-      .querySelector(`.${validGlobalClassName}`)
-  ).toBeTruthy();
+        // input valid text
+        fireEvent.change(screen.getByTestId(DataTestId.Surname), {
+            target: { value: " " }
+        });
 
-  // input valid text
-  fireEvent.change(screen.getByTestId(surnameTestId), {
-    target: { value: " " }
-  });
+        // submit should be disabled
+        expect(screen.getByTestId(DataTestId.Submit)).toBeDisabled();
 
-  // submit should be disabled
-  expect(screen.getByTestId(submitTestId)).toBeDisabled();
+        // one error should be shown
+        testInvalidMessage(container, 1);
 
-  // one error should be shown
-  testInvalidMessage(container, 1);
+        // input should have global message
+        expect(screen.getByTestId(DataTestId.InputFieldRow2).querySelector(`.${invalidGlobalClassName}`)).toBeTruthy();
 
-  // input should have global message
-  expect(
-    screen
-      .getByTestId(inputFieldRow2TestId)
-      .querySelector(`.${invalidGlobalClassName}`)
-  ).toBeTruthy();
+        // input a valid text
+        fireEvent.change(screen.getByTestId(DataTestId.Surname), {
+            target: { value: TestingContent.Bond }
+        });
 
-  // input a valid text
-  fireEvent.change(screen.getByTestId(surnameTestId), {
-    target: { value: "Bond" }
-  });
+        // submit should be disabled
+        expect(screen.getByTestId(DataTestId.Submit)).toBeDisabled();
 
-  // submit should be disabled
-  expect(screen.getByTestId(submitTestId)).toBeDisabled();
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // select a radio option
+        fireEvent.click(screen.getByTestId(DataTestId.Radio2));
 
-  // select a radio option
-  fireEvent.click(screen.getByTestId(radio2TestId));
+        // submit should be disabled
+        expect(screen.getByTestId(DataTestId.Submit)).toBeDisabled();
 
-  // submit should be disabled
-  expect(screen.getByTestId(submitTestId)).toBeDisabled();
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // input should have validation message
+        expect(
+            screen.getByTestId(DataTestId.RadioFieldRow1).querySelector(`.${validValidationClassName}`)
+        ).toBeTruthy();
 
-  // input should have validation message
-  expect(
-    screen
-      .getByTestId(radioFieldRow1TestId)
-      .querySelector(`.${validValidationClassName}`)
-  ).toBeTruthy();
+        // select an option
+        fireEvent.change(screen.getByTestId(DataTestId.Select), {
+            target: { value: TestingContent.CaptionOption1 }
+        });
 
-  // select an option
-  fireEvent.change(screen.getByTestId(selectTestId), {
-    target: { value: "Option 1" }
-  });
+        // submit should be disabled
+        expect(screen.getByTestId(DataTestId.Submit)).toBeDisabled();
 
-  // submit should be disabled
-  expect(screen.getByTestId(submitTestId)).toBeDisabled();
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // input should have field message
+        expect(screen.getByTestId(DataTestId.SelectFieldRow).querySelector(`.${validGlobalClassName}`)).toBeTruthy();
 
-  // input should have field message
-  expect(
-    screen
-      .getByTestId(selectFieldRowTestId)
-      .querySelector(`.${validGlobalClassName}`)
-  ).toBeTruthy();
+        // select an option
+        fireEvent.change(screen.getByTestId(DataTestId.Select), {
+            target: { value: "" }
+        });
 
-  // select an option
-  fireEvent.change(screen.getByTestId(selectTestId), {
-    target: { value: "" }
-  });
+        // submit should be disabled
+        expect(screen.getByTestId(DataTestId.Submit)).toBeDisabled();
 
-  // submit should be disabled
-  expect(screen.getByTestId(submitTestId)).toBeDisabled();
+        // one error should be shown
+        testInvalidMessage(container, 1);
 
-  // one error should be shown
-  testInvalidMessage(container, 1);
+        // input should have global message
+        expect(screen.getByTestId(DataTestId.SelectFieldRow).querySelector(`.${invalidGlobalClassName}`)).toBeTruthy();
 
-  // input should have global message
-  expect(
-    screen
-      .getByTestId(selectFieldRowTestId)
-      .querySelector(`.${invalidGlobalClassName}`)
-  ).toBeTruthy();
+        // select an option
+        fireEvent.change(screen.getByTestId(DataTestId.Select), {
+            target: { value: TestingContent.ValueOption3 }
+        });
 
-  // select an option
-  fireEvent.change(screen.getByTestId(selectTestId), {
-    target: { value: "option-3" }
-  });
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // select a option
+        fireEvent.change(screen.getByTestId(DataTestId.Textarea), {
+            target: { value: " " }
+        });
 
-  // select a option
-  fireEvent.change(screen.getByTestId(textareaTestId), {
-    target: { value: " " }
-  });
+        // submit should be disabled
+        expect(screen.getByTestId(DataTestId.Submit)).toBeDisabled();
 
-  // submit should be disabled
-  expect(screen.getByTestId(submitTestId)).toBeDisabled();
+        // one error should be shown
+        testInvalidMessage(container, 1);
 
-  // one error should be shown
-  testInvalidMessage(container, 1);
+        // input should have global message
+        expect(screen.getByTestId(DataTestId.TextareaFieldRow).querySelector(`.${invalidFieldClassName}`)).toBeTruthy();
 
-  // input should have global message
-  expect(
-    screen
-      .getByTestId(textareaFieldrowTestId)
-      .querySelector(`.${invalidFieldClassName}`)
-  ).toBeTruthy();
+        // select a option
+        fireEvent.change(screen.getByTestId(DataTestId.Textarea), {
+            target: { value: TestingContent.Description }
+        });
 
-  // select a option
-  fireEvent.change(screen.getByTestId(textareaTestId), {
-    target: { value: "Description" }
-  });
+        // submit should not be disabled
+        expect(screen.getByTestId(DataTestId.Submit)).not.toBeDisabled();
 
-  // submit should not be disabled
-  expect(screen.getByTestId(submitTestId)).not.toBeDisabled();
+        // no errors should be shown
+        testInvalidMessage(container, 0);
 
-  // no errors should be shown
-  testInvalidMessage(container, 0);
+        // input should have global message
+        expect(screen.getByTestId(DataTestId.TextareaFieldRow).querySelector(`.${validFieldClassName}`)).toBeTruthy();
 
-  // input should have global message
-  expect(
-    screen
-      .getByTestId(textareaFieldrowTestId)
-      .querySelector(`.${validFieldClassName}`)
-  ).toBeTruthy();
+        // submit valid form
+        await waitFor(async () => {
+            fireEvent.click(screen.getByTestId(DataTestId.Submit));
+        });
 
-  // submit valid form
-  await waitFor(async () => {
-    fireEvent.click(screen.getByTestId(submitTestId));
-  });
+        // check the onSubmit action
+        expect(console.log).toBeCalledTimes(1);
+        expect(console.log).lastCalledWith({
+            description: TestingContent.Description,
+            givenName: TestingContent.James,
+            surname: TestingContent.Bond,
+            radio: TestingContent.CaptionOption2,
+            select: TestingContent.ValueOption3
+        });
 
-  // check the onSubmit action
-  expect(console.log).toBeCalledTimes(1);
-  expect(console.log).lastCalledWith({
-    description: "Description",
-    givenName: "James",
-    surname: "Bond",
-    radio: "Option 2",
-    select: "option-3"
-  });
+        fireEvent.click(screen.getByTestId(DataTestId.Reset));
 
-  fireEvent.click(screen.getByTestId(resetTestId));
+        // errors should not be shown
+        testInvalidMessage(container, 0);
 
-  // errors should not be shown
-  testInvalidMessage(container, 0);
+        // submit should be disabled
+        expect(screen.getByTestId(DataTestId.Submit)).toBeDisabled();
 
-  // submit should be disabled
-  expect(screen.getByTestId(submitTestId)).toBeDisabled();
-
-  checkStarCount(container);
+        checkStarCount(container);
+    });
 });
