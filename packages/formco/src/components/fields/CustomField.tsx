@@ -20,6 +20,9 @@ export const CustomField = <
     $id,
     $initialValidation,
     $name,
+    $onBlur,
+    $onChange,
+    $onKeyDown,
     $onValidation,
     $provideValue,
     $validateOnBlur,
@@ -45,6 +48,9 @@ export const CustomField = <
             id={$id ? $id : getRandomId()}
             initialValidation={$initialValidation}
             name={$name}
+            onBlur={$onBlur}
+            onChange={$onChange}
+            onKeyDown={$onKeyDown}
             onValidation={$onValidation}
             privateController={privateController}
             provideValue={$provideValue}

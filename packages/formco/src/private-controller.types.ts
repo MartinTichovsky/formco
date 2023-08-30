@@ -23,13 +23,19 @@ export interface ControllerProps<T extends FormFields<T>> {
     hideIf?: {
         [K in keyof T]?: (fields: Partial<T>) => boolean;
     };
-    initialValidation?: boolean;
     initialValues?: InitialValues<T>;
     options?: ControllerOptions;
     onSubmit?: OnSubmit<T>;
     requiredInvalidMessage?: string | JSX.Element;
     requiredValidMessage?: string | JSX.Element;
-    setController: React.Dispatch<React.SetStateAction<PrivateController<T> | undefined>>;
+    /**
+     * A helper dispatch function to re-set the PrivateController
+     */
+    setFormControllerState: React.Dispatch<React.SetStateAction<PrivateControllerSetKey>>;
+    /**
+     * Do not increase the keyIndex which re-render the whole form
+     */
+    silent?: boolean;
     validateOnBlur?: boolean;
     validateOnChange?: boolean;
     validation?: {
@@ -142,6 +148,11 @@ export type OnValidationAction = (
     fieldIsValid: boolean,
     validationResult: ValidationContentResult
 ) => void;
+
+export interface PrivateControllerSetKey {
+    key: number;
+    silent: boolean;
+}
 
 export interface PromiseQueue<T> {
     blurAction?: boolean;

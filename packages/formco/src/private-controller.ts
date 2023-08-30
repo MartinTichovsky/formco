@@ -21,6 +21,7 @@ import {
     OnDisableAction,
     OnSubmit,
     OnValidation,
+    PrivateControllerSetKey,
     PromiseQueue,
     SetDefaultIsDisabled,
     SetDefaultIsInvalid,
@@ -55,13 +56,12 @@ export class PrivateController<T extends FormFields<T>> {
     private _fields: Fields<T> = {};
     private _hideIf?: HideIf<T>;
     private _initialRender = true;
-    private _initialValidation?: boolean;
     private _initialValues?: InitialValues<T>;
     private _isSubmitted = false;
     private _onChangeCounter = 0;
     private _onSubmit?: OnSubmit<T>;
-    private _setController: React.Dispatch<React.SetStateAction<PrivateController<T> | undefined>>;
     private _scrolledToElement: boolean = false;
+    private _setFormControllerState: React.Dispatch<React.SetStateAction<PrivateControllerSetKey>>;
     private _validateOnBlur;
     private _validateOnChange;
     private _validation?: Validation<T>;
@@ -85,13 +85,13 @@ export class PrivateController<T extends FormFields<T>> {
     constructor({
         disableIf,
         hideIf,
-        initialValidation,
         initialValues,
         options,
         onSubmit,
         requiredInvalidMessage,
         requiredValidMessage,
-        setController,
+        setFormControllerState,
+        silent,
         validateOnBlur = false,
         validateOnChange = false,
         validation
@@ -106,8 +106,7 @@ export class PrivateController<T extends FormFields<T>> {
 
         this._disableIf = disableIf;
         this._hideIf = hideIf;
-        this._initialValidation = initialValidation;
-        this._setController = setController;
+        this._setFormControllerState = setFormControllerState;
         this._validation = validation;
         this._validateOnBlur = validateOnBlur;
         this._validateOnChange = validateOnChange;
@@ -116,7 +115,7 @@ export class PrivateController<T extends FormFields<T>> {
         this.requiredInvalidMessage = requiredInvalidMessage;
         this.requiredValidMessage = requiredValidMessage;
 
-        this.keyIndex = PrivateController.uniqueIndex++;
+        this.keyIndex = silent ? PrivateController.uniqueIndex : PrivateController.uniqueIndex++;
     }
 
     get canScrollToElement() {
@@ -545,25 +544,8 @@ export class PrivateController<T extends FormFields<T>> {
         }
     }
 
-    public resetForm() {
-        this._setController(
-            new PrivateController<T>({
-                disableIf: this._disableIf,
-                hideIf: this._hideIf,
-                initialValidation: this._initialValidation,
-                initialValues: this._initialValues,
-
-                options: this.options,
-                onSubmit: this._onSubmit,
-                requiredInvalidMessage: this.requiredInvalidMessage,
-                requiredValidMessage: this.requiredValidMessage,
-                setController: this._setController,
-                validateOnBlur: this._validateOnBlur,
-                validateOnChange: this._validateOnChange,
-                validation: this._validation
-            })
-        );
-
+    public resetForm(silent = false) {
+        this._setFormControllerState((prevState) => ({ key: ++prevState.key, silent }));
         this._isSubmitted = false;
     }
 

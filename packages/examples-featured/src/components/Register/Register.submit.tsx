@@ -41,8 +41,8 @@ export const SubmitComponent = ({
     store: MessageStore;
 }>) => {
     const [state, setState] = React.useState<State>({ pending: false });
-    const refState = React.useRef(state);
-    refState.current = state;
+    const stateRef = React.useRef(state);
+    stateRef.current = state;
     const isMounted = React.useRef(true);
 
     React.useEffect(() => {
@@ -78,7 +78,7 @@ export const SubmitComponent = ({
             setState({ error: true, pending: false });
             // dismiss the error after 3s
             setTimeout(() => {
-                if (refState.current.error) {
+                if (stateRef.current.error) {
                     setState((prevState) => ({ ...prevState, error: false }));
                 }
             }, 3000);

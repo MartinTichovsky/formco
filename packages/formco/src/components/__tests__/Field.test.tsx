@@ -8,11 +8,11 @@ import { getGeneratedValues } from "../../__tests__/utils/value-generator";
 import { FormField } from "../FormField";
 import { FormFieldInternalProps, FormFieldPrivateProps, FormFieldType, InitialState } from "../FormField.types";
 
-type Form = {
+interface Form {
     input: string;
     name: string;
     radio: string;
-};
+}
 
 let controller: Controller<Form>;
 let privateController: PrivateController<Form>;
@@ -66,7 +66,7 @@ const FieldContainer = <K extends keyof Form>(
 beforeEach(() => {
     passedValues = {};
     privateController = new PrivateController<Form>({
-        setController: jest.fn()
+        setFormControllerState: jest.fn()
     });
     controller = new Controller(privateController);
 });

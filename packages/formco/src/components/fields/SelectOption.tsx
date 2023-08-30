@@ -80,6 +80,7 @@ export const SelectOption = <T extends FormFields<T>>({
     ...rest
 }: SelectOptionProps<T>) => {
     const context = React.useContext(selectContext);
+
     if (!context || !context.name) {
         return null;
     }
@@ -90,43 +91,45 @@ export const SelectOption = <T extends FormFields<T>>({
         isDisabled: disableIf !== undefined && disableIf(privateController.fields),
         isVisible: hideIf === undefined || !hideIf(privateController.fields)
     });
-    const refState = React.useRef<SelectOptionState>();
-    refState.current = state;
+    const stateRef = React.useRef<SelectOptionState>();
+    stateRef.current = state;
 
     const key = React.useRef(0);
 
-    if (disableIf !== undefined || hideIf !== undefined) {
-        React.useEffect(() => {
-            const action = () => {
-                const isDisabled = disableIf !== undefined && disableIf(privateController.fields);
-                const isVisible = hideIf === undefined || !hideIf(privateController.fields);
+    React.useEffect(() => {
+        if (disableIf === undefined && hideIf === undefined) {
+            return;
+        }
 
-                if (refState.current!.isDisabled !== isDisabled || refState.current!.isVisible !== isVisible) {
-                    registerAfterAll({
-                        id,
-                        isDisabled,
-                        isVisible,
-                        name,
-                        privateController: privateController as PrivateController<FormFields<unknown>>,
-                        selectRef,
-                        value: rest.value !== undefined ? rest.value : children
-                    });
+        const action = () => {
+            const isDisabled = disableIf !== undefined && disableIf(privateController.fields);
+            const isVisible = hideIf === undefined || !hideIf(privateController.fields);
 
-                    key.current++;
-                    setState({
-                        isDisabled,
-                        isVisible
-                    });
-                }
-            };
+            if (stateRef.current!.isDisabled !== isDisabled || stateRef.current!.isVisible !== isVisible) {
+                registerAfterAll({
+                    id,
+                    isDisabled,
+                    isVisible,
+                    name,
+                    privateController: privateController as PrivateController<FormFields<unknown>>,
+                    selectRef,
+                    value: rest.value !== undefined ? rest.value : children
+                });
 
-            privateController.subscribeOnChange(action);
+                key.current++;
+                setState({
+                    isDisabled,
+                    isVisible
+                });
+            }
+        };
 
-            return () => {
-                privateController.unsubscribeOnChange(action);
-            };
-        }, [controller, disableIf, hideIf, refState]);
-    }
+        privateController.subscribeOnChange(action);
+
+        return () => {
+            privateController.unsubscribeOnChange(action);
+        };
+    }, [controller, disableIf, hideIf, stateRef]);
 
     React.useEffect(() => {
         executeAfterAll(privateController as PrivateController<FormFields<unknown>>);

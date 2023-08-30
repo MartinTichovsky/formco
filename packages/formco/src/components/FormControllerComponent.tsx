@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Controller } from "../controller";
 import { PrivateController } from "../private-controller";
-import { FormFields } from "../private-controller.types";
+import { FormFields, PrivateControllerSetKey } from "../private-controller.types";
 import { getControllerProviderContext } from "../providers";
 import { FormControllerComponentProps } from "./FormController.types";
 
@@ -20,11 +20,11 @@ export const FormControllerComponent = <T extends FormFields<T>>({
     validation,
     ...rest
 }: FormControllerComponentProps<T>) => {
-    const [privateController, setController] = React.useState<PrivateController<T>>();
+    const [state, setFormControllerState] = React.useState<PrivateControllerSetKey>({ key: 0, silent: false });
 
-    React.useEffect(
-        () => {
-            const controller = new PrivateController<T>({
+    const privateController = React.useMemo(
+        () =>
+            new PrivateController<T>({
                 disableIf,
                 hideIf,
                 initialValues,
@@ -32,14 +32,13 @@ export const FormControllerComponent = <T extends FormFields<T>>({
                 onSubmit,
                 requiredInvalidMessage,
                 requiredValidMessage,
-                setController,
+                setFormControllerState,
+                silent: state.silent,
                 validateOnBlur,
                 validateOnChange,
                 validation
-            });
-            setController(controller);
-        }, // eslint-disable-next-line react-hooks/exhaustive-deps
-        [setController, validateOnChange]
+            }),
+        [state.key, state.silent, setFormControllerState, validateOnChange]
     );
 
     React.useEffect(() => {
@@ -48,10 +47,6 @@ export const FormControllerComponent = <T extends FormFields<T>>({
             privateController.onChange();
         }
     }, [privateController]);
-
-    if (privateController === undefined) {
-        return null;
-    }
 
     const privateControllerContext = getControllerProviderContext<T>();
 

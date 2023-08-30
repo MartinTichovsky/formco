@@ -33,7 +33,10 @@ export function FormField<
     $label,
     $messageComponent,
     $name,
+    $onBlur,
+    $onChange,
     $onFormChange,
+    $onKeyDown,
     $required,
     $requiredComponent,
     $requiredInvalidMessage,
@@ -133,10 +136,10 @@ export function FormField<
         providedProps.$requiredValidMessage = privateController.requiredValidMessage;
     }
 
-    let _validation = providedProps.$validation;
+    let validationUpdated = providedProps.$validation;
 
     if (providedProps.$required && providedProps.$validation) {
-        _validation = ((value: T[K] | undefined, fields: Partial<T>) => {
+        validationUpdated = ((value: T[K] | undefined, fields: Partial<T>) => {
             if ($type === "checkbox" || $type === "radio" || fieldType === "select") {
                 const validationResult = providedProps.$validation!(value, fields);
 
@@ -151,7 +154,7 @@ export function FormField<
                 : providedProps.$validation!(value, fields);
         }) as typeof providedProps.$validation;
     } else if (providedProps.$required) {
-        _validation = (value: T[K] | undefined) =>
+        validationUpdated = (value: T[K] | undefined) =>
             typeof value === "string" ? !value.trim() : $type === "checkbox" ? !value : value === undefined;
     }
 
@@ -171,8 +174,9 @@ export function FormField<
         privateController.registerOption($name, providedProps.$id!);
     }
 
-    let validationResult =
-        _validation && _validation(privateController.getFieldValue($name), privateController.getObservedFields($name));
+    const validationResult =
+        validationUpdated &&
+        validationUpdated(privateController.getFieldValue($name), privateController.getObservedFields($name));
 
     const initialState: InitialState = {
         isDisabled: providedProps.$disableIf ? providedProps.$disableIf(privateController.fields) : false,
@@ -183,7 +187,7 @@ export function FormField<
     if (initialState.isDisabled) {
         privateController.setDefaultIsDisabled({
             id: providedProps.$id,
-            isValidated: $type !== "radio" && !!($initialValidation && _validation),
+            isValidated: $type !== "radio" && !!($initialValidation && validationUpdated),
             key: $name,
             type: $type,
             validationResult: $initialValidation ? validationResult : undefined
@@ -191,13 +195,13 @@ export function FormField<
     } else if (!initialState.isVisible) {
         privateController.setDefaultIsNotVisible({
             id: providedProps.$id,
-            isValidated: $type !== "radio" && !!($initialValidation && _validation),
+            isValidated: $type !== "radio" && !!($initialValidation && validationUpdated),
             key: $name,
             type: $type,
             validationResult: $initialValidation ? validationResult : undefined,
             value: $value || children
         });
-    } else if (_validation) {
+    } else if (validationUpdated) {
         privateController.setDefaultIsValid({
             initialValidation: $initialValidation,
             isValidated: $type !== "radio",
@@ -223,11 +227,13 @@ export function FormField<
             hideRequiredStar={providedProps.$hideRequiredStar}
             id={providedProps.$id}
             initialState={initialState}
-            initialValidation={$initialValidation}
             label={$label}
             messageComponent={$messageComponent}
             name={$name}
+            onBlur={$onBlur}
+            onChange={$onChange}
             onFormChange={$onFormChange}
+            onKeyDown={$onKeyDown}
             privateController={privateController}
             required={providedProps.$required}
             requiredComponent={providedProps.$requiredComponent}
@@ -235,10 +241,7 @@ export function FormField<
             requiredValidMessage={providedProps.$requiredValidMessage}
             rest={rest}
             type={$type}
-            validateOnBlur={$validateOnBlur}
-            validateOnChange={$validateOnChange}
-            validation={_validation}
-            validationDependencies={$validationDependencies}
+            validation={validationUpdated}
             value={$value}
         />
     );

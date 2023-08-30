@@ -8,9 +8,9 @@ import { getGeneratedValues } from "../../__tests__/utils/value-generator";
 import { Condition } from "../Condition";
 import { ConditionComponent } from "../ConditionComponent";
 
-type Form = {
+interface Form {
     input: string;
-};
+}
 
 let controller: Controller<Form>;
 let privateController: PrivateController<Form>;
@@ -66,7 +66,7 @@ console.error = jest.fn();
 
 beforeEach(() => {
     collector.reset();
-    privateController = new PrivateController<Form>({ setController: jest.fn() });
+    privateController = new PrivateController<Form>({ setFormControllerState: jest.fn() });
     controller = new Controller(privateController);
 });
 

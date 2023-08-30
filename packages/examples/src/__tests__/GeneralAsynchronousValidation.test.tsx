@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import * as React from "react";
-import { GeneralAsynchronousValidation } from "../components/GeneralAsynchronousValidation";
+import { GeneralAsynchronousValidation, TIMEOUT } from "../components/GeneralAsynchronousValidation";
 import { DataTestId, TestingContent } from "../enums";
 import { wait } from "../utils/utils";
 import { testInvalidMessage, testValidMessage } from "./utils/selectors";
@@ -124,7 +124,7 @@ describe("GeneralAsynchronousValidation.tsx", () => {
         expect(screen.getAllByText(TestingContent.Pending).length).toBe(2);
 
         await act(async () => {
-            await wait(2000);
+            await wait(TIMEOUT);
         });
 
         // check the onSubmit action
@@ -150,7 +150,7 @@ describe("GeneralAsynchronousValidation.tsx", () => {
         expect(console.log).not.toBeCalled();
 
         await act(async () => {
-            await wait(2500);
+            await wait(TIMEOUT + TIMEOUT / 2);
         });
 
         // check the onSubmit action

@@ -34,15 +34,18 @@ export const SubmitComponent = <
         [Component]
     );
 
-    const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
-        onClick?.(event);
+    const handleClick = React.useCallback(
+        async (event: React.MouseEvent<HTMLButtonElement>) => {
+            onClick?.(event);
 
-        await privateController.submit();
+            await privateController.submit();
 
-        onSubmit?.(privateController.fields, new Controller(privateController));
+            onSubmit?.(privateController.fields, new Controller(privateController));
 
-        return new Controller(privateController);
-    };
+            return new Controller(privateController);
+        },
+        [privateController]
+    );
 
     React.useEffect(() => {
         if (disableIfNotValid) {

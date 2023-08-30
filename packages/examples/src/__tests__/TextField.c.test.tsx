@@ -99,7 +99,7 @@ describe("TextField.c.tsx", () => {
                 collector.getCallCount(formControllerComponentName, {
                     dataTestId: DataTestId.FormController
                 })
-            ).toBe(2); // beacause the form controller creates a controller `useEffect` and set it with `setController`
+            ).toBe(1);
             expect(
                 collector.getCallCount(fieldComponentName, {
                     dataTestId: DataTestId.GivenName
@@ -115,7 +115,7 @@ describe("TextField.c.tsx", () => {
                 collector.getCallCount(formControllerComponentName, {
                     dataTestId: DataTestId.FormController
                 })
-            ).toBe(2);
+            ).toBe(1);
             expect(
                 collector.getCallCount(fieldComponentName, {
                     dataTestId: DataTestId.GivenName
@@ -129,7 +129,7 @@ describe("TextField.c.tsx", () => {
                 collector.getCallCount(formControllerComponentName, {
                     dataTestId: DataTestId.FormController
                 })
-            ).toBe(2);
+            ).toBe(1);
             expect(
                 collector.getCallCount(fieldComponentName, {
                     dataTestId: DataTestId.GivenName
@@ -153,7 +153,7 @@ describe("TextField.c.tsx", () => {
                 collector.getCallCount(formControllerComponentName, {
                     dataTestId: DataTestId.FormController
                 })
-            ).toBe(2);
+            ).toBe(1);
             expect(
                 collector.getCallCount(fieldComponentName, {
                     dataTestId: DataTestId.GivenName
@@ -185,7 +185,7 @@ describe("TextField.c.tsx", () => {
                 collector.getCallCount(formControllerComponentName, {
                     dataTestId: DataTestId.FormController
                 })
-            ).toBe(2);
+            ).toBe(1);
             expect(
                 collector.getCallCount(fieldComponentName, {
                     dataTestId: DataTestId.GivenName
@@ -216,7 +216,7 @@ describe("TextField.c.tsx", () => {
                 collector.getCallCount(formControllerComponentName, {
                     dataTestId: DataTestId.FormController
                 })
-            ).toBe(3);
+            ).toBe(2);
             expect(
                 collector.getCallCount(fieldComponentName, {
                     dataTestId: DataTestId.GivenName
@@ -232,7 +232,7 @@ describe("TextField.c.tsx", () => {
                 collector.getCallCount(formControllerComponentName, {
                     dataTestId: DataTestId.FormController
                 })
-            ).toBe(4);
+            ).toBe(3);
             expect(
                 collector.getCallCount(fieldComponentName, {
                     dataTestId: DataTestId.GivenName
@@ -256,7 +256,7 @@ describe("TextField.c.tsx", () => {
                 collector.getCallCount(formControllerComponentName, {
                     dataTestId: DataTestId.FormController
                 })
-            ).toBe(3);
+            ).toBe(2);
             expect(
                 collector.getCallCount(fieldComponentName, {
                     dataTestId: DataTestId.GivenName
@@ -287,7 +287,7 @@ describe("TextField.c.tsx", () => {
                 collector.getCallCount(formControllerComponentName, {
                     dataTestId: DataTestId.FormController
                 })
-            ).toBe(3);
+            ).toBe(2);
             expect(
                 collector.getCallCount(fieldComponentName, {
                     dataTestId: DataTestId.GivenName

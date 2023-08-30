@@ -2,6 +2,7 @@ import { Controller } from "../../controller";
 import { FormFields, ValidationResult } from "../../private-controller.types";
 
 export interface CustomFieldPrivateProps {
+    name: string;
     onBlur: (event: React.ChangeEvent) => void;
     onChange: (event: React.ChangeEvent) => void;
     onKeyDown: (event: React.KeyboardEvent) => void;
@@ -14,6 +15,9 @@ export interface CustomFieldPublicProps<T extends FormFields<T>, K extends keyof
     $id?: string;
     $initialValidation?: boolean;
     $name: K;
+    $onBlur?: (event: React.ChangeEvent) => void;
+    $onChange?: (event: React.ChangeEvent) => void;
+    $onKeyDown?: (event: React.KeyboardEvent) => void;
     $validateOnBlur?: boolean;
     $validateOnChange?: boolean;
 }
@@ -48,7 +52,7 @@ export interface CustomFieldType<
             ) => void;
             $provideValue?: boolean;
             $validation?: (value: T[K] | undefined, fields: Partial<T>) => ValidationResult;
-        } & Omit<React.ComponentPropsWithoutRef<IComponent>, "onBlur" | "onChange" | "onKeyDown">
+        } & Omit<React.ComponentPropsWithoutRef<IComponent>, "name" | "onBlur" | "onChange" | "onKeyDown">
     >): JSX.Element | null;
 }
 
@@ -59,6 +63,9 @@ export interface CustomFieldComponentProps<T extends FormFields<T>, K extends ke
     id?: CustomFieldPublicProps<T, K>["$id"];
     initialValidation?: CustomFieldPublicProps<T, K>["$initialValidation"];
     name: CustomFieldPublicProps<T, K>["$name"];
+    onBlur?: CustomFieldPublicProps<T, K>["$onBlur"];
+    onChange?: CustomFieldPublicProps<T, K>["$onChange"];
+    onKeyDown?: CustomFieldPublicProps<T, K>["$onKeyDown"];
     rest: Object;
     validateOnBlur?: CustomFieldPublicProps<T, K>["$validateOnBlur"];
     validateOnChange?: CustomFieldPublicProps<T, K>["$validateOnChange"];

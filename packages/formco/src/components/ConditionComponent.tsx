@@ -14,8 +14,8 @@ export const ConditionComponent = <T extends FormFields<T>>({
     const [state, setState] = React.useState<ConditionComponentState>({
         isVisible: false
     });
-    const refState = React.useRef<ConditionComponentState>();
-    refState.current = state;
+    const stateRef = React.useRef<ConditionComponentState>();
+    stateRef.current = state;
 
     const key = React.useRef(0);
 
@@ -25,8 +25,8 @@ export const ConditionComponent = <T extends FormFields<T>>({
 
     React.useEffect(() => {
         const action = (isValid: boolean) => {
-            const setStateOnNotVisible = dynamicRender || dynamicContent || !refState.current!.isVisible;
-            const setStateOnVisible = dynamicRender || dynamicContent || refState.current!.isVisible;
+            const setStateOnNotVisible = dynamicRender || dynamicContent || !stateRef.current!.isVisible;
+            const setStateOnVisible = dynamicRender || dynamicContent || stateRef.current!.isVisible;
 
             if (ifFormValid === undefined && showIf === undefined && setStateOnNotVisible) {
                 setState({ isVisible: true });
@@ -50,7 +50,7 @@ export const ConditionComponent = <T extends FormFields<T>>({
         return () => {
             privateController.unsubscribeOnChange(action);
         };
-    }, [privateController, ifFormValid, refState, showIf]);
+    }, [privateController, ifFormValid, stateRef, showIf]);
 
     return (
         <>

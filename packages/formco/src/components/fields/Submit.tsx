@@ -27,7 +27,6 @@ export const Submit = <
         <SubmitComponent
             children={children}
             component={$component}
-            controller={$controller}
             data-testid={rest["data-testid"]}
             disableIfNotValid={$disableIfNotValid}
             disabledByDefault={$disabledByDefault}

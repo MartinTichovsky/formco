@@ -6,10 +6,10 @@ import { PrivateController } from "../../private-controller";
 import { getControllerProviderContext, SelectProvider } from "../../providers";
 import { SelectOption } from "../fields/SelectOption";
 
-type Form = {
+interface Form {
     input: string;
     select: string;
-};
+}
 
 let controller: Controller<Form>;
 let privateController: PrivateController<Form>;
@@ -24,7 +24,7 @@ beforeEach(() => {
     jest.resetAllMocks();
 
     privateController = new PrivateController<Form>({
-        setController: jest.fn()
+        setFormControllerState: jest.fn()
     });
     controller = new Controller(privateController);
     selectRef = {

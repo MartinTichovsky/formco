@@ -6,9 +6,9 @@ import { PrivateController } from "../../private-controller";
 import { getControllerProviderContext } from "../../providers";
 import { MessageFor } from "../MessageFor";
 
-type Form = {
+interface Form {
     input: string;
-};
+}
 
 let controller: Controller<Form>;
 let privateController: PrivateController<Form>;
@@ -19,7 +19,7 @@ const testText2 = "Test text 2";
 beforeEach(() => {
     collector.reset();
     privateController = new PrivateController<Form>({
-        setController: jest.fn()
+        setFormControllerState: jest.fn()
     });
     controller = new Controller(privateController);
 

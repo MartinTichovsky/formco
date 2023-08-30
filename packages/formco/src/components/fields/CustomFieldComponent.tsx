@@ -15,51 +15,54 @@ export const CustomFieldComponent = <
     controller,
     id,
     name,
+    onBlur,
+    onChange,
+    onKeyDown,
     privateController,
     validateOnBlur,
     validateOnChange,
     disableIf,
     hideIf,
-    initialValidation,
     rest
 }: React.PropsWithChildren<CustomFieldComponentType<T, K, IComponent>> & PrivateProps<T>) => {
     const [props, setProps] = React.useState<React.ComponentProps<React.ElementType>>(rest);
     const ref = React.useRef<HTMLElement>();
-    const refProps = React.useRef(props);
-    refProps.current = props;
-    const onBlur = React.useRef<React.FocusEventHandler | undefined>(undefined);
+    const propsRef = React.useRef(props);
+    propsRef.current = props;
 
-    if (validation) {
-        React.useEffect(
-            () => {
-                const action = (validationResult: ValidationResult, submitAction: boolean) => {
-                    if (
-                        validationResult &&
-                        submitAction &&
-                        privateController.scrollToError &&
-                        ref.current &&
-                        privateController.canScrollToElement
-                    ) {
-                        ref.current.scrollTo();
-                        ref.current.focus();
-                    }
-                };
+    React.useEffect(
+        () => {
+            if (!validation) {
+                return;
+            }
 
-                privateController.subscribeValidator({
-                    action,
-                    id,
-                    key: name,
-                    validation: () =>
-                        validation(privateController.getFieldValue(name), privateController.getObservedFields(name))
-                });
+            const action = (validationResult: ValidationResult, submitAction: boolean) => {
+                if (
+                    validationResult &&
+                    submitAction &&
+                    privateController.scrollToError &&
+                    ref.current &&
+                    privateController.canScrollToElement
+                ) {
+                    ref.current.scrollTo();
+                    ref.current.focus();
+                }
+            };
 
-                return () => {
-                    privateController.unsubscribeValidator(name, action);
-                };
-            }, // eslint-disable-next-line react-hooks/exhaustive-deps
-            [privateController, name, refProps, setProps, validation]
-        );
-    }
+            privateController.subscribeValidator({
+                action,
+                id,
+                key: name,
+                validation: () =>
+                    validation(privateController.getFieldValue(name), privateController.getObservedFields(name))
+            });
+
+            return () => {
+                privateController.unsubscribeValidator(name, action);
+            };
+        }, // eslint-disable-next-line react-hooks/exhaustive-deps
+        [privateController, name, propsRef, setProps, validation]
+    );
 
     React.useEffect(() => {
         const onValidationAction =
@@ -108,11 +111,50 @@ export const CustomFieldComponent = <
         };
     }, [privateController, name, onValidation, setProps]);
 
-    if (validation && !onBlur.current) {
-        onBlur.current = () => {
+    const onBlurHandler = React.useCallback((event: React.ChangeEvent<Element>) => {
+        if (validation) {
             privateController.validateOnBlur(name);
-        };
-    }
+        }
+        onBlur?.(event);
+    }, []);
+
+    const onChangeHandler = React.useCallback(
+        (
+            event: React.ChangeEvent<
+                Element & {
+                    checked: boolean;
+                    type: string;
+                    value: string;
+                }
+            >
+        ) => {
+            privateController.setFieldValue({
+                id,
+                isTouched: true,
+                key: name,
+                value: event.target.type === "checkbox" ? event.target.checked : event.target.value
+            });
+
+            if (provideValue) {
+                setProps((prevProps: typeof rest) => ({
+                    ...prevProps,
+                    value: event.target.value
+                }));
+            }
+            onChange?.(event);
+        },
+        [id, name, privateController]
+    );
+
+    const onKeyDownHandler = React.useCallback(
+        (event: React.KeyboardEvent) => {
+            if (event.key === "Enter") {
+                privateController.submit();
+            }
+            onKeyDown?.(event);
+        },
+        [privateController]
+    );
 
     return React.createElement(
         Component,
@@ -120,33 +162,9 @@ export const CustomFieldComponent = <
             ...props,
             id,
             name,
-            onBlur: onBlur.current,
-            onChange: (
-                event: React.ChangeEvent<{
-                    checked: boolean;
-                    type: string;
-                    value: string;
-                }>
-            ) => {
-                privateController.setFieldValue({
-                    id,
-                    isTouched: true,
-                    key: name,
-                    value: event.target.type === "checkbox" ? event.target.checked : event.target.value
-                });
-
-                if (provideValue) {
-                    setProps((prevProps: typeof rest) => ({
-                        ...prevProps,
-                        value: event.target.value
-                    }));
-                }
-            },
-            onKeyDown: (event: React.KeyboardEvent) => {
-                if (event.key === "Enter") {
-                    privateController.submit();
-                }
-            },
+            onBlur: onBlurHandler,
+            onChange: onChangeHandler,
+            onKeyDown: onKeyDownHandler,
             ref
         },
         children

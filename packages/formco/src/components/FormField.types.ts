@@ -38,6 +38,7 @@ export interface FormFieldInternalProps {
 export interface FormFieldPrivateProps {
     defaultValue: string;
     disabled: boolean;
+    name: string;
     onBlur: (event: React.ChangeEvent) => void;
     onChange: (event: React.ChangeEvent) => void;
     onKeyDown: (event: React.KeyboardEvent) => void;
@@ -50,6 +51,9 @@ export interface FormFieldPublicProps<T extends FormFields<T>, K extends keyof T
     $id?: string;
     $initialValidation?: boolean;
     $name: K;
+    $onBlur?: (event: React.ChangeEvent) => void;
+    $onChange?: (event: React.ChangeEvent) => void;
+    $onKeyDown?: (event: React.KeyboardEvent) => void;
     $validateOnBlur?: boolean;
     $validateOnChange?: boolean;
 }
@@ -80,7 +84,7 @@ export type FormFieldType<
           $messageComponent?: MComponent;
       } & Omit<
           React.ComponentPropsWithoutRef<IComponent>,
-          "defaultValue" | "disabled" | "onBlur" | "onChange" | "onKeyDown"
+          "defaultValue" | "disabled" | "name" | "onBlur" | "onChange" | "onKeyDown"
       >)
 ) &
     FormFieldPublicProps<T, K> & {
@@ -159,11 +163,13 @@ export type FormFieldComponentType<
     hideIf?: FormFieldPublicProps<T, K>["$hideIf"];
     hideMessage?: boolean;
     id?: FormFieldPublicProps<T, K>["$id"];
-    initialValidation?: FormFieldPublicProps<T, K>["$initialValidation"];
     label?: string | JSX.Element;
     messageComponent?: MComponent;
     name: FormFieldPublicProps<T, K>["$name"];
+    onBlur?: (event: React.ChangeEvent) => void;
+    onChange?: (event: React.ChangeEvent) => void;
     onFormChange?: (name: K) => void;
+    onKeyDown?: (event: React.KeyboardEvent) => void;
     rest: { className?: string } & Object;
     type?:
         | undefined
@@ -185,9 +191,6 @@ export type FormFieldComponentType<
         | "week"
         | "radio"
         | "checkbox";
-    validateOnBlur?: FormFieldPublicProps<T, K>["$validateOnBlur"];
-    validateOnChange?: FormFieldPublicProps<T, K>["$validateOnChange"];
     validation?: (value: T[K] | undefined, fields: Partial<T>) => ValidationResult;
-    validationDependencies?: (keyof T)[];
     value?: string;
 } & CommonFormFieldComponentProps;

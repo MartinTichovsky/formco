@@ -9,7 +9,6 @@ export type SubmitComponentType<
 } & SubmitComponentProps<T>;
 
 export type SubmitComponentProps<T extends FormFields<T>> = {
-    controller: SubmitPublicProps<T>["$controller"];
     disabledByDefault?: SubmitPublicProps<T>["$disabledByDefault"];
     disableIfNotValid?: SubmitPublicProps<T>["$disableIfNotValid"];
     onClick?: SubmitPublicProps<T>["$onClick"];

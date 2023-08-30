@@ -13,8 +13,8 @@ export const MessageFor = <T extends FormFields<T>, K extends keyof T>({
         message: undefined,
         isVisible: false
     });
-    const refState = React.useRef<MessageForState>();
-    refState.current = state;
+    const stateRef = React.useRef<MessageForState>();
+    stateRef.current = state;
 
     React.useEffect(() => {
         const onValidation = {
@@ -22,12 +22,12 @@ export const MessageFor = <T extends FormFields<T>, K extends keyof T>({
                 if (
                     show &&
                     ((isValid && fieldIsValid) || (!isValid && !fieldIsValid)) &&
-                    (!refState.current!.isVisible || (!children && refState.current!.message !== validationResult))
+                    (!stateRef.current!.isVisible || (!children && stateRef.current!.message !== validationResult))
                 ) {
                     setState({ isVisible: true, message: validationResult });
                 } else if (
                     (!show || (isValid && !fieldIsValid) || (!isValid && fieldIsValid)) &&
-                    refState.current!.isVisible
+                    stateRef.current!.isVisible
                 ) {
                     setState({ isVisible: false, message: undefined });
                 }
@@ -40,7 +40,7 @@ export const MessageFor = <T extends FormFields<T>, K extends keyof T>({
         return () => {
             privateController.unsubscribeOnValidation(onValidation);
         };
-    }, [privateController, refState, setState]);
+    }, [privateController, stateRef, setState]);
 
     return <>{state.isVisible && (children ? children : state.message)}</>;
 };

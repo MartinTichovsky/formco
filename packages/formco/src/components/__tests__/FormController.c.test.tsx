@@ -7,9 +7,9 @@ import { getGeneratedValues } from "../../__tests__/utils/value-generator";
 import { FormController } from "../FormController";
 import { FormControllerComponent } from "../FormControllerComponent";
 
-type Form = {
+interface Form {
     input: string;
-};
+}
 
 const testid = "test-id";
 
@@ -90,7 +90,7 @@ describe("FormController", () => {
             const useEffectHooks = collector.getReactHooks(FormControllerComponent.name)?.getHooksByType("useEffect");
 
             // must be rendered once and passed controller must not be undefined
-            expect(collector.getCallCount(FormControllerComponent.name)).toBe(2);
+            expect(collector.getCallCount(FormControllerComponent.name)).toBe(1);
             expect(renderCount).toBe(1);
             expect(controller).not.toBeUndefined();
 
@@ -109,8 +109,8 @@ describe("FormController", () => {
             // reset the form
             act(() => controller!.resetForm());
             expect(renderCount).toBe(2);
-            expect(collector.getCallCount(FormControllerComponent.name)).toBe(3);
-            expect(useEffectHooks?.get(1)?.action).toBeCalledTimes(1);
+            expect(collector.getCallCount(FormControllerComponent.name)).toBe(2);
+            expect(useEffectHooks?.get(1)?.action).toBeCalledTimes(2);
         });
     });
 

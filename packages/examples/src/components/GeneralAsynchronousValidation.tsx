@@ -11,6 +11,8 @@ interface MyForm {
     surname: string;
 }
 
+export const TIMEOUT = 2000;
+
 export const GeneralAsynchronousValidation = (props: Partial<React.ComponentProps<typeof FormController>>) => {
     const store = new LogStore();
 
@@ -48,7 +50,7 @@ export const GeneralAsynchronousValidation = (props: Partial<React.ComponentProp
                                 $validation={(value) => ({
                                     content: TestingContent.Pending,
                                     promise: async function () {
-                                        await wait(2000);
+                                        await wait(TIMEOUT);
                                         return {
                                             isValid: !!value?.trim(),
                                             content: !value?.trim() ? (

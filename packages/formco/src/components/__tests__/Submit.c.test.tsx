@@ -8,9 +8,9 @@ import { getGeneratedValues } from "../../__tests__/utils/value-generator";
 import { Submit } from "../fields/Submit";
 import { SubmitComponent } from "../fields/SubmitComponent";
 
-type Form = {
+interface Form {
     input: string;
-};
+}
 
 let controller: Controller<Form>;
 let privateController: PrivateController<Form>;
@@ -66,7 +66,7 @@ console.error = jest.fn();
 beforeEach(() => {
     collector.reset();
     privateController = new PrivateController<Form>({
-        setController: jest.fn()
+        setFormControllerState: jest.fn()
     });
     controller = new Controller(privateController);
 });
@@ -104,9 +104,7 @@ describe("Submit", () => {
     describe("SubmitComponent Element", () => {
         test("Default functionality", async () => {
             const { unmount } = render(
-                <SubmitComponent controller={controller} privateController={privateController}>
-                    {buttonText}
-                </SubmitComponent>
+                <SubmitComponent privateController={privateController}>{buttonText}</SubmitComponent>
             );
 
             await defaultFunctionalityTest(unmount);
@@ -114,7 +112,7 @@ describe("Submit", () => {
 
         test("DisabledByDefault is set to true and disableIfNotValid is false, the behaviour must be the same as default", async () => {
             const { unmount } = render(
-                <SubmitComponent controller={controller} disabledByDefault privateController={privateController}>
+                <SubmitComponent disabledByDefault privateController={privateController}>
                     {buttonText}
                 </SubmitComponent>
             );
@@ -124,12 +122,7 @@ describe("Submit", () => {
 
         test("DisabledByDefault is true and disableIfNotValid is true", () => {
             const { unmount } = render(
-                <SubmitComponent
-                    controller={controller}
-                    disabledByDefault
-                    disableIfNotValid
-                    privateController={privateController}
-                >
+                <SubmitComponent disabledByDefault disableIfNotValid privateController={privateController}>
                     {buttonText}
                 </SubmitComponent>
             );
@@ -174,7 +167,7 @@ describe("Submit", () => {
             const onSubmit = jest.fn();
 
             render(
-                <SubmitComponent controller={controller} onSubmit={onSubmit} privateController={privateController}>
+                <SubmitComponent onSubmit={onSubmit} privateController={privateController}>
                     {buttonText}
                 </SubmitComponent>
             );
@@ -191,11 +184,7 @@ describe("Submit", () => {
         });
 
         test("On disable action triggered from controller should disable the button - use case 1", () => {
-            render(
-                <SubmitComponent controller={controller} privateController={privateController}>
-                    {buttonText}
-                </SubmitComponent>
-            );
+            render(<SubmitComponent privateController={privateController}>{buttonText}</SubmitComponent>);
 
             const button = screen.getByText(buttonText);
             expect(button).not.toBeDisabled();
@@ -220,12 +209,7 @@ describe("Submit", () => {
             };
 
             render(
-                <SubmitComponent
-                    component={Component}
-                    controller={controller}
-                    onSubmit={onSubmit}
-                    privateController={privateController}
-                >
+                <SubmitComponent component={Component} onSubmit={onSubmit} privateController={privateController}>
                     {buttonText}
                 </SubmitComponent>
             );
