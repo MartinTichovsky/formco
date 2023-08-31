@@ -17,6 +17,7 @@ const registered = [
 
 app.post("/email", async (req, res) => {
     await wait(2000);
+
     res.json({
         isValid: !registered.find((item) => item.email === req.body.email)
     });
@@ -24,6 +25,7 @@ app.post("/email", async (req, res) => {
 
 app.post("/register", async (req, res) => {
     await wait(4000);
+
     if (
         !req.body.email ||
         !req.body.username ||
@@ -38,6 +40,7 @@ app.post("/register", async (req, res) => {
 
 app.post("/username", async (req, res) => {
     await wait(2000);
+
     res.json({
         isValid: !registered.find((item) => item.username === req.body.username)
     });
