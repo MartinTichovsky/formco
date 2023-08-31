@@ -33,7 +33,7 @@ describe("TextFieldMessageComponent.tsx", () => {
         expect(screen.queryByTestId(DataTestId.FunctionalComponent)).toBeNull();
 
         // input an empty text
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: " " }
         });
 
@@ -51,7 +51,7 @@ describe("TextFieldMessageComponent.tsx", () => {
         expect(screen.getByTestId(DataTestId.FunctionalComponent)).toBeTruthy();
 
         // input a valid text
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: TestingContent.James }
         });
         fireEvent.change(screen.getByTestId(DataTestId.Surname), {
@@ -70,7 +70,7 @@ describe("TextFieldMessageComponent.tsx", () => {
         // check the onSubmit action
         expect(console.log).toBeCalledTimes(1);
         expect(console.log).lastCalledWith({
-            givenName: TestingContent.James,
+            firstName: TestingContent.James,
             surname: TestingContent.Bond
         });
     });

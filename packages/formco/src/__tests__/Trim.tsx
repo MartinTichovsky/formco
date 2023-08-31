@@ -4,7 +4,7 @@ import { Input, Submit } from "../components/fields";
 import { FormControllerComponentProps } from "../components/FormController.types";
 
 type MyForm = {
-    givenName: string;
+    firstName: string;
     surname: string;
 };
 
@@ -15,8 +15,8 @@ export const Trim = (props: Partial<FormControllerComponentProps<MyForm>>) => (
                 <div>
                     <Input
                         $controller={controller}
-                        data-testid="givenName"
-                        $name="givenName"
+                        data-testid="firstName"
+                        $name="firstName"
                         placeholder="Input a given name"
                     />
                 </div>

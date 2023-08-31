@@ -6,7 +6,7 @@ import { FieldRow, FieldRowButtons, Info, ResetButton, Template } from "./Templa
 
 interface MyForm {
     description: string;
-    givenName: string;
+    firstName: string;
     radio: string;
     select: string;
     surname: string;
@@ -53,10 +53,10 @@ export const GeneralRequiredCommonMessage = (
                             <FieldRow data-testid={DataTestId.InputFieldRow1}>
                                 <FC.Input
                                     $controller={controller}
-                                    $label={TestingContent.GivenName}
-                                    $name="givenName"
+                                    $label={TestingContent.FirstName}
+                                    $name="firstName"
                                     $required
-                                    data-testid={DataTestId.GivenName}
+                                    data-testid={DataTestId.FirstName}
                                     placeholder="Input a given name"
                                 />
                             </FieldRow>
@@ -79,7 +79,7 @@ export const GeneralRequiredCommonMessage = (
                             <FieldRow data-testid={DataTestId.RadioFieldRow1}>
                                 <FC.Input
                                     $controller={controller}
-                                    $hideIf={(fields) => !fields.givenName?.trim()}
+                                    $hideIf={(fields) => !fields.firstName?.trim()}
                                     $label={TestingContent.CaptionOption1}
                                     $name="radio"
                                     $type="radio"

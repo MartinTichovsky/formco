@@ -5,7 +5,7 @@ import { LogStore } from "../store";
 import { FieldRow, FieldRowButtons, FieldRowFullWidth, Info, ResetButton, Template } from "./Template/Template";
 
 interface MyForm {
-    givenName: string;
+    firstName: string;
     surname: string;
 }
 
@@ -30,9 +30,9 @@ export const SubmitDisabledOnSubmit = (props: Partial<React.ComponentProps<typeo
                         <FieldRow>
                             <FC.Input
                                 $controller={controller}
-                                $name="givenName"
+                                $name="firstName"
                                 $validation={(value) => !value?.trim() && "Provide a valid given name"}
-                                data-testid={DataTestId.GivenName}
+                                data-testid={DataTestId.FirstName}
                                 placeholder="Input a given name"
                             />
                         </FieldRow>

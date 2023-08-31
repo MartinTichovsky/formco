@@ -11,13 +11,13 @@ describe("GeneralValidateOnChange.tsx", () => {
         testInvalidMessage(container, 0);
 
         // blur on the input
-        fireEvent.blur(screen.getByTestId(DataTestId.GivenName));
+        fireEvent.blur(screen.getByTestId(DataTestId.FirstName));
 
         // errors should not be shown
         testInvalidMessage(container, 0);
 
         // input an empty value should show an error
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: " " }
         });
 
@@ -39,7 +39,7 @@ describe("GeneralValidateOnChange.tsx", () => {
         testInvalidMessage(container, 2);
 
         // input valid text
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: TestingContent.James }
         });
 
@@ -61,7 +61,7 @@ describe("GeneralValidateOnChange.tsx", () => {
 
         // check the onSubmit action
         expect(console.log).toBeCalledTimes(1);
-        expect(console.log).lastCalledWith({ givenName: TestingContent.James, surname: TestingContent.Bond });
+        expect(console.log).lastCalledWith({ firstName: TestingContent.James, surname: TestingContent.Bond });
 
         fireEvent.click(screen.getByTestId(DataTestId.Reset));
     };

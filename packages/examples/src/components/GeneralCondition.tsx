@@ -5,7 +5,7 @@ import { LogStore } from "../store";
 import { FieldRow, FieldRowButtons, Info, ResetButton, Template } from "./Template/Template";
 
 interface MyForm {
-    givenName: string;
+    firstName: string;
     surname: string;
 }
 
@@ -23,9 +23,9 @@ export const GeneralCondition = (props: Partial<React.ComponentProps<typeof Form
                         <FieldRow>
                             <FC.Input
                                 $controller={controller}
-                                $name="givenName"
+                                $name="firstName"
                                 $validation={(value) => !value?.trim() && "Provide a valid given name"}
-                                data-testid={DataTestId.GivenName}
+                                data-testid={DataTestId.FirstName}
                                 placeholder="Input a given name"
                             />
                         </FieldRow>
@@ -41,7 +41,7 @@ export const GeneralCondition = (props: Partial<React.ComponentProps<typeof Form
                         <Condition controller={controller} ifFormValid>
                             <FieldRow>{formIsValidText}</FieldRow>
                         </Condition>
-                        <Condition controller={controller} showIf={() => controller.isSubmitted}>
+                        <Condition controller={controller} showIf={() => controller.isFormSubmitted}>
                             <FieldRow>{submitConditionText}</FieldRow>
                         </Condition>
 

@@ -20,7 +20,15 @@ export const MaterialUI = () => {
 
     return (
         <Template store={store}>
-            <FormController<MaterialUIForm> validateOnBlur validateOnChange>
+            <FormController<MaterialUIForm>
+                validateOnBlur
+                validateOnChange
+                initialValues={
+                    {
+                        /*gender: "female"*/
+                    }
+                }
+            >
                 {(controller) => (
                     <>
                         <FieldRow>

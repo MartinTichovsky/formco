@@ -10,7 +10,7 @@ import {
     DefaultDisabledRadioId,
     DisableIf,
     ExecutePromise,
-    FieldAdditionalProperties,
+    Field,
     Fields,
     FieldTypes,
     FormFields,
@@ -378,6 +378,13 @@ export class PrivateController<T extends FormFields<T>> {
         ) as OnValidationCustom<R> | undefined;
     }
 
+    public getOptions() {
+        return {
+            validateOnBlur: this._validateOnBlur,
+            validateOnChange: this._validateOnChange
+        };
+    }
+
     public getValidationCondition(key: keyof T) {
         return this._validation && key in this._validation ? this._validation[key] : undefined;
     }
@@ -702,7 +709,7 @@ export class PrivateController<T extends FormFields<T>> {
         this._fields[key]!.isVisible = Array.from(this._fields[key]!.options!.values()).some((item) => item.isVisible);
     }
 
-    public setFieldProperties(key: keyof T, props: FieldAdditionalProperties) {
+    public setFieldProperties(key: keyof T, props: Partial<Field>) {
         if (key in this._fields) {
             this._fields[key] = {
                 ...this._fields[key],
@@ -710,17 +717,19 @@ export class PrivateController<T extends FormFields<T>> {
             };
         } else {
             this._fields[key] = {
-                ...props,
-                activeId: undefined,
-                isDisabled: false,
-                isTouched: false,
-                isValid: true,
-                isValidated: false,
-                isVisible: true,
-                validationContent: undefined,
-                validationInProgress: false,
-                validationToBeExecuted: false,
-                value: undefined
+                ...{
+                    activeId: undefined,
+                    isDisabled: false,
+                    isTouched: false,
+                    isValid: true,
+                    isValidated: false,
+                    isVisible: true,
+                    validationContent: undefined,
+                    validationInProgress: false,
+                    validationToBeExecuted: false,
+                    value: undefined
+                },
+                ...props
             };
         }
     }

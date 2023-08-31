@@ -14,11 +14,11 @@ describe("TextFieldDefaultValuesUseCase2.tsx", () => {
         const { container } = render(<TextFieldDefaultValuesUseCase2 />);
 
         // the first input must have default value
-        expect(screen.getByTestId(DataTestId.GivenName)).toHaveValue(TestingContent.James);
+        expect(screen.getByTestId(DataTestId.FirstName)).toHaveValue(TestingContent.James);
         expect(screen.getByTestId(DataTestId.Surname)).toHaveValue("");
 
         // first input should be disabled
-        expect(screen.getByTestId(DataTestId.GivenName)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.FirstName)).toBeDisabled();
         expect(screen.getByTestId(DataTestId.Surname)).not.toBeDisabled();
 
         // input a value
@@ -27,11 +27,11 @@ describe("TextFieldDefaultValuesUseCase2.tsx", () => {
         });
 
         // no input should be disabled
-        expect(screen.getByTestId(DataTestId.GivenName)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.FirstName)).not.toBeDisabled();
         expect(screen.getByTestId(DataTestId.Surname)).not.toBeDisabled();
 
         // input a value
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: TestingContent.JamesJunior }
         });
 
@@ -46,7 +46,7 @@ describe("TextFieldDefaultValuesUseCase2.tsx", () => {
         // check the onSubmit action
         expect(console.log).toBeCalledTimes(1);
         expect(console.log).lastCalledWith({
-            givenName: TestingContent.JamesJunior,
+            firstName: TestingContent.JamesJunior,
             surname: TestingContent.Bond
         });
 
@@ -56,14 +56,14 @@ describe("TextFieldDefaultValuesUseCase2.tsx", () => {
         });
 
         // the first input must have default value
-        expect(screen.getByTestId(DataTestId.GivenName)).toHaveValue(TestingContent.James);
+        expect(screen.getByTestId(DataTestId.FirstName)).toHaveValue(TestingContent.James);
         expect(screen.getByTestId(DataTestId.Surname)).toHaveValue("");
 
         // one error should be shown
         testInvalidMessage(container, 1);
 
         // first input should be disabled
-        expect(screen.getByTestId(DataTestId.GivenName)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.FirstName)).toBeDisabled();
         expect(screen.getByTestId(DataTestId.Surname)).not.toBeDisabled();
 
         // input a value
@@ -75,7 +75,7 @@ describe("TextFieldDefaultValuesUseCase2.tsx", () => {
         testInvalidMessage(container, 0);
 
         // input a value
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: "" }
         });
 
@@ -83,7 +83,7 @@ describe("TextFieldDefaultValuesUseCase2.tsx", () => {
         testInvalidMessage(container, 1);
 
         // input a value
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: TestingContent.James }
         });
 
@@ -98,12 +98,12 @@ describe("TextFieldDefaultValuesUseCase2.tsx", () => {
         // check the onSubmit action
         expect(console.log).toBeCalledTimes(2);
         expect(console.log).lastCalledWith({
-            givenName: TestingContent.James,
+            firstName: TestingContent.James,
             surname: TestingContent.Bond
         });
 
         // input a value
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: TestingContent.JamesJunior }
         });
 
@@ -113,17 +113,17 @@ describe("TextFieldDefaultValuesUseCase2.tsx", () => {
         });
 
         // no input should be disabled
-        expect(screen.getByTestId(DataTestId.GivenName)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.FirstName)).not.toBeDisabled();
         expect(screen.getByTestId(DataTestId.Surname)).not.toBeDisabled();
 
         fireEvent.click(screen.getByTestId(DataTestId.Reset));
 
         // the first input must have default value
-        expect(screen.getByTestId(DataTestId.GivenName)).toHaveValue(TestingContent.James);
+        expect(screen.getByTestId(DataTestId.FirstName)).toHaveValue(TestingContent.James);
         expect(screen.getByTestId(DataTestId.Surname)).toHaveValue("");
 
         // first input should be disabled
-        expect(screen.getByTestId(DataTestId.GivenName)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.FirstName)).toBeDisabled();
         expect(screen.getByTestId(DataTestId.Surname)).not.toBeDisabled();
 
         // input a value
@@ -139,7 +139,7 @@ describe("TextFieldDefaultValuesUseCase2.tsx", () => {
         // check the onSubmit action
         expect(console.log).toBeCalledTimes(3);
         expect(console.log).lastCalledWith({
-            givenName: TestingContent.James,
+            firstName: TestingContent.James,
             surname: TestingContent.Bond
         });
     });

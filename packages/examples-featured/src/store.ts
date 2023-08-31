@@ -13,7 +13,7 @@ export class LogStore {
 
     @action
     onSubmit<T extends FormFields<T>>(fields: unknown, controller: Controller<T>) {
-        this.log = `> submitted: true\n> isValid: ${controller.isValid}\n> result: ${JSON.stringify(fields)}
+        this.log = `> submitted: true\n> isValid: ${controller.isFormValid}\n> result: ${JSON.stringify(fields)}
     `;
     }
 

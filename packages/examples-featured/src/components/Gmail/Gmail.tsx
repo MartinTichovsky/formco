@@ -72,7 +72,7 @@ export const Gmail = () => {
                         <FC.Submit
                             $component={Button}
                             $controller={controller}
-                            $onSubmit={() => console.log(controller.isValid)}
+                            $onSubmit={() => console.log(controller.isFormValid)}
                             variant="outlined"
                         >
                             Submit

@@ -5,11 +5,11 @@ import { LogStore } from "../store";
 import { FieldRow, FieldRowButtons, Info, ResetButton, Template } from "./Template/Template";
 
 interface MyForm {
-    givenName: string;
+    firstName: string;
     surname: string;
 }
 
-export const givenNameValidText = "Given name is valid";
+export const firstNameValidText = "Given name is valid";
 export const surnameValidText = "Surname is valid";
 
 export const GeneralMessageForUseCase2 = (props: Partial<React.ComponentProps<typeof FormController>>) => {
@@ -24,15 +24,15 @@ export const GeneralMessageForUseCase2 = (props: Partial<React.ComponentProps<ty
                             <FC.Input
                                 $controller={controller}
                                 $hideMessage
-                                $name="givenName"
+                                $name="firstName"
                                 $validation={(value) => !value?.trim()}
-                                data-testid={DataTestId.GivenName}
+                                data-testid={DataTestId.FirstName}
                                 placeholder="Input a given name"
                             />
                         </FieldRow>
                         <FieldRow>
-                            <MessageFor controller={controller} isValid={true} name="givenName">
-                                {givenNameValidText}
+                            <MessageFor controller={controller} isValid={true} name="firstName">
+                                {firstNameValidText}
                             </MessageFor>
                         </FieldRow>
                         <FieldRow>

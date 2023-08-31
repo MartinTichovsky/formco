@@ -145,7 +145,11 @@ export function FormField<
 
                 return (
                     validationResult ||
-                    (typeof value === "string" ? !value.trim() : $type === "checkbox" ? !value : value === undefined)
+                    (typeof value === "string"
+                        ? !value.trim()
+                        : typeof value === "boolean"
+                        ? !value
+                        : value === undefined)
                 );
             }
 
@@ -155,7 +159,7 @@ export function FormField<
         }) as typeof providedProps.$validation;
     } else if (providedProps.$required) {
         validationUpdated = (value: T[K] | undefined) =>
-            typeof value === "string" ? !value.trim() : $type === "checkbox" ? !value : value === undefined;
+            typeof value === "string" ? !value.trim() : typeof value === "boolean" ? !value : value === undefined;
     }
 
     if ($initialValidation !== undefined || $validateOnBlur !== undefined || $validateOnChange !== undefined) {
@@ -164,6 +168,12 @@ export function FormField<
             validateOnBlur: $validateOnBlur,
             validateOnChange: $validateOnChange
         });
+    }
+
+    const globalOptions = privateController.getOptions();
+
+    if ($validateOnBlur === undefined) {
+        $validateOnBlur = globalOptions.validateOnBlur;
     }
 
     providedProps.$id = (
@@ -241,6 +251,7 @@ export function FormField<
             requiredValidMessage={providedProps.$requiredValidMessage}
             rest={rest}
             type={$type}
+            validateOnBlur={$validateOnBlur}
             validation={validationUpdated}
             value={$value}
         />

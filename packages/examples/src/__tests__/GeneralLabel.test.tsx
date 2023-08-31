@@ -22,8 +22,8 @@ describe("GeneralLabel.tsx", () => {
         expect(screen.getByTestId(DataTestId.Salutation)).toHaveFocus();
 
         // click on the second label
-        userEvent.click(screen.getByText(TestingContent.GivenName));
-        expect(screen.getByTestId(DataTestId.GivenName)).toHaveFocus();
+        userEvent.click(screen.getByText(TestingContent.FirstName));
+        expect(screen.getByTestId(DataTestId.FirstName)).toHaveFocus();
 
         // click on the third label
         userEvent.click(screen.getByText(TestingContent.Surname));

@@ -8,7 +8,7 @@ interface MyForm {
     description: string;
     checkbox1: boolean;
     checkbox2: boolean;
-    givenName: string;
+    firstName: string;
     radio: string;
     select: string;
     surname: string;
@@ -38,10 +38,10 @@ export const GeneralRequired = ({
                             <FieldRow>
                                 <FC.Input
                                     $controller={controller}
-                                    $label={TestingContent.GivenName}
-                                    $name="givenName"
+                                    $label={TestingContent.FirstName}
+                                    $name="firstName"
                                     $required
-                                    data-testid={DataTestId.GivenName}
+                                    data-testid={DataTestId.FirstName}
                                     placeholder="Input a given name"
                                 />
                             </FieldRow>
@@ -79,7 +79,7 @@ export const GeneralRequired = ({
                             <FieldRow data-testid={DataTestId.RadioFieldRow1}>
                                 <FC.Input
                                     $controller={controller}
-                                    $hideIf={(fields) => !fields.givenName?.trim()}
+                                    $hideIf={(fields) => !fields.firstName?.trim()}
                                     $label={TestingContent.CaptionOption1}
                                     $name="radio"
                                     $type="radio"

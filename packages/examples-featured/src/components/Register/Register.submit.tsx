@@ -62,7 +62,7 @@ export const SubmitComponent = ({
     const handleClick = React.useCallback(async (event: React.MouseEvent<HTMLButtonElement>) => {
         const controller = await onClick(event);
 
-        if (!controller.isValid) {
+        if (!controller.isFormValid) {
             return;
         }
 

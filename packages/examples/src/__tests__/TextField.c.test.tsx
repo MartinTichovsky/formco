@@ -21,11 +21,11 @@ describe("TextField.c.tsx", () => {
     test("Basic", async () => {
         const { container } = render(<TextField />);
 
-        expect(screen.getByTestId(DataTestId.GivenName)).toHaveAttribute("placeholder", TestingContent.InputGivenName);
+        expect(screen.getByTestId(DataTestId.FirstName)).toHaveAttribute("placeholder", TestingContent.InputFirstName);
         expect(screen.getByTestId(DataTestId.Surname)).toHaveAttribute("placeholder", TestingContent.InputSurname);
 
         // render count check
-        expect(collector.getCallCount(fieldComponentName, { dataTestId: DataTestId.GivenName })).toBe(1);
+        expect(collector.getCallCount(fieldComponentName, { dataTestId: DataTestId.FirstName })).toBe(1);
         expect(collector.getCallCount(fieldComponentName, { dataTestId: DataTestId.Surname })).toBe(1);
         expect(collector.getCallCount(submitComponentName, { dataTestId: DataTestId.Submit })).toBe(1);
 
@@ -40,7 +40,7 @@ describe("TextField.c.tsx", () => {
         // two errors should be shown
         testInvalidMessage(container, 2);
 
-        expect(collector.getCallCount(fieldComponentName, { dataTestId: DataTestId.GivenName })).toBe(2);
+        expect(collector.getCallCount(fieldComponentName, { dataTestId: DataTestId.FirstName })).toBe(2);
         expect(collector.getCallCount(fieldComponentName, { dataTestId: DataTestId.Surname })).toBe(2);
         expect(collector.getCallCount(submitComponentName, { dataTestId: DataTestId.Submit })).toBe(1);
 
@@ -49,12 +49,12 @@ describe("TextField.c.tsx", () => {
             fireEvent.click(screen.getByTestId(DataTestId.Submit));
         });
 
-        expect(collector.getCallCount(fieldComponentName, { dataTestId: DataTestId.GivenName })).toBe(2);
+        expect(collector.getCallCount(fieldComponentName, { dataTestId: DataTestId.FirstName })).toBe(2);
         expect(collector.getCallCount(fieldComponentName, { dataTestId: DataTestId.Surname })).toBe(2);
         expect(collector.getCallCount(submitComponentName, { dataTestId: DataTestId.Submit })).toBe(1);
 
         // input a text to the first input, after change or submit should be visible only one error message
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: TestingContent.James }
         });
 
@@ -87,7 +87,7 @@ describe("TextField.c.tsx", () => {
 
         // check the onSubmit action
         expect(console.log).toBeCalledTimes(1);
-        expect(console.log).lastCalledWith({ givenName: TestingContent.James, surname: TestingContent.Bond });
+        expect(console.log).lastCalledWith({ firstName: TestingContent.James, surname: TestingContent.Bond });
     });
 
     describe("Re-render", () => {
@@ -102,7 +102,7 @@ describe("TextField.c.tsx", () => {
             ).toBe(1);
             expect(
                 collector.getCallCount(fieldComponentName, {
-                    dataTestId: DataTestId.GivenName
+                    dataTestId: DataTestId.FirstName
                 })
             ).toBe(1);
             expect(collector.getCallCount(fieldComponentName, { dataTestId: DataTestId.Surname })).toBe(1);
@@ -118,7 +118,7 @@ describe("TextField.c.tsx", () => {
             ).toBe(1);
             expect(
                 collector.getCallCount(fieldComponentName, {
-                    dataTestId: DataTestId.GivenName
+                    dataTestId: DataTestId.FirstName
                 })
             ).toBe(1);
             expect(collector.getCallCount(fieldComponentName, { dataTestId: DataTestId.Surname })).toBe(1);
@@ -132,7 +132,7 @@ describe("TextField.c.tsx", () => {
             ).toBe(1);
             expect(
                 collector.getCallCount(fieldComponentName, {
-                    dataTestId: DataTestId.GivenName
+                    dataTestId: DataTestId.FirstName
                 })
             ).toBe(1);
             expect(collector.getCallCount(fieldComponentName, { dataTestId: DataTestId.Surname })).toBe(1);
@@ -156,7 +156,7 @@ describe("TextField.c.tsx", () => {
             ).toBe(1);
             expect(
                 collector.getCallCount(fieldComponentName, {
-                    dataTestId: DataTestId.GivenName
+                    dataTestId: DataTestId.FirstName
                 })
             ).toBe(2); // because the second render is the submit event (validation)
             expect(collector.getCallCount(fieldComponentName, { dataTestId: DataTestId.Surname })).toBe(2);
@@ -171,7 +171,7 @@ describe("TextField.c.tsx", () => {
         test("With Values", () => {
             render(<TextField />);
 
-            fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+            fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
                 target: { value: TestingContent.James }
             });
             fireEvent.change(screen.getByTestId(DataTestId.Surname), {
@@ -188,13 +188,13 @@ describe("TextField.c.tsx", () => {
             ).toBe(1);
             expect(
                 collector.getCallCount(fieldComponentName, {
-                    dataTestId: DataTestId.GivenName
+                    dataTestId: DataTestId.FirstName
                 })
             ).toBe(1);
             expect(collector.getCallCount(fieldComponentName, { dataTestId: DataTestId.Surname })).toBe(1);
             expect(collector.getCallCount(submitComponentName, { dataTestId: DataTestId.Submit })).toBe(1);
 
-            expect(screen.getByTestId(DataTestId.GivenName)).toHaveValue(TestingContent.James);
+            expect(screen.getByTestId(DataTestId.FirstName)).toHaveValue(TestingContent.James);
             expect(screen.getByTestId(DataTestId.Surname)).toHaveValue(TestingContent.Bond);
         });
     });
@@ -205,9 +205,9 @@ describe("TextField.c.tsx", () => {
 
             fireEvent.click(screen.getByTestId(DataTestId.Reset));
 
-            expect(screen.getByTestId(DataTestId.GivenName)).toHaveAttribute(
+            expect(screen.getByTestId(DataTestId.FirstName)).toHaveAttribute(
                 "placeholder",
-                TestingContent.InputGivenName
+                TestingContent.InputFirstName
             );
             expect(screen.getByTestId(DataTestId.Surname)).toHaveAttribute("placeholder", TestingContent.InputSurname);
 
@@ -219,7 +219,7 @@ describe("TextField.c.tsx", () => {
             ).toBe(2);
             expect(
                 collector.getCallCount(fieldComponentName, {
-                    dataTestId: DataTestId.GivenName
+                    dataTestId: DataTestId.FirstName
                 })
             ).toBe(2);
             expect(collector.getCallCount(fieldComponentName, { dataTestId: DataTestId.Surname })).toBe(2);
@@ -235,7 +235,7 @@ describe("TextField.c.tsx", () => {
             ).toBe(3);
             expect(
                 collector.getCallCount(fieldComponentName, {
-                    dataTestId: DataTestId.GivenName
+                    dataTestId: DataTestId.FirstName
                 })
             ).toBe(3);
             expect(collector.getCallCount(fieldComponentName, { dataTestId: DataTestId.Surname })).toBe(3);
@@ -259,7 +259,7 @@ describe("TextField.c.tsx", () => {
             ).toBe(2);
             expect(
                 collector.getCallCount(fieldComponentName, {
-                    dataTestId: DataTestId.GivenName
+                    dataTestId: DataTestId.FirstName
                 })
             ).toBe(3);
             expect(collector.getCallCount(fieldComponentName, { dataTestId: DataTestId.Surname })).toBe(3);
@@ -272,7 +272,7 @@ describe("TextField.c.tsx", () => {
         test("With values", () => {
             render(<TextField />);
 
-            fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+            fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
                 target: { value: TestingContent.James }
             });
             fireEvent.change(screen.getByTestId(DataTestId.Surname), {
@@ -290,13 +290,13 @@ describe("TextField.c.tsx", () => {
             ).toBe(2);
             expect(
                 collector.getCallCount(fieldComponentName, {
-                    dataTestId: DataTestId.GivenName
+                    dataTestId: DataTestId.FirstName
                 })
             ).toBe(2);
             expect(collector.getCallCount(fieldComponentName, { dataTestId: DataTestId.Surname })).toBe(2);
             expect(collector.getCallCount(submitComponentName, { dataTestId: DataTestId.Submit })).toBe(2);
 
-            expect(screen.getByTestId(DataTestId.GivenName)).toHaveValue("");
+            expect(screen.getByTestId(DataTestId.FirstName)).toHaveValue("");
             expect(screen.getByTestId(DataTestId.Surname)).toHaveValue("");
         });
     });

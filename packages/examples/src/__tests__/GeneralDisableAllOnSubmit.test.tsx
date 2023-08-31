@@ -13,7 +13,7 @@ describe("GeneralDisableAllOnSubmit.tsx", () => {
         render(<GeneralDisableAllOnSubmit />);
 
         // all fields must not be disabled
-        expect(screen.getByTestId(DataTestId.GivenName)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.FirstName)).not.toBeDisabled();
         expect(screen.getByTestId(DataTestId.Surname)).not.toBeDisabled();
         expect(screen.getByTestId(DataTestId.Radio1)).not.toBeDisabled();
         expect(screen.getByTestId(DataTestId.Radio2)).not.toBeDisabled();
@@ -28,7 +28,7 @@ describe("GeneralDisableAllOnSubmit.tsx", () => {
         expect(console.log).lastCalledWith({});
 
         // all inputs must be disabled
-        expect(screen.getByTestId(DataTestId.GivenName)).toBeDisabled();
+        expect(screen.getByTestId(DataTestId.FirstName)).toBeDisabled();
         expect(screen.getByTestId(DataTestId.Surname)).toBeDisabled();
         expect(screen.getByTestId(DataTestId.Radio1)).toBeDisabled();
         expect(screen.getByTestId(DataTestId.Radio2)).toBeDisabled();
@@ -37,7 +37,7 @@ describe("GeneralDisableAllOnSubmit.tsx", () => {
         fireEvent.click(screen.getByTestId(DataTestId.Reset));
 
         // all inputs most not be disabled
-        expect(screen.getByTestId(DataTestId.GivenName)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.FirstName)).not.toBeDisabled();
         expect(screen.getByTestId(DataTestId.Surname)).not.toBeDisabled();
         expect(screen.getByTestId(DataTestId.Radio1)).not.toBeDisabled();
         expect(screen.getByTestId(DataTestId.Radio2)).not.toBeDisabled();

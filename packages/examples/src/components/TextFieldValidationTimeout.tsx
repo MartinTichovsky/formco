@@ -5,7 +5,7 @@ import { LogStore } from "../store";
 import { FieldRow, FieldRowButtons, Info, ResetButton, Template } from "./Template/Template";
 
 interface MyForm {
-    givenName: string;
+    firstName: string;
     middleName: string;
     surname: string;
 }
@@ -19,6 +19,7 @@ export const TextFieldValidationTimeout = ({ ...props }: Partial<React.Component
                 options={{ validationTimeout: 2000 }}
                 {...props}
                 onSubmit={(fields) => console.log(fields)}
+                validateOnBlur
                 validateOnChange
             >
                 {(controller) => (
@@ -26,9 +27,9 @@ export const TextFieldValidationTimeout = ({ ...props }: Partial<React.Component
                         <FieldRow>
                             <FC.Input
                                 $controller={controller}
-                                $name="givenName"
+                                $name="firstName"
                                 $validation={(value) => !value?.trim() && "Provide a valid given name"}
-                                data-testid={DataTestId.GivenName}
+                                data-testid={DataTestId.FirstName}
                                 placeholder="Input a given name"
                             />
                         </FieldRow>

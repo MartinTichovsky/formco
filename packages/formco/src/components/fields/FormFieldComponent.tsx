@@ -35,6 +35,7 @@ export function FormFieldComponent<
     requiredInvalidMessage,
     requiredValidMessage,
     type,
+    validateOnBlur,
     validation,
     value,
     children,
@@ -323,7 +324,11 @@ export function FormFieldComponent<
     }, [id, name, privateController, ref]);
 
     const onBlurHandler = React.useCallback((event: React.ChangeEvent<Element>) => {
-        if (validation) {
+        privateController.setFieldProperties(name, {
+            isTouched: true
+        });
+
+        if (validation && validateOnBlur) {
             privateController.validateOnBlur(name);
         }
         onBlur?.(event);

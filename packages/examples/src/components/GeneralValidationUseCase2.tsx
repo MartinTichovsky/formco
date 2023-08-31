@@ -5,7 +5,7 @@ import { LogStore } from "../store";
 import { FieldRow, FieldRowButtons, Info, ResetButton, Template } from "./Template/Template";
 
 interface MyForm {
-    givenName: string;
+    firstName: string;
     surname: string;
 }
 
@@ -17,7 +17,7 @@ export const GeneralValidationUseCase2 = (props: Partial<React.ComponentProps<ty
             <FormController<MyForm>
                 validateOnChange
                 validation={{
-                    givenName: (value) =>
+                    firstName: (value) =>
                         (value === undefined || (typeof value === "string" && !value.trim())) &&
                         "Provide a valid given name",
                     surname: (value) =>
@@ -32,8 +32,8 @@ export const GeneralValidationUseCase2 = (props: Partial<React.ComponentProps<ty
                         <FieldRow>
                             <FC.Input
                                 $controller={controller}
-                                $name="givenName"
-                                data-testid={DataTestId.GivenName}
+                                $name="firstName"
+                                data-testid={DataTestId.FirstName}
                                 placeholder="Input a given name"
                             />
                         </FieldRow>

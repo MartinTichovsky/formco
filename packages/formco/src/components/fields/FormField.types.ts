@@ -190,6 +190,7 @@ export type FormFieldComponentType<
         | "week"
         | "radio"
         | "checkbox";
+    validateOnBlur: FormFieldPublicProps<T, K>["$validateOnBlur"];
     validation?: (value: T[K] | undefined, fields: Partial<T>) => ValidationResult;
     value?: string;
 } & CommonFormFieldComponentProps;

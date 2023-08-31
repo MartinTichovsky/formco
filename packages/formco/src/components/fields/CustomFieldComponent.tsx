@@ -11,6 +11,9 @@ export const CustomFieldComponent = <
     initialValidation,
     children,
     controller,
+    disableIf,
+
+    hideIf,
     id,
     name,
     onBlur,
@@ -19,12 +22,12 @@ export const CustomFieldComponent = <
     onValidation,
     privateController,
     provideValue,
-    validateOnBlur,
-    validateOnChange,
-    disableIf,
-    hideIf,
+    required,
     rest,
-    validation
+    useDefaultOnValidation,
+    validation,
+    validateOnBlur,
+    validateOnChange
 }: React.PropsWithChildren<CustomFieldComponentType<T, K, IComponent>> & PrivateProps<T>) => {
     const [props, setProps] = React.useState<React.ComponentProps<React.ElementType>>({});
     const ref = React.useRef<HTMLElement>();
@@ -70,6 +73,10 @@ export const CustomFieldComponent = <
     );
 
     React.useEffect(() => {
+        if (!onValidation && !useDefaultOnValidation) {
+            return;
+        }
+
         const onValidationAction =
             onValidation ||
             ((
@@ -117,7 +124,11 @@ export const CustomFieldComponent = <
     }, [privateController, name, onValidation, setProps]);
 
     const onBlurHandler = React.useCallback((event: React.ChangeEvent<Element>) => {
-        if (validation) {
+        privateController.setFieldProperties(name, {
+            isTouched: true
+        });
+
+        if (validation && validateOnBlur) {
             privateController.validateOnBlur(name);
         }
         onBlur?.(event);

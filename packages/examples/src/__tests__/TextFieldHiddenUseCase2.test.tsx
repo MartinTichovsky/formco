@@ -15,7 +15,7 @@ describe("TextFieldHiddenUseCase2.tsx", () => {
 
         // the first and the third input must not be in the document
         expect(screen.queryByTestId(DataTestId.Salutation)).toBeNull();
-        expect(screen.getByTestId(DataTestId.GivenName)).toBeTruthy();
+        expect(screen.getByTestId(DataTestId.FirstName)).toBeTruthy();
         expect(screen.queryByTestId(DataTestId.Surname)).toBeNull();
         expect(screen.getByTestId(DataTestId.Submit)).not.toBeDisabled();
 
@@ -31,13 +31,13 @@ describe("TextFieldHiddenUseCase2.tsx", () => {
         expect(console.log).lastCalledWith({});
 
         // input an empty value should show an error
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: " " }
         });
 
         // the first and the third input must not be in the document
         expect(screen.queryByTestId(DataTestId.Salutation)).toBeNull();
-        expect(screen.getByTestId(DataTestId.GivenName)).toBeTruthy();
+        expect(screen.getByTestId(DataTestId.FirstName)).toBeTruthy();
         expect(screen.queryByTestId(DataTestId.Surname)).toBeNull();
         expect(screen.getByTestId(DataTestId.Submit)).not.toBeDisabled();
 
@@ -45,13 +45,13 @@ describe("TextFieldHiddenUseCase2.tsx", () => {
         testInvalidMessage(container, 0);
 
         // input a valid text
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: TestingContent.James }
         });
 
         // the first input must not be in the document and the submit button must be disabled
         expect(screen.queryByTestId(DataTestId.Salutation)).toBeNull();
-        expect(screen.getByTestId(DataTestId.GivenName)).toBeTruthy();
+        expect(screen.getByTestId(DataTestId.FirstName)).toBeTruthy();
         expect(screen.getByTestId(DataTestId.Surname)).toBeTruthy();
         expect(screen.getByTestId(DataTestId.Submit)).toBeDisabled();
 
@@ -65,7 +65,7 @@ describe("TextFieldHiddenUseCase2.tsx", () => {
 
         // the first input must not be in the document and the submit button must be disabled
         expect(screen.queryByTestId(DataTestId.Salutation)).toBeNull();
-        expect(screen.getByTestId(DataTestId.GivenName)).toBeTruthy();
+        expect(screen.getByTestId(DataTestId.FirstName)).toBeTruthy();
         expect(screen.getByTestId(DataTestId.Surname)).toBeTruthy();
         expect(screen.getByTestId(DataTestId.Submit)).toBeDisabled();
 
@@ -79,7 +79,7 @@ describe("TextFieldHiddenUseCase2.tsx", () => {
 
         // all fields must be in the document
         expect(screen.getByTestId(DataTestId.Salutation)).toBeTruthy();
-        expect(screen.getByTestId(DataTestId.GivenName)).toBeTruthy();
+        expect(screen.getByTestId(DataTestId.FirstName)).toBeTruthy();
         expect(screen.getByTestId(DataTestId.Surname)).toBeTruthy();
         expect(screen.getByTestId(DataTestId.Submit)).not.toBeDisabled();
 
@@ -93,7 +93,7 @@ describe("TextFieldHiddenUseCase2.tsx", () => {
 
         expect(console.log).toBeCalledTimes(2);
         expect(console.log).lastCalledWith({
-            givenName: TestingContent.James,
+            firstName: TestingContent.James,
             surname: TestingContent.Bond
         });
 
@@ -104,7 +104,7 @@ describe("TextFieldHiddenUseCase2.tsx", () => {
 
         // all fields must be in the document
         expect(screen.getByTestId(DataTestId.Salutation)).toBeTruthy();
-        expect(screen.getByTestId(DataTestId.GivenName)).toBeTruthy();
+        expect(screen.getByTestId(DataTestId.FirstName)).toBeTruthy();
         expect(screen.getByTestId(DataTestId.Surname)).toBeTruthy();
         expect(screen.getByTestId(DataTestId.Submit)).not.toBeDisabled();
 
@@ -118,7 +118,7 @@ describe("TextFieldHiddenUseCase2.tsx", () => {
 
         expect(console.log).toBeCalledTimes(3);
         expect(console.log).lastCalledWith({
-            givenName: TestingContent.James,
+            firstName: TestingContent.James,
             salutation: " ",
             surname: TestingContent.Bond
         });
@@ -144,7 +144,7 @@ describe("TextFieldHiddenUseCase2.tsx", () => {
         // check the onSubmit action
         expect(console.log).toBeCalledTimes(4);
         expect(console.log).lastCalledWith({
-            givenName: TestingContent.James,
+            firstName: TestingContent.James,
             salutation: "Mr.",
             surname: TestingContent.Bond
         });

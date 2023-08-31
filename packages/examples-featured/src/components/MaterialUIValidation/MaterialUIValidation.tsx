@@ -20,7 +20,7 @@ export const MaterialUIValidation = () => {
                 onValidation={{
                     address: onValidationAddress,
                     // this is not type safe
-                    givenName: (isFieldValid, setProps) => {
+                    firstName: (isFieldValid, setProps) => {
                         setProps(isFieldValid ? { color: "success", error: false } : { color: "error", error: true });
                     }
                 }}
@@ -37,6 +37,7 @@ export const MaterialUIValidation = () => {
                                 $controller={controller}
                                 $component={TextField}
                                 $name="salutation"
+                                $useDefaultOnValidation
                                 $validation={(value) => !value?.trim()}
                                 label="Salutation"
                                 placeholder="Salutation"
@@ -53,7 +54,7 @@ export const MaterialUIValidation = () => {
                             <FC.CustomField
                                 $controller={controller}
                                 $component={TextField}
-                                $name="givenName"
+                                $name="firstName"
                                 $validation={(value) => !value?.trim()}
                                 label="Given name"
                                 placeholder="Given name"

@@ -5,7 +5,7 @@ import { LogStore } from "../store";
 import { FieldRow, FieldRowButtons, Info, ResetButton, Template } from "./Template/Template";
 
 interface MyForm {
-    givenName: string;
+    firstName: string;
     surname: string;
 }
 
@@ -18,6 +18,7 @@ export const GeneralValidateOnBlur = (
 ) => {
     const store = new LogStore();
     const { inputValidateOnBlur, ...rest } = props;
+
     return (
         <Template store={store}>
             <FormController<MyForm> validateOnBlur {...rest} onSubmit={(fields) => console.log(fields)}>
@@ -26,10 +27,10 @@ export const GeneralValidateOnBlur = (
                         <FieldRow>
                             <FC.Input
                                 $controller={controller}
-                                $name="givenName"
+                                $name="firstName"
                                 $validateOnBlur={inputValidateOnBlur}
                                 $validation={(value) => !value?.trim() && "Provide a valid given name"}
-                                data-testid={DataTestId.GivenName}
+                                data-testid={DataTestId.FirstName}
                                 placeholder="Input a given name"
                             />
                         </FieldRow>

@@ -5,7 +5,7 @@ import { LogStore } from "../store";
 import { FieldRow, FieldRowButtons, Info, ResetButton, Template } from "./Template/Template";
 
 interface MyForm {
-    givenName: string;
+    firstName: string;
     salutation: string;
     surname: string;
 }
@@ -31,9 +31,9 @@ export const GeneralLabel = (props: Partial<React.ComponentProps<typeof FormCont
                         <FieldRow>
                             <FC.Input
                                 $controller={controller}
-                                $label={TestingContent.GivenName}
-                                $name="givenName"
-                                data-testid={DataTestId.GivenName}
+                                $label={TestingContent.FirstName}
+                                $name="firstName"
+                                data-testid={DataTestId.FirstName}
                                 placeholder="Input a given name"
                             />
                         </FieldRow>

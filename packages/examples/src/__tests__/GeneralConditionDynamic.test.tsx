@@ -5,7 +5,7 @@ import { GeneralConditionDynamic } from "../components/GeneralConditionDynamic";
 import { DataTestId, TestingContent } from "../enums";
 
 describe("GeneralConditionDynamic.tsx", () => {
-    const getTestedGivenNameText = (name: string) => `Your given name is: ${name}`.trim();
+    const getTestedFirstNameText = (name: string) => `Your given name is: ${name}`.trim();
     const getTesteSurnameText = (name: string) => `Your surname is: ${name}`.trim();
 
     beforeAll(() => {
@@ -16,7 +16,7 @@ describe("GeneralConditionDynamic.tsx", () => {
         render(<GeneralConditionDynamic />);
 
         // the default text should be visible
-        expect(screen.getByTestId(DataTestId.DynamicContent)).toHaveTextContent(getTestedGivenNameText(""));
+        expect(screen.getByTestId(DataTestId.DynamicContent)).toHaveTextContent(getTestedFirstNameText(""));
         expect(screen.getByTestId(DataTestId.DynamicComponent)).toHaveTextContent(getTesteSurnameText(""));
 
         // click on the submit button
@@ -29,31 +29,31 @@ describe("GeneralConditionDynamic.tsx", () => {
         expect(console.log).lastCalledWith({});
 
         // input a valid text
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: "J" }
         });
 
         // test expected text
-        expect(screen.getByTestId(DataTestId.DynamicContent)).toHaveTextContent(getTestedGivenNameText("J"));
+        expect(screen.getByTestId(DataTestId.DynamicContent)).toHaveTextContent(getTestedFirstNameText("J"));
         expect(screen.getByTestId(DataTestId.DynamicComponent)).toHaveTextContent(getTesteSurnameText(""));
 
         // input a valid text
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: "Ja" }
         });
 
         // test expected text
-        expect(screen.getByTestId(DataTestId.DynamicContent)).toHaveTextContent(getTestedGivenNameText("Ja"));
+        expect(screen.getByTestId(DataTestId.DynamicContent)).toHaveTextContent(getTestedFirstNameText("Ja"));
         expect(screen.getByTestId(DataTestId.DynamicComponent)).toHaveTextContent(getTesteSurnameText(""));
 
         // input a valid text
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: TestingContent.James }
         });
 
         // test expected text
         expect(screen.getByTestId(DataTestId.DynamicContent)).toHaveTextContent(
-            getTestedGivenNameText(TestingContent.James)
+            getTestedFirstNameText(TestingContent.James)
         );
         expect(screen.getByTestId(DataTestId.DynamicComponent)).toHaveTextContent(getTesteSurnameText(""));
 
@@ -64,7 +64,7 @@ describe("GeneralConditionDynamic.tsx", () => {
 
         // check the onSubmit action
         expect(console.log).toBeCalledTimes(2);
-        expect(console.log).lastCalledWith({ givenName: TestingContent.James });
+        expect(console.log).lastCalledWith({ firstName: TestingContent.James });
 
         // input a valid text
         fireEvent.change(screen.getByTestId(DataTestId.Surname), {
@@ -73,7 +73,7 @@ describe("GeneralConditionDynamic.tsx", () => {
 
         // test expected text
         expect(screen.getByTestId(DataTestId.DynamicContent)).toHaveTextContent(
-            getTestedGivenNameText(TestingContent.James)
+            getTestedFirstNameText(TestingContent.James)
         );
         expect(screen.getByTestId(DataTestId.DynamicComponent)).toHaveTextContent(getTesteSurnameText("B"));
 
@@ -84,7 +84,7 @@ describe("GeneralConditionDynamic.tsx", () => {
 
         // test expected text
         expect(screen.getByTestId(DataTestId.DynamicContent)).toHaveTextContent(
-            getTestedGivenNameText(TestingContent.James)
+            getTestedFirstNameText(TestingContent.James)
         );
         expect(screen.getByTestId(DataTestId.DynamicComponent)).toHaveTextContent(getTesteSurnameText("Bo"));
 
@@ -95,7 +95,7 @@ describe("GeneralConditionDynamic.tsx", () => {
 
         // test expected text
         expect(screen.getByTestId(DataTestId.DynamicContent)).toHaveTextContent(
-            getTestedGivenNameText(TestingContent.James)
+            getTestedFirstNameText(TestingContent.James)
         );
         expect(screen.getByTestId(DataTestId.DynamicComponent)).toHaveTextContent(
             getTesteSurnameText(TestingContent.Bond)
@@ -105,7 +105,7 @@ describe("GeneralConditionDynamic.tsx", () => {
         fireEvent.click(screen.getByTestId(DataTestId.Reset));
 
         // the default text should be visible
-        expect(screen.getByTestId(DataTestId.DynamicContent)).toHaveTextContent(getTestedGivenNameText(""));
+        expect(screen.getByTestId(DataTestId.DynamicContent)).toHaveTextContent(getTestedFirstNameText(""));
         expect(screen.getByTestId(DataTestId.DynamicComponent)).toHaveTextContent(getTesteSurnameText(""));
     });
 });

@@ -8,7 +8,7 @@ import { testInvalidMessage } from "./utils/selectors";
 
 describe("GeneralRequired.tsx", () => {
     const allFieldsMustHaveInvalidClassName = () => {
-        expect(screen.getByTestId(DataTestId.GivenName)).toHaveClass(CN.InvalidField);
+        expect(screen.getByTestId(DataTestId.FirstName)).toHaveClass(CN.InvalidField);
         expect(screen.getByTestId(DataTestId.Surname)).toHaveClass(CN.InvalidField);
         expect(screen.queryByTestId(DataTestId.Radio1)).toBeNull();
         expect(screen.getByTestId(DataTestId.Radio2)).toHaveClass(CN.InvalidField);
@@ -39,7 +39,7 @@ describe("GeneralRequired.tsx", () => {
     };
 
     const noInvalidClassNamesAreProvided = () => {
-        expect(screen.getByTestId(DataTestId.GivenName)).not.toHaveClass(CN.InvalidField);
+        expect(screen.getByTestId(DataTestId.FirstName)).not.toHaveClass(CN.InvalidField);
         expect(screen.getByTestId(DataTestId.Surname)).not.toHaveClass(CN.InvalidField);
         expect(screen.queryByTestId(DataTestId.Radio1)).toBeNull();
         expect(screen.getByTestId(DataTestId.Radio2)).not.toHaveClass(CN.InvalidField);
@@ -51,7 +51,7 @@ describe("GeneralRequired.tsx", () => {
     };
 
     const noValidClassNamesAreProvided = () => {
-        expect(screen.getByTestId(DataTestId.GivenName)).not.toHaveClass(CN.ValidField);
+        expect(screen.getByTestId(DataTestId.FirstName)).not.toHaveClass(CN.ValidField);
         expect(screen.getByTestId(DataTestId.Surname)).not.toHaveClass(CN.ValidField);
         expect(screen.getByTestId(DataTestId.Radio2)).not.toHaveClass(CN.ValidField);
         expect(screen.getByTestId(DataTestId.Radio3)).not.toHaveClass(CN.ValidField);
@@ -103,7 +103,7 @@ describe("GeneralRequired.tsx", () => {
         expect(screen.getByTestId(DataTestId.RadioFieldRow3).querySelector(`.${CN.RequiredStar}`)).toBeNull();
 
         // input an empty values
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: " " }
         });
 
@@ -122,7 +122,7 @@ describe("GeneralRequired.tsx", () => {
         testInvalidMessage(container, 0);
 
         // check fields
-        expectToBeInvalid(DataTestId.GivenName);
+        expectToBeInvalid(DataTestId.FirstName);
         expectToBeInvalid(DataTestId.Surname);
         expect(screen.queryByTestId(DataTestId.Radio1)).toBeNull();
         expectNotTohaveClasses(DataTestId.Radio2);
@@ -143,7 +143,7 @@ describe("GeneralRequired.tsx", () => {
         testInvalidMessage(container, 1);
 
         // check fields
-        expectToBeInvalid(DataTestId.GivenName);
+        expectToBeInvalid(DataTestId.FirstName);
         expectToBeInvalid(DataTestId.Surname);
         expect(screen.queryByTestId(DataTestId.Radio1)).toBeNull();
         expectNotTohaveClasses(DataTestId.Radio2);
@@ -154,7 +154,7 @@ describe("GeneralRequired.tsx", () => {
         expectNotTohaveClasses(DataTestId.Checkbox2);
 
         // input  values
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: TestingContent.James }
         });
 
@@ -173,7 +173,7 @@ describe("GeneralRequired.tsx", () => {
         testInvalidMessage(container, 0);
 
         // check fields
-        expectToBeValid(DataTestId.GivenName);
+        expectToBeValid(DataTestId.FirstName);
         expectToBeValid(DataTestId.Surname);
         expectNotTohaveClasses(DataTestId.Radio1);
         expectNotTohaveClasses(DataTestId.Radio2);
@@ -192,7 +192,7 @@ describe("GeneralRequired.tsx", () => {
         testInvalidMessage(container, 0);
 
         // check fields
-        expectToBeValid(DataTestId.GivenName);
+        expectToBeValid(DataTestId.FirstName);
         expectToBeValid(DataTestId.Surname);
         expectToBeValid(DataTestId.Radio1);
         expectToBeValid(DataTestId.Radio2);
@@ -214,7 +214,7 @@ describe("GeneralRequired.tsx", () => {
         testInvalidMessage(container, 0);
 
         // check fields
-        expectToBeValid(DataTestId.GivenName);
+        expectToBeValid(DataTestId.FirstName);
         expectToBeValid(DataTestId.Surname);
         expectToBeValid(DataTestId.Radio1);
         expectToBeValid(DataTestId.Radio2);
@@ -236,7 +236,7 @@ describe("GeneralRequired.tsx", () => {
         testInvalidMessage(container, 1);
 
         // check fields
-        expectToBeValid(DataTestId.GivenName);
+        expectToBeValid(DataTestId.FirstName);
         expectToBeValid(DataTestId.Surname);
         expectToBeValid(DataTestId.Radio1);
         expectToBeValid(DataTestId.Radio2);
@@ -258,7 +258,7 @@ describe("GeneralRequired.tsx", () => {
         testInvalidMessage(container, 0);
 
         // check fields
-        expectToBeValid(DataTestId.GivenName);
+        expectToBeValid(DataTestId.FirstName);
         expectToBeValid(DataTestId.Surname);
         expectToBeValid(DataTestId.Radio1);
         expectToBeValid(DataTestId.Radio2);
@@ -278,7 +278,7 @@ describe("GeneralRequired.tsx", () => {
         testInvalidMessage(container, 0);
 
         // check fields
-        expectToBeValid(DataTestId.GivenName);
+        expectToBeValid(DataTestId.FirstName);
         expectToBeValid(DataTestId.Surname);
         expectToBeValid(DataTestId.Radio1);
         expectToBeValid(DataTestId.Radio2);
@@ -298,7 +298,7 @@ describe("GeneralRequired.tsx", () => {
         testInvalidMessage(container, 1);
 
         // check fields
-        expectToBeValid(DataTestId.GivenName);
+        expectToBeValid(DataTestId.FirstName);
         expectToBeValid(DataTestId.Surname);
         expectToBeValid(DataTestId.Radio1);
         expectToBeValid(DataTestId.Radio2);
@@ -318,7 +318,7 @@ describe("GeneralRequired.tsx", () => {
         testInvalidMessage(container, 0);
 
         // check fields
-        expectToBeValid(DataTestId.GivenName);
+        expectToBeValid(DataTestId.FirstName);
         expectToBeValid(DataTestId.Surname);
         expectToBeValid(DataTestId.Radio1);
         expectToBeValid(DataTestId.Radio2);
@@ -338,7 +338,7 @@ describe("GeneralRequired.tsx", () => {
         testInvalidMessage(container, 0);
 
         // check fields
-        expectToBeValid(DataTestId.GivenName);
+        expectToBeValid(DataTestId.FirstName);
         expectToBeValid(DataTestId.Surname);
         expectToBeValid(DataTestId.Radio1);
         expectToBeValid(DataTestId.Radio2);
@@ -359,7 +359,7 @@ describe("GeneralRequired.tsx", () => {
             checkbox1: true,
             checkbox2: true,
             description: TestingContent.Description,
-            givenName: TestingContent.James,
+            firstName: TestingContent.James,
             radio: TestingContent.CaptionOption1,
             select: TestingContent.ValueOption3,
             surname: TestingContent.Bond
@@ -398,7 +398,7 @@ describe("GeneralRequired.tsx", () => {
         noValidClassNamesAreProvided();
 
         // input a value
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: " " }
         });
 
@@ -435,7 +435,7 @@ describe("GeneralRequired.tsx", () => {
         noValidClassNamesAreProvided();
 
         // input a value
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: TestingContent.James }
         });
 
@@ -443,7 +443,7 @@ describe("GeneralRequired.tsx", () => {
         testInvalidMessage(container, 3);
 
         // check fields
-        expectToBeValid(DataTestId.GivenName);
+        expectToBeValid(DataTestId.FirstName);
         expectToBeInvalid(DataTestId.Surname);
         expectToBeInvalid(DataTestId.Radio1);
         expectToBeInvalid(DataTestId.Radio2);
@@ -469,7 +469,7 @@ describe("GeneralRequired.tsx", () => {
         testInvalidMessage(container, 4);
 
         // check fields
-        expectToBeValid(DataTestId.GivenName);
+        expectToBeValid(DataTestId.FirstName);
         expectToBeInvalid(DataTestId.Surname);
         expectToBeInvalid(DataTestId.Radio1);
         expectToBeInvalid(DataTestId.Radio2);
@@ -490,7 +490,7 @@ describe("GeneralRequired.tsx", () => {
         testInvalidMessage(container, 3);
 
         // check fields
-        expectToBeValid(DataTestId.GivenName);
+        expectToBeValid(DataTestId.FirstName);
         expectToBeValid(DataTestId.Surname);
         expectToBeInvalid(DataTestId.Radio1);
         expectToBeInvalid(DataTestId.Radio2);
@@ -507,7 +507,7 @@ describe("GeneralRequired.tsx", () => {
         testInvalidMessage(container, 2);
 
         // check fields
-        expectToBeValid(DataTestId.GivenName);
+        expectToBeValid(DataTestId.FirstName);
         expectToBeValid(DataTestId.Surname);
         expectToBeValid(DataTestId.Radio1);
         expectToBeValid(DataTestId.Radio2);
@@ -528,7 +528,7 @@ describe("GeneralRequired.tsx", () => {
         testInvalidMessage(container, 1);
 
         // check fields
-        expectToBeValid(DataTestId.GivenName);
+        expectToBeValid(DataTestId.FirstName);
         expectToBeValid(DataTestId.Surname);
         expectToBeValid(DataTestId.Radio1);
         expectToBeValid(DataTestId.Radio2);
@@ -549,7 +549,7 @@ describe("GeneralRequired.tsx", () => {
         testInvalidMessage(container, 1);
 
         // check fields
-        expectToBeValid(DataTestId.GivenName);
+        expectToBeValid(DataTestId.FirstName);
         expectToBeValid(DataTestId.Surname);
         expectToBeValid(DataTestId.Radio1);
         expectToBeValid(DataTestId.Radio2);
@@ -566,7 +566,7 @@ describe("GeneralRequired.tsx", () => {
         testInvalidMessage(container, 0);
 
         // check fields
-        expectToBeValid(DataTestId.GivenName);
+        expectToBeValid(DataTestId.FirstName);
         expectToBeValid(DataTestId.Surname);
         expectToBeValid(DataTestId.Radio1);
         expectToBeValid(DataTestId.Radio2);
@@ -583,7 +583,7 @@ describe("GeneralRequired.tsx", () => {
         testInvalidMessage(container, 0);
 
         // check fields
-        expectToBeValid(DataTestId.GivenName);
+        expectToBeValid(DataTestId.FirstName);
         expectToBeValid(DataTestId.Surname);
         expectToBeValid(DataTestId.Radio1);
         expectToBeValid(DataTestId.Radio2);
@@ -604,7 +604,7 @@ describe("GeneralRequired.tsx", () => {
             checkbox1: true,
             checkbox2: true,
             description: TestingContent.Description,
-            givenName: TestingContent.James,
+            firstName: TestingContent.James,
             radio: TestingContent.CaptionOption2,
             select: TestingContent.CaptionOption1,
             surname: TestingContent.Bond

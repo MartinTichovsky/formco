@@ -4,7 +4,7 @@ import { Trim } from "./Trim";
 
 console.warn = jest.fn();
 
-const givenNameTestId = "givenName";
+const firstNameTestId = "firstName";
 const surnameTestId = "surname";
 const submitTestId = "submit";
 
@@ -12,7 +12,7 @@ test("The values should be the same as entered", async () => {
     const onSubmit = jest.fn();
     render(<Trim onSubmit={(fields) => onSubmit(fields)} />);
 
-    fireEvent.change(screen.getByTestId(givenNameTestId), {
+    fireEvent.change(screen.getByTestId(firstNameTestId), {
         target: { value: " James " }
     });
 
@@ -26,14 +26,14 @@ test("The values should be the same as entered", async () => {
     });
 
     // the values must be the same as entered
-    expect(onSubmit).lastCalledWith({ givenName: " James ", surname: " Bond " });
+    expect(onSubmit).lastCalledWith({ firstName: " James ", surname: " Bond " });
 });
 
 test("The values should be trimmed", async () => {
     const onSubmit = jest.fn();
     render(<Trim onSubmit={(fields) => onSubmit(fields)} options={{ trimValues: true }} />);
 
-    fireEvent.change(screen.getByTestId(givenNameTestId), {
+    fireEvent.change(screen.getByTestId(firstNameTestId), {
         target: { value: " James " }
     });
 
@@ -47,5 +47,5 @@ test("The values should be trimmed", async () => {
     });
 
     // the values must be trimmed
-    expect(onSubmit).lastCalledWith({ givenName: "James", surname: "Bond" });
+    expect(onSubmit).lastCalledWith({ firstName: "James", surname: "Bond" });
 });

@@ -19,14 +19,16 @@ describe("TextFieldValidationTimeout.tsx", () => {
         testInvalidMessage(container, 0);
 
         // input an empty value
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: " " }
         });
 
         // errors should not be shown
         testInvalidMessage(container, 0);
 
-        await wait(1000);
+        await act(async () => {
+            await wait(1000);
+        });
 
         // errors should not be shown
         testInvalidMessage(container, 0);
@@ -36,32 +38,32 @@ describe("TextFieldValidationTimeout.tsx", () => {
         });
 
         // one error should be shown
-        testInvalidMessage(container, 1);
+        await waitFor(() => testInvalidMessage(container, 1));
 
         // submit the form
         fireEvent.click(screen.getByTestId(DataTestId.Submit));
 
         // second error should be shown immediately
-        testInvalidMessage(container, 2);
+        await waitFor(() => testInvalidMessage(container, 2));
 
         // reset the form
         fireEvent.click(screen.getByTestId(DataTestId.Reset));
 
         // input an empty value
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: " " }
         });
 
         // errors should not be shown
-        testInvalidMessage(container, 0);
+        await waitFor(() => testInvalidMessage(container, 0));
 
         // blur on the input
-        fireEvent.blur(screen.getByTestId(DataTestId.GivenName));
+        fireEvent.blur(screen.getByTestId(DataTestId.FirstName));
 
         // one error should not be shown immediately when onBlur event
-        testInvalidMessage(container, 1);
+        await waitFor(() => testInvalidMessage(container, 1));
 
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: TestingContent.James }
         });
 
@@ -80,7 +82,7 @@ describe("TextFieldValidationTimeout.tsx", () => {
         // check the onSubmit action
         expect(console.log).toBeCalledTimes(1);
         expect(console.log).lastCalledWith({
-            givenName: TestingContent.James,
+            firstName: TestingContent.James,
             surname: TestingContent.Bond
         });
     });

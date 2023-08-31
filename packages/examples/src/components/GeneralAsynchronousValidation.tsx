@@ -6,7 +6,7 @@ import { wait } from "../utils/utils";
 import { FieldRow, FieldRowButtons, Info, ResetButton, Template } from "./Template/Template";
 
 interface MyForm {
-    givenName: string;
+    firstName: string;
     radio: string;
     surname: string;
 }
@@ -24,7 +24,7 @@ export const GeneralAsynchronousValidation = (props: Partial<React.ComponentProp
                         <FieldRow>
                             <FC.Input
                                 $controller={controller}
-                                $name="givenName"
+                                $name="firstName"
                                 $validation={(value) => ({
                                     content: TestingContent.Pending,
                                     promise: async function () {
@@ -39,7 +39,7 @@ export const GeneralAsynchronousValidation = (props: Partial<React.ComponentProp
                                         };
                                     }
                                 })}
-                                data-testid={DataTestId.GivenName}
+                                data-testid={DataTestId.FirstName}
                                 placeholder="Input a given name"
                             />
                         </FieldRow>

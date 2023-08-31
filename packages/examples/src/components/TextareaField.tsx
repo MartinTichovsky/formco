@@ -35,7 +35,7 @@ export const TextareaField = (props: Partial<React.ComponentProps<typeof FormCon
                                     return {
                                         isValid: (value?.length || 0) > 0 && lettersRemains >= 0,
                                         content:
-                                            !value?.length && controller.isSubmitted ? (
+                                            !value?.length && controller.isFormSubmitted ? (
                                                 <span data-testid={DataTestId.Error} style={{ color: "red" }}>
                                                     You must type at least 1 character
                                                 </span>

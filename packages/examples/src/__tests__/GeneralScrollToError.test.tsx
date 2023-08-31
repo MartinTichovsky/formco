@@ -22,10 +22,10 @@ describe("GeneralScrollToError.tsx", () => {
 
         // giveName should have focus
         expect(Element.prototype.scrollTo).toBeCalledTimes(1);
-        expect(screen.getByTestId(DataTestId.GivenName)).toHaveFocus();
+        expect(screen.getByTestId(DataTestId.FirstName)).toHaveFocus();
 
         // input a given name
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: TestingContent.James }
         });
 
@@ -125,8 +125,8 @@ describe("GeneralScrollToError.tsx", () => {
             fireEvent.click(screen.getByTestId(DataTestId.Submit));
         });
 
-        // givenName should have focus
+        // firstName should have focus
         expect(Element.prototype.scrollTo).toBeCalledTimes(8);
-        expect(screen.getByTestId(DataTestId.GivenName)).toHaveFocus();
+        expect(screen.getByTestId(DataTestId.FirstName)).toHaveFocus();
     });
 });

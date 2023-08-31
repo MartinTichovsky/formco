@@ -5,7 +5,7 @@ import { LogStore } from "../store";
 import { FieldRow, FieldRowFullWidth, Info, ResetButton, Template } from "./Template/Template";
 
 interface MyForm {
-    givenName: string;
+    firstName: string;
     surname: string;
 }
 
@@ -30,7 +30,7 @@ const FunctionalSubmitComponent = ({
     const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
         const controller = await onClick(event);
 
-        if (controller.isValid) {
+        if (controller.isFormValid) {
             console.log(controller.fields);
 
             setPending(true);
@@ -73,7 +73,7 @@ class ClassSubmitComponent extends React.Component<ClassSubmitComponentProps> {
     handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
         const controller = await this.props.onClick(event);
 
-        if (controller.isValid) {
+        if (controller.isFormValid) {
             console.log(controller.fields);
 
             this.setState({ pending: true });
@@ -110,9 +110,9 @@ export const SubmitComponent = (props: Partial<React.ComponentProps<typeof FormC
                         <FieldRow>
                             <FC.Input
                                 $controller={controller}
-                                $name="givenName"
+                                $name="firstName"
                                 $validation={(value) => !value?.trim() && "Provide a valid given name"}
-                                data-testid={DataTestId.GivenName}
+                                data-testid={DataTestId.FirstName}
                                 placeholder="Input a given name"
                             />
                         </FieldRow>

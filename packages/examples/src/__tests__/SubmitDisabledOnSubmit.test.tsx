@@ -43,7 +43,7 @@ describe("SubmitDefaultDisabled.tsx", () => {
         expect(screen.getByTestId(DataTestId.SubmitTop)).not.toBeDisabled();
 
         // input an empty value, the `validateOnChange` option is false, the empty value shouldn't cause an error
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: " " }
         });
 
@@ -79,7 +79,7 @@ describe("SubmitDefaultDisabled.tsx", () => {
         testInvalidMessage(container, 2);
 
         // input a valid text
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: TestingContent.James }
         });
 
@@ -112,7 +112,7 @@ describe("SubmitDefaultDisabled.tsx", () => {
 
         // check the onSubmit action
         expect(console.log).toBeCalledTimes(1);
-        expect(console.log).lastCalledWith({ givenName: TestingContent.James, surname: TestingContent.Bond });
+        expect(console.log).lastCalledWith({ firstName: TestingContent.James, surname: TestingContent.Bond });
 
         // submit valid form
         await waitFor(async () => {
@@ -124,6 +124,6 @@ describe("SubmitDefaultDisabled.tsx", () => {
 
         // check the onSubmit action
         expect(console.log).toBeCalledTimes(2);
-        expect(console.log).lastCalledWith({ givenName: TestingContent.James, surname: TestingContent.Bond });
+        expect(console.log).lastCalledWith({ firstName: TestingContent.James, surname: TestingContent.Bond });
     });
 });

@@ -14,7 +14,7 @@ describe("TextFieldDefaultValuesUseCase1.tsx", () => {
         const { container } = render(<TextFieldDefaultValuesUseCase1 />);
 
         // the inputs must have default values
-        expect(screen.getByTestId(DataTestId.GivenName)).toHaveValue(TestingContent.James);
+        expect(screen.getByTestId(DataTestId.FirstName)).toHaveValue(TestingContent.James);
         expect(screen.getByTestId(DataTestId.Surname)).toHaveValue(TestingContent.Bond);
 
         // errors should not be shown
@@ -28,12 +28,12 @@ describe("TextFieldDefaultValuesUseCase1.tsx", () => {
         // check the onSubmit action
         expect(console.log).toBeCalledTimes(1);
         expect(console.log).lastCalledWith({
-            givenName: TestingContent.James,
+            firstName: TestingContent.James,
             surname: TestingContent.Bond
         });
 
         // input an empty value should show an error
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: "" }
         });
 
@@ -59,7 +59,7 @@ describe("TextFieldDefaultValuesUseCase1.tsx", () => {
         fireEvent.click(screen.getByTestId(DataTestId.Reset));
 
         // the inputs must have default values
-        expect(screen.getByTestId(DataTestId.GivenName)).toHaveValue(TestingContent.James);
+        expect(screen.getByTestId(DataTestId.FirstName)).toHaveValue(TestingContent.James);
         expect(screen.getByTestId(DataTestId.Surname)).toHaveValue(TestingContent.Bond);
     });
 });

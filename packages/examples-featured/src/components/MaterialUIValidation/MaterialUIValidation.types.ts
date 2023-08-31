@@ -1,6 +1,6 @@
 export interface MaterialUIValidationForm {
     address: string;
-    givenName: string;
+    firstName: string;
     salutation: string;
     surname: string;
 }

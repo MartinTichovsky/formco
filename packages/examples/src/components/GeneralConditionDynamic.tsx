@@ -5,7 +5,7 @@ import { LogStore } from "../store";
 import { FieldRow, FieldRowButtons, Info, ResetButton, Template } from "./Template/Template";
 
 interface MyForm {
-    givenName: string;
+    firstName: string;
     surname: string;
 }
 
@@ -20,7 +20,7 @@ const DynamicComponent = ({ controller }: { controller: Controller<MyForm> }) =>
 const dynamicContent = (controller: Controller<MyForm>) => {
     return (
         <FieldRow data-testid={DataTestId.DynamicContent}>
-            Your given name is: {controller.getFieldValue("givenName")}
+            Your given name is: {controller.getFieldValue("firstName")}
         </FieldRow>
     );
 };
@@ -36,8 +36,8 @@ export const GeneralConditionDynamic = (props: Partial<React.ComponentProps<type
                         <FieldRow>
                             <FC.Input
                                 $controller={controller}
-                                $name="givenName"
-                                data-testid={DataTestId.GivenName}
+                                $name="firstName"
+                                data-testid={DataTestId.FirstName}
                                 placeholder="Input a given name"
                             />
                         </FieldRow>

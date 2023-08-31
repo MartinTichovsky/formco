@@ -49,7 +49,7 @@ describe("GeneralAsynchronousValidation.tsx", () => {
         const { container } = render(<GeneralAsynchronousValidation />);
 
         // input a valid text
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: TestingContent.James }
         });
 
@@ -95,7 +95,7 @@ describe("GeneralAsynchronousValidation.tsx", () => {
         // check the onSubmit action
         expect(console.log).toBeCalledTimes(1);
         expect(console.log).lastCalledWith({
-            givenName: TestingContent.James,
+            firstName: TestingContent.James,
             surname: TestingContent.Bond
         });
     });
@@ -104,7 +104,7 @@ describe("GeneralAsynchronousValidation.tsx", () => {
         render(<GeneralAsynchronousValidation />);
 
         // input a valid text
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: TestingContent.James }
         });
 
@@ -134,7 +134,7 @@ describe("GeneralAsynchronousValidation.tsx", () => {
         fireEvent.click(screen.getByTestId(DataTestId.Reset));
 
         // input a valid text
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: TestingContent.James }
         });
 
@@ -156,7 +156,7 @@ describe("GeneralAsynchronousValidation.tsx", () => {
         // check the onSubmit action
         expect(console.log).toBeCalledTimes(1);
         expect(console.log).lastCalledWith({
-            givenName: TestingContent.James,
+            firstName: TestingContent.James,
             surname: TestingContent.Bond
         });
     });
@@ -165,7 +165,7 @@ describe("GeneralAsynchronousValidation.tsx", () => {
         const { container } = render(<GeneralAsynchronousValidation />);
 
         // input a valid text
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: "J" }
         });
 
@@ -176,7 +176,7 @@ describe("GeneralAsynchronousValidation.tsx", () => {
         // a pending text should be shown
         expect(screen.getAllByText(TestingContent.Pending).length).toBe(1);
 
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: "Ja" }
         });
 
@@ -187,7 +187,7 @@ describe("GeneralAsynchronousValidation.tsx", () => {
         // a pending text should be shown
         expect(screen.getAllByText(TestingContent.Pending).length).toBe(1);
 
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: "Jam" }
         });
 
@@ -198,7 +198,7 @@ describe("GeneralAsynchronousValidation.tsx", () => {
         // a pending text should be shown
         expect(screen.getAllByText(TestingContent.Pending).length).toBe(1);
 
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: "" }
         });
 

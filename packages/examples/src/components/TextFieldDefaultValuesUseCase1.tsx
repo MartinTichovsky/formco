@@ -5,12 +5,12 @@ import { LogStore } from "../store";
 import { FieldRow, FieldRowButtons, Info, ResetButton, Template } from "./Template/Template";
 
 interface MyForm {
-    givenName: string;
+    firstName: string;
     surname: string;
 }
 
 const initialValues: MyForm = {
-    givenName: TestingContent.James,
+    firstName: TestingContent.James,
     surname: TestingContent.Bond
 };
 
@@ -25,11 +25,11 @@ export const TextFieldDefaultValuesUseCase1 = (props: Partial<React.ComponentPro
                         <FieldRow>
                             <FC.Input
                                 $controller={controller}
-                                $name="givenName"
+                                $name="firstName"
                                 $validation={(value) =>
                                     (value === undefined || !value.trim()) && "Provide a valid given name"
                                 }
-                                data-testid={DataTestId.GivenName}
+                                data-testid={DataTestId.FirstName}
                                 placeholder="Input a given name"
                             />
                         </FieldRow>

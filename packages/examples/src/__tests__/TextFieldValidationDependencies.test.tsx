@@ -55,7 +55,7 @@ describe("TextFieldValidationDependencies.tsx", () => {
         expect(console.warn).not.toBeCalled();
 
         // input a text
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: TestingContent.James }
         });
 
@@ -96,7 +96,7 @@ describe("TextFieldValidationDependencies.tsx", () => {
         // check the onSubmit action
         expect(console.log).toBeCalledTimes(1);
         expect(console.log).lastCalledWith({
-            givenName: TestingContent.James,
+            firstName: TestingContent.James,
             middleName: TestingContent.Ronald,
             surname: TestingContent.Bond
         });
@@ -128,7 +128,7 @@ describe("TextFieldValidationDependencies.tsx", () => {
         }
 
         // input a text
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: TestingContent.James }
         });
 
@@ -203,7 +203,7 @@ describe("TextFieldValidationDependencies.tsx", () => {
         expect(screen.getByTestId(DataTestId.Error3)).toBeTruthy();
 
         // input a text
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: TestingContent.James }
         });
 

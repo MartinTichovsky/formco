@@ -11,7 +11,7 @@ describe("GeneralValidateOnBlur.tsx", () => {
         testInvalidMessage(container, 0);
 
         // blur on the input
-        fireEvent.blur(screen.getByTestId(DataTestId.GivenName));
+        fireEvent.blur(screen.getByTestId(DataTestId.FirstName));
 
         // one error should be shown
         testInvalidMessage(container, 1);
@@ -26,7 +26,7 @@ describe("GeneralValidateOnBlur.tsx", () => {
         fireEvent.click(screen.getByTestId(DataTestId.Reset));
 
         // input an empty value
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: " " }
         });
 
@@ -45,12 +45,12 @@ describe("GeneralValidateOnBlur.tsx", () => {
         fireEvent.click(screen.getByTestId(DataTestId.Reset));
 
         // input valid text
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: TestingContent.James }
         });
 
         // blur on the input
-        fireEvent.blur(screen.getByTestId(DataTestId.GivenName));
+        fireEvent.blur(screen.getByTestId(DataTestId.FirstName));
 
         // errors should not be shown
         testInvalidMessage(container, 0);
@@ -74,7 +74,7 @@ describe("GeneralValidateOnBlur.tsx", () => {
         // check the onSubmit action
         expect(console.log).toBeCalledTimes(1);
         expect(console.log).lastCalledWith({
-            givenName: TestingContent.James,
+            firstName: TestingContent.James,
             surname: TestingContent.Bond
         });
 

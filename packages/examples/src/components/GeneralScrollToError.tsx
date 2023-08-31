@@ -6,7 +6,7 @@ import { FieldRow, FieldRowButtons, Info, ResetButton, Template } from "./Templa
 
 interface MyForm {
     checkbox: boolean;
-    givenName: string;
+    firstName: string;
     select: string;
     surname: string;
     note: string;
@@ -31,9 +31,9 @@ export const GeneralScrollToError = (props: Partial<React.ComponentProps<typeof 
                         <FieldRow>
                             <FC.Input
                                 $controller={controller}
-                                $name="givenName"
+                                $name="firstName"
                                 $validation={(value) => !value?.trim() && "Provide a valid given name"}
-                                data-testid={DataTestId.GivenName}
+                                data-testid={DataTestId.FirstName}
                                 placeholder="Input a given name"
                             />
                         </FieldRow>

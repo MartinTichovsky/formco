@@ -25,6 +25,8 @@ export const CustomField = <
     $onKeyDown,
     $onValidation,
     $provideValue,
+    $required,
+    $useDefaultOnValidation,
     $validateOnBlur,
     $validateOnChange,
     $validation,
@@ -38,6 +40,17 @@ export const CustomField = <
     }
 
     $onValidation = $onValidation || privateController.getOnValidationCondition($name);
+
+    if ($required && !$validation) {
+        $validation = (value: T[K] | undefined) =>
+            typeof value === "string" ? !value.trim() : typeof value === "boolean" ? !value : value === undefined;
+    }
+
+    const globalOptions = privateController.getOptions();
+
+    if ($validateOnBlur === undefined) {
+        $validateOnBlur = globalOptions.validateOnBlur;
+    }
 
     return (
         <CustomFieldComponent
@@ -56,7 +69,9 @@ export const CustomField = <
             onValidation={$onValidation as OnValidationCustom}
             privateController={privateController}
             provideValue={$provideValue}
+            required={$required}
             rest={rest}
+            useDefaultOnValidation={$useDefaultOnValidation}
             validateOnBlur={$validateOnBlur}
             validateOnChange={$validateOnChange}
             validation={$validation}

@@ -15,7 +15,7 @@ describe("TextFieldDisabledUseCase1.tsx", () => {
 
         // the first, the third input and the submit button must be disabled
         expect(screen.getByTestId(DataTestId.Salutation)).toBeDisabled();
-        expect(screen.getByTestId(DataTestId.GivenName)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.FirstName)).not.toBeDisabled();
         expect(screen.getByTestId(DataTestId.Surname)).toBeDisabled();
         expect(screen.getByTestId(DataTestId.Submit)).toBeDisabled();
 
@@ -23,13 +23,13 @@ describe("TextFieldDisabledUseCase1.tsx", () => {
         testInvalidMessage(container, 0);
 
         // input an empty value should show an error
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: " " }
         });
 
         // the first, the third input and the submit button must be disabled
         expect(screen.getByTestId(DataTestId.Salutation)).toBeDisabled();
-        expect(screen.getByTestId(DataTestId.GivenName)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.FirstName)).not.toBeDisabled();
         expect(screen.getByTestId(DataTestId.Surname)).toBeDisabled();
         expect(screen.getByTestId(DataTestId.Submit)).toBeDisabled();
 
@@ -37,13 +37,13 @@ describe("TextFieldDisabledUseCase1.tsx", () => {
         testInvalidMessage(container, 1);
 
         // input a valid text
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: TestingContent.James }
         });
 
         // the first input and the submit button must be disabled
         expect(screen.getByTestId(DataTestId.Salutation)).toBeDisabled();
-        expect(screen.getByTestId(DataTestId.GivenName)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.FirstName)).not.toBeDisabled();
         expect(screen.getByTestId(DataTestId.Surname)).not.toBeDisabled();
         expect(screen.getByTestId(DataTestId.Submit)).toBeDisabled();
 
@@ -57,7 +57,7 @@ describe("TextFieldDisabledUseCase1.tsx", () => {
 
         // the first input and the submit button must be disabled
         expect(screen.getByTestId(DataTestId.Salutation)).toBeDisabled();
-        expect(screen.getByTestId(DataTestId.GivenName)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.FirstName)).not.toBeDisabled();
         expect(screen.getByTestId(DataTestId.Surname)).not.toBeDisabled();
         expect(screen.getByTestId(DataTestId.Submit)).toBeDisabled();
 
@@ -71,7 +71,7 @@ describe("TextFieldDisabledUseCase1.tsx", () => {
 
         // only the submit button must be disabled
         expect(screen.getByTestId(DataTestId.Salutation)).not.toBeDisabled();
-        expect(screen.getByTestId(DataTestId.GivenName)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.FirstName)).not.toBeDisabled();
         expect(screen.getByTestId(DataTestId.Surname)).not.toBeDisabled();
         expect(screen.getByTestId(DataTestId.Submit)).toBeDisabled();
 
@@ -85,7 +85,7 @@ describe("TextFieldDisabledUseCase1.tsx", () => {
 
         // only the submit button must be disabled
         expect(screen.getByTestId(DataTestId.Salutation)).not.toBeDisabled();
-        expect(screen.getByTestId(DataTestId.GivenName)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.FirstName)).not.toBeDisabled();
         expect(screen.getByTestId(DataTestId.Surname)).not.toBeDisabled();
         expect(screen.getByTestId(DataTestId.Submit)).toBeDisabled();
 
@@ -93,13 +93,13 @@ describe("TextFieldDisabledUseCase1.tsx", () => {
         testInvalidMessage(container, 1);
 
         // input an empty value should disable all other inputs
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: "" }
         });
 
         // the first, the third input and the submit button must be disabled
         expect(screen.getByTestId(DataTestId.Salutation)).toBeDisabled();
-        expect(screen.getByTestId(DataTestId.GivenName)).not.toBeDisabled();
+        expect(screen.getByTestId(DataTestId.FirstName)).not.toBeDisabled();
         expect(screen.getByTestId(DataTestId.Surname)).toBeDisabled();
         expect(screen.getByTestId(DataTestId.Submit)).toBeDisabled();
 
@@ -107,7 +107,7 @@ describe("TextFieldDisabledUseCase1.tsx", () => {
         testInvalidMessage(container, 1);
 
         // fill all inputs
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: TestingContent.James }
         });
         fireEvent.change(screen.getByTestId(DataTestId.Surname), {
@@ -131,7 +131,7 @@ describe("TextFieldDisabledUseCase1.tsx", () => {
         // check the onSubmit action
         expect(console.log).toBeCalledTimes(1);
         expect(console.log).lastCalledWith({
-            givenName: TestingContent.James,
+            firstName: TestingContent.James,
             salutation: "Mr.",
             surname: TestingContent.Bond
         });

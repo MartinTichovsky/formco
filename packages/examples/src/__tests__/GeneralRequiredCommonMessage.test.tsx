@@ -34,7 +34,7 @@ describe("GeneralRequiredCommonMessage.tsx", () => {
         checkStarCount(container);
 
         // input an empty value should show an error
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: " " }
         });
 
@@ -48,7 +48,7 @@ describe("GeneralRequiredCommonMessage.tsx", () => {
         expect(screen.getByTestId(DataTestId.InputFieldRow1).querySelector(`.${invalidGlobalClassName}`)).toBeTruthy();
 
         // input an empty value should show an error
-        fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
+        fireEvent.change(screen.getByTestId(DataTestId.FirstName), {
             target: { value: TestingContent.James }
         });
 
@@ -173,7 +173,7 @@ describe("GeneralRequiredCommonMessage.tsx", () => {
         expect(console.log).toBeCalledTimes(1);
         expect(console.log).lastCalledWith({
             description: TestingContent.Description,
-            givenName: TestingContent.James,
+            firstName: TestingContent.James,
             surname: TestingContent.Bond,
             radio: TestingContent.CaptionOption2,
             select: TestingContent.ValueOption3

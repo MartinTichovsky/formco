@@ -5,7 +5,7 @@ import { LogStore } from "../store";
 import { FieldRow, FieldRowButtons, Info, ResetButton, Template } from "./Template/Template";
 
 interface MyForm {
-    givenName: string;
+    firstName: string;
     salutation: string;
     surname: string;
 }
@@ -31,16 +31,16 @@ export const TextFieldDisabledUseCase1 = (props: Partial<React.ComponentProps<ty
                         <FieldRow>
                             <FC.Input
                                 $controller={controller}
-                                $name="givenName"
+                                $name="firstName"
                                 $validation={(value) => !value?.trim() && "Provide a valid given name"}
-                                data-testid={DataTestId.GivenName}
+                                data-testid={DataTestId.FirstName}
                                 placeholder="Input a given name"
                             />
                         </FieldRow>
                         <FieldRow>
                             <FC.Input
                                 $controller={controller}
-                                $disableIf={(fields) => !fields.givenName?.trim()}
+                                $disableIf={(fields) => !fields.firstName?.trim()}
                                 $name="surname"
                                 $validation={(value) => !value?.trim() && "Provide a valid surname"}
                                 data-testid={DataTestId.Surname}
