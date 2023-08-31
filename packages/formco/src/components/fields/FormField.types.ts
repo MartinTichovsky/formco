@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Controller } from "../controller";
-import { FormFields, ValidationResult } from "../private-controller.types";
+import { Controller } from "../../controller";
+import { FormFields, ValidationResult } from "../../private-controller.types";
 
 export interface CommonFormFieldProps {
     $hideMessage?: boolean;
@@ -38,7 +38,6 @@ export interface FormFieldInternalProps {
 export interface FormFieldPrivateProps {
     defaultValue: string;
     disabled: boolean;
-    name: string;
     onBlur: (event: React.ChangeEvent) => void;
     onChange: (event: React.ChangeEvent) => void;
     onKeyDown: (event: React.KeyboardEvent) => void;
@@ -84,7 +83,7 @@ export type FormFieldType<
           $messageComponent?: MComponent;
       } & Omit<
           React.ComponentPropsWithoutRef<IComponent>,
-          "defaultValue" | "disabled" | "name" | "onBlur" | "onChange" | "onKeyDown"
+          "defaultValue" | "disabled" | "onBlur" | "onChange" | "onKeyDown"
       >)
 ) &
     FormFieldPublicProps<T, K> & {

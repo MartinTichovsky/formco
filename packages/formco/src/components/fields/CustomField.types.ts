@@ -1,5 +1,5 @@
 import { Controller } from "../../controller";
-import { FormFields, ValidationResult } from "../../private-controller.types";
+import { FormFields, OnValidationCustom, ValidationResult } from "../../private-controller.types";
 
 export interface CustomFieldPrivateProps {
     name: string;
@@ -45,11 +45,7 @@ export interface CustomFieldType<
     }: React.PropsWithChildren<
         CustomFieldPublicProps<T, K> & {
             $component: IComponent;
-            $onValidation?: (
-                isFieldValid: boolean,
-                setProps: React.Dispatch<React.SetStateAction<typeof rest>>,
-                validationInProgress: boolean
-            ) => void;
+            $onValidation?: OnValidationCustom<typeof rest>;
             $provideValue?: boolean;
             $validation?: (value: T[K] | undefined, fields: Partial<T>) => ValidationResult;
         } & Omit<React.ComponentPropsWithoutRef<IComponent>, "name" | "onBlur" | "onChange" | "onKeyDown">
@@ -77,11 +73,7 @@ export type CustomFieldComponentType<
     IComponent extends React.ComponentType<React.ComponentProps<IComponent> & CustomFieldPrivateProps>
 > = CustomFieldComponentProps<T, K> & {
     component: IComponent;
-    onValidation?: (
-        isFieldValid: boolean,
-        setProps: React.Dispatch<React.SetStateAction<any>>,
-        validationInProgress: boolean
-    ) => void;
+    onValidation?: OnValidationCustom;
     provideValue?: boolean;
     validation?: (value: T[K] | undefined, fields: Partial<T>) => ValidationResult;
 };

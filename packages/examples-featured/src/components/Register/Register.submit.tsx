@@ -1,17 +1,27 @@
 import { Controller } from "formco";
 import * as React from "react";
-import { MessageStore } from "../../store";
+import { LogStore, MessageStore } from "../../store";
 import { registerFetch } from "./Register.api";
+import { RegisterDataTestId } from "./Register.enums";
 import { RegisterForm } from "./Register.types";
 
-interface State {
+interface SubmitComponentState {
     error?: boolean;
     pending: boolean;
     success?: boolean;
 }
 
+interface SubmitComponentProps {
+    disabled: boolean;
+    onClick: (event: React.MouseEvent) => Promise<Controller<RegisterForm>>;
+    logStore: LogStore;
+    messageStore: MessageStore;
+}
+
+const maxDotsCountInPending = 3;
+
 const Pending = () => {
-    const [dots, setDots] = React.useState(3);
+    const [dotsCount, setDotsCount] = React.useState(maxDotsCountInPending);
     const isMounted = React.useRef(true);
 
     React.useEffect(() => {
@@ -22,27 +32,25 @@ const Pending = () => {
 
     setTimeout(() => {
         if (isMounted.current) {
-            setDots(dots === 3 ? 1 : dots + 1);
+            setDotsCount(dotsCount === maxDotsCountInPending ? 1 : dotsCount + 1);
         }
     }, 500);
 
-    return <span data-testid="pending">pending{".".repeat(dots)}</span>;
+    return <span data-testid={RegisterDataTestId.Pending}>pending{".".repeat(dotsCount)}</span>;
 };
 
 export const SubmitComponent = ({
     children,
     disabled,
     onClick,
-    store,
+    logStore,
+    messageStore,
     ...rest
-}: React.PropsWithChildren<{
-    disabled: boolean;
-    onClick: (event: React.MouseEvent) => Controller<RegisterForm>;
-    store: MessageStore;
-}>) => {
-    const [state, setState] = React.useState<State>({ pending: false });
+}: React.PropsWithChildren<SubmitComponentProps>) => {
+    const [state, setState] = React.useState<SubmitComponentState>({ pending: false });
     const stateRef = React.useRef(state);
     stateRef.current = state;
+
     const isMounted = React.useRef(true);
 
     React.useEffect(() => {
@@ -51,7 +59,7 @@ export const SubmitComponent = ({
         };
     }, [isMounted]);
 
-    const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleClick = React.useCallback(async (event: React.MouseEvent<HTMLButtonElement>) => {
         const controller = await onClick(event);
 
         if (!controller.isValid) {
@@ -70,11 +78,16 @@ export const SubmitComponent = ({
 
         if (response.ok) {
             controller.resetForm();
-            store.setMessage("Successfully registered", 3000);
+            logStore.reset();
+            messageStore.setMessage("Successfully registered", 3000);
         } else {
+            logStore.reset();
             // in case that somebody have already registered the same email or username
+            // test it in another tab
             controller.disableFields(false);
+            // force validate input fields
             controller.validate(true);
+            // disable the pending
             setState({ error: true, pending: false });
             // dismiss the error after 3s
             setTimeout(() => {
@@ -83,7 +96,7 @@ export const SubmitComponent = ({
                 }
             }, 3000);
         }
-    };
+    }, []);
 
     return (
         <>

@@ -11,9 +11,9 @@ describe("TextFieldValidationDependencies.tsx", () => {
         testInvalidMessage(container, 0);
 
         // errors should not be shown
-        expect(() => screen.getByTestId(DataTestId.Error1)).toThrowError();
-        expect(() => screen.getByTestId(DataTestId.Error2)).toThrowError();
-        expect(() => screen.getByTestId(DataTestId.Error3)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Error1)).toBeNull();
+        expect(screen.queryByTestId(DataTestId.Error2)).toBeNull();
+        expect(screen.queryByTestId(DataTestId.Error3)).toBeNull();
 
         if (submitForValidation) {
             // submit invalid form
@@ -64,8 +64,8 @@ describe("TextFieldValidationDependencies.tsx", () => {
 
         // first error should be shown
         expect(screen.getByTestId(DataTestId.Error1)).toBeTruthy();
-        expect(() => screen.getByTestId(DataTestId.Error2)).toThrowError();
-        expect(() => screen.getByTestId(DataTestId.Error3)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Error2)).toBeNull();
+        expect(screen.queryByTestId(DataTestId.Error3)).toBeNull();
 
         // submit invalid form
         await waitFor(async () => {
@@ -84,9 +84,9 @@ describe("TextFieldValidationDependencies.tsx", () => {
         testInvalidMessage(container, 0);
 
         // errors should not be shown
-        expect(() => screen.getByTestId(DataTestId.Error1)).toThrowError();
-        expect(() => screen.getByTestId(DataTestId.Error2)).toThrowError();
-        expect(() => screen.getByTestId(DataTestId.Error3)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Error1)).toBeNull();
+        expect(screen.queryByTestId(DataTestId.Error2)).toBeNull();
+        expect(screen.queryByTestId(DataTestId.Error3)).toBeNull();
 
         // submit valid form
         await waitFor(async () => {
@@ -108,9 +108,9 @@ describe("TextFieldValidationDependencies.tsx", () => {
         testInvalidMessage(container, 0);
 
         // errors should not be shown
-        expect(() => screen.getByTestId(DataTestId.Error1)).toThrowError();
-        expect(() => screen.getByTestId(DataTestId.Error2)).toThrowError();
-        expect(() => screen.getByTestId(DataTestId.Error3)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Error1)).toBeNull();
+        expect(screen.queryByTestId(DataTestId.Error2)).toBeNull();
+        expect(screen.queryByTestId(DataTestId.Error3)).toBeNull();
 
         if (submitForValidation) {
             // submit invalid form
@@ -138,7 +138,7 @@ describe("TextFieldValidationDependencies.tsx", () => {
         // two errors should  be shown
         expect(screen.getByTestId(DataTestId.Error1)).toBeTruthy();
         expect(screen.getByTestId(DataTestId.Error2)).toBeTruthy();
-        expect(() => screen.getByTestId(DataTestId.Error3)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Error3)).toBeNull();
 
         // input a text
         fireEvent.change(screen.getByTestId(DataTestId.Middlename), {
@@ -149,9 +149,9 @@ describe("TextFieldValidationDependencies.tsx", () => {
         testInvalidMessage(container, 1);
 
         // one error should  be shown
-        expect(() => screen.getByTestId(DataTestId.Error1)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Error1)).toBeNull();
         expect(screen.getByTestId(DataTestId.Error2)).toBeTruthy();
-        expect(() => screen.getByTestId(DataTestId.Error3)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Error3)).toBeNull();
 
         // input a text
         fireEvent.change(screen.getByTestId(DataTestId.Surname), {
@@ -162,9 +162,9 @@ describe("TextFieldValidationDependencies.tsx", () => {
         testInvalidMessage(container, 0);
 
         // errors should not be shown
-        expect(() => screen.getByTestId(DataTestId.Error1)).toThrowError();
-        expect(() => screen.getByTestId(DataTestId.Error2)).toThrowError();
-        expect(() => screen.getByTestId(DataTestId.Error3)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Error1)).toBeNull();
+        expect(screen.queryByTestId(DataTestId.Error2)).toBeNull();
+        expect(screen.queryByTestId(DataTestId.Error3)).toBeNull();
 
         // reset the form
         fireEvent.click(screen.getByTestId(DataTestId.Reset));
@@ -185,7 +185,7 @@ describe("TextFieldValidationDependencies.tsx", () => {
         testInvalidMessage(container, 2);
 
         // two errors should  be shown
-        expect(() => screen.getByTestId(DataTestId.Error1)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Error1)).toBeNull();
         expect(screen.getByTestId(DataTestId.Error2)).toBeTruthy();
         expect(screen.getByTestId(DataTestId.Error3)).toBeTruthy();
 
@@ -198,7 +198,7 @@ describe("TextFieldValidationDependencies.tsx", () => {
         testInvalidMessage(container, 2);
 
         // two errors should  be shown
-        expect(() => screen.getByTestId(DataTestId.Error1)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Error1)).toBeNull();
         expect(screen.getByTestId(DataTestId.Error2)).toBeTruthy();
         expect(screen.getByTestId(DataTestId.Error3)).toBeTruthy();
 
@@ -211,9 +211,9 @@ describe("TextFieldValidationDependencies.tsx", () => {
         testInvalidMessage(container, 0);
 
         // errors should not be shown
-        expect(() => screen.getByTestId(DataTestId.Error1)).toThrowError();
-        expect(() => screen.getByTestId(DataTestId.Error2)).toThrowError();
-        expect(() => screen.getByTestId(DataTestId.Error3)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Error1)).toBeNull();
+        expect(screen.queryByTestId(DataTestId.Error2)).toBeNull();
+        expect(screen.queryByTestId(DataTestId.Error3)).toBeNull();
     };
 
     beforeAll(() => {

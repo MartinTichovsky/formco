@@ -17,12 +17,12 @@ describe("RadioFieldHiddenUseCase2.tsx", () => {
         testInvalidMessage(container, 0);
 
         // the radio volume 1 and 3 must be hidden
-        expect(() => screen.getByTestId(DataTestId.Radio11)).toThrowError();
-        expect(() => screen.getByTestId(DataTestId.Radio12)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Radio11)).toBeNull();
+        expect(screen.queryByTestId(DataTestId.Radio12)).toBeNull();
         expect(screen.getByTestId(DataTestId.Radio21)).toBeTruthy();
         expect(screen.getByTestId(DataTestId.Radio22)).toBeTruthy();
-        expect(() => screen.getByTestId(DataTestId.Radio31)).toThrowError();
-        expect(() => screen.getByTestId(DataTestId.Radio32)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Radio31)).toBeNull();
+        expect(screen.queryByTestId(DataTestId.Radio32)).toBeNull();
 
         // submit invalid form
         await waitFor(async () => {
@@ -43,8 +43,8 @@ describe("RadioFieldHiddenUseCase2.tsx", () => {
         expect(screen.getByTestId(DataTestId.Radio12)).toBeTruthy();
         expect(screen.getByTestId(DataTestId.Radio21)).toBeTruthy();
         expect(screen.getByTestId(DataTestId.Radio22)).toBeTruthy();
-        expect(() => screen.getByTestId(DataTestId.Radio31)).toThrowError();
-        expect(() => screen.getByTestId(DataTestId.Radio32)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Radio31)).toBeNull();
+        expect(screen.queryByTestId(DataTestId.Radio32)).toBeNull();
 
         // submit invalid form
         await waitFor(async () => {
@@ -76,8 +76,8 @@ describe("RadioFieldHiddenUseCase2.tsx", () => {
         fireEvent.click(screen.getByTestId(DataTestId.Radio22));
 
         // the radio volume 1 must be hidden
-        expect(() => screen.getByTestId(DataTestId.Radio11)).toThrowError();
-        expect(() => screen.getByTestId(DataTestId.Radio12)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Radio11)).toBeNull();
+        expect(screen.queryByTestId(DataTestId.Radio12)).toBeNull();
         expect(screen.getByTestId(DataTestId.Radio21)).toBeTruthy();
         expect(screen.getByTestId(DataTestId.Radio22)).toBeTruthy();
         expect(screen.getByTestId(DataTestId.Radio31)).toBeTruthy();
@@ -127,11 +127,11 @@ describe("RadioFieldHiddenUseCase2.tsx", () => {
         fireEvent.click(screen.getByTestId(DataTestId.Reset));
 
         // the radio volume 1 and 3 must be hidden
-        expect(() => screen.getByTestId(DataTestId.Radio11)).toThrowError();
-        expect(() => screen.getByTestId(DataTestId.Radio12)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Radio11)).toBeNull();
+        expect(screen.queryByTestId(DataTestId.Radio12)).toBeNull();
         expect(screen.getByTestId(DataTestId.Radio21)).toBeTruthy();
         expect(screen.getByTestId(DataTestId.Radio22)).toBeTruthy();
-        expect(() => screen.getByTestId(DataTestId.Radio31)).toThrowError();
-        expect(() => screen.getByTestId(DataTestId.Radio32)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Radio31)).toBeNull();
+        expect(screen.queryByTestId(DataTestId.Radio32)).toBeNull();
     });
 });

@@ -19,7 +19,8 @@
     "formco": "workspace:packages/formco",
     "lodash.debounce": "4.0.8",
     "mobx": "6.3.5",
-    "mobx-react-lite": "3.2.1"
+    "mobx-react-lite": "3.2.1",
+    "proxy-object-path": "1.1.1"
   },
   "devDependencies": {
     "@testing-library/dom": "8.9.1",

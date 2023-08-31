@@ -1,5 +1,5 @@
 import * as React from "react";
-import { CommonFormFieldProps } from "./components/FormField.types";
+import { CommonFormFieldProps } from "./components/fields/FormField.types";
 import { PrivateController } from "./private-controller";
 import { FormFields } from "./private-controller.types";
 import { OnChangeCondition, SelectProviderProps, ValidationAction, ValidationProviderProps } from "./providers.types";

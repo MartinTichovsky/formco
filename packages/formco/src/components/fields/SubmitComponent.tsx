@@ -20,7 +20,7 @@ export const SubmitComponent = <
 
     const ButtonElement = React.useCallback(
         (props: React.PropsWithChildren<React.ButtonHTMLAttributes<HTMLButtonElement>>) =>
-            Component && typeof Component === "function" ? (
+            Component ? (
                 React.createElement(Component, {
                     ...rest,
                     ...props

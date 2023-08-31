@@ -1,3 +1,4 @@
+import { FormControllerProps } from "./components/FormController.types";
 import { Controller } from "./controller";
 import { PrivateController } from "./private-controller";
 
@@ -26,6 +27,7 @@ export interface ControllerProps<T extends FormFields<T>> {
     initialValues?: InitialValues<T>;
     options?: ControllerOptions;
     onSubmit?: OnSubmit<T>;
+    onValidation?: FormControllerProps<T>["onValidation"];
     requiredInvalidMessage?: string | JSX.Element;
     requiredValidMessage?: string | JSX.Element;
     /**
@@ -147,6 +149,12 @@ export type OnValidationAction = (
     show: boolean,
     fieldIsValid: boolean,
     validationResult: ValidationContentResult
+) => void;
+
+export type OnValidationCustom<E = unknown> = <R = unknown>(
+    isFieldValid: boolean,
+    setProps: React.Dispatch<React.SetStateAction<E | R>>,
+    validationInProgress: boolean
 ) => void;
 
 export interface PrivateControllerSetKey {

@@ -1,5 +1,5 @@
 import { FormFields, ValidationResult, Value } from "../private-controller.types";
-import { CommonFormFieldComponentProps } from "./FormField.types";
+import { CommonFormFieldComponentProps } from "./fields/FormField.types";
 
 export type ValidationProps<T extends FormFields<T>> = React.PropsWithChildren<
     {

@@ -1,5 +1,12 @@
 import { Controller } from "../controller";
-import { ControllerOptions, FormFields, InitialValues, OnSubmit, ValidationResult } from "../private-controller.types";
+import {
+    ControllerOptions,
+    FormFields,
+    InitialValues,
+    OnSubmit,
+    OnValidationCustom,
+    ValidationResult
+} from "../private-controller.types";
 
 export type FormControllerComponentProps<T extends FormFields<T>> = FormControllerProps<T> &
     Omit<React.FormHTMLAttributes<HTMLFormElement>, "onSubmit">;
@@ -16,6 +23,11 @@ export type FormControllerProps<T extends FormFields<T>> = React.PropsWithChildr
     initialValues?: InitialValues<T>;
     options?: ControllerOptions;
     onSubmit?: OnSubmit<T>;
+    onValidation?:
+        | {
+              [key in keyof T]?: OnValidationCustom;
+          }
+        | OnValidationCustom;
     requiredInvalidMessage?: string | JSX.Element;
     requiredValidMessage?: string | JSX.Element;
     validateOnBlur?: boolean;

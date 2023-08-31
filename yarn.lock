@@ -657,6 +657,7 @@ __metadata:
     lodash.debounce: 4.0.8
     mobx: 6.3.5
     mobx-react-lite: 3.2.1
+    proxy-object-path: 1.1.1
     react: 17.0.2
     react-dom: 17.0.2
     rimraf: 3.0.2
@@ -7057,6 +7058,13 @@ __metadata:
     forwarded: 0.2.0
     ipaddr.js: 1.9.1
   checksum: 29c6990ce9364648255454842f06f8c46fcd124d3e6d7c5066df44662de63cdc0bad032e9bf5a3d653ff72141cc7b6019873d685708ac8210c30458ad99f2b74
+  languageName: node
+  linkType: hard
+
+"proxy-object-path@npm:1.1.1":
+  version: 1.1.1
+  resolution: "proxy-object-path@npm:1.1.1"
+  checksum: 9a07538cf40a516cfdd68f6522b8c6a1427a40a64f079cbe37708806ef700152c354ff921121c601de323d546a8792f3317a8f2ca72c22bd43f6b074ca198fb3
   languageName: node
   linkType: hard
 

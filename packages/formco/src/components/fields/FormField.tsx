@@ -1,12 +1,12 @@
 import * as React from "react";
-import { FormFields } from "../private-controller.types";
+import { FormFields } from "../../private-controller.types";
 import {
     commonPropsContext,
     disableIfContext,
     hideIfContext,
     usePrivateController,
     validationContext
-} from "../providers";
+} from "../../providers";
 import { FormFieldInternalProps, FormFieldPrivateProps, FormFieldType, InitialState } from "./FormField.types";
 import { FormFieldComponent } from "./FormFieldComponent";
 

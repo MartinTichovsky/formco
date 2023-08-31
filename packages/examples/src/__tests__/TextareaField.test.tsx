@@ -16,8 +16,8 @@ describe("SubmitDefaultDisabled.tsx", () => {
         expect(screen.getByTestId(DataTestId.Textarea)).toHaveAttribute("placeholder", TestingContent.InputText);
 
         // default valid text should be shown
-        expect(() => screen.getByTestId(DataTestId.Error)).toThrowError();
-        expect(() => screen.getByTestId(DataTestId.InvalidText)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Error)).toBeNull();
+        expect(screen.queryByTestId(DataTestId.InvalidText)).toBeNull();
         expect(screen.getByTestId(DataTestId.ValidText)).toBeTruthy();
 
         // submit invalid form
@@ -30,15 +30,15 @@ describe("SubmitDefaultDisabled.tsx", () => {
 
         // error text should be shown
         expect(screen.getByTestId(DataTestId.Error)).toBeTruthy();
-        expect(() => screen.getByTestId(DataTestId.InvalidText)).toThrowError();
-        expect(() => screen.getByTestId(DataTestId.ValidText)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.InvalidText)).toBeNull();
+        expect(screen.queryByTestId(DataTestId.ValidText)).toBeNull();
 
         // reset the form
         fireEvent.click(screen.getByTestId(DataTestId.Reset));
 
         // default valid text should be shown
-        expect(() => screen.getByTestId(DataTestId.Error)).toThrowError();
-        expect(() => screen.getByTestId(DataTestId.InvalidText)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Error)).toBeNull();
+        expect(screen.queryByTestId(DataTestId.InvalidText)).toBeNull();
         expect(screen.getByTestId(DataTestId.ValidText)).toBeTruthy();
 
         // input a valid text
@@ -47,8 +47,8 @@ describe("SubmitDefaultDisabled.tsx", () => {
         });
 
         // default valid text should be shown
-        expect(() => screen.getByTestId(DataTestId.Error)).toThrowError();
-        expect(() => screen.getByTestId(DataTestId.InvalidText)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Error)).toBeNull();
+        expect(screen.queryByTestId(DataTestId.InvalidText)).toBeNull();
         expect(screen.getByTestId(DataTestId.ValidText)).toBeTruthy();
 
         // input a valid text
@@ -57,8 +57,8 @@ describe("SubmitDefaultDisabled.tsx", () => {
         });
 
         // default valid text should be shown
-        expect(() => screen.getByTestId(DataTestId.Error)).toThrowError();
-        expect(() => screen.getByTestId(DataTestId.InvalidText)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Error)).toBeNull();
+        expect(screen.queryByTestId(DataTestId.InvalidText)).toBeNull();
         expect(screen.getByTestId(DataTestId.ValidText)).toBeTruthy();
 
         // input too much text
@@ -67,9 +67,9 @@ describe("SubmitDefaultDisabled.tsx", () => {
         });
 
         // invalid text should be shown
-        expect(() => screen.getByTestId(DataTestId.Error)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Error)).toBeNull();
         expect(screen.getByTestId(DataTestId.InvalidText)).toBeTruthy();
-        expect(() => screen.getByTestId(DataTestId.ValidText)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.ValidText)).toBeNull();
 
         // input too much text
         fireEvent.change(screen.getByTestId(DataTestId.Textarea), {
@@ -77,9 +77,9 @@ describe("SubmitDefaultDisabled.tsx", () => {
         });
 
         // invalid text should be shown
-        expect(() => screen.getByTestId(DataTestId.Error)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Error)).toBeNull();
         expect(screen.getByTestId(DataTestId.InvalidText)).toBeTruthy();
-        expect(() => screen.getByTestId(DataTestId.ValidText)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.ValidText)).toBeNull();
 
         // submit invalid form
         await waitFor(async () => {
@@ -90,9 +90,9 @@ describe("SubmitDefaultDisabled.tsx", () => {
         expect(console.warn).not.toBeCalled();
 
         // invalid text should be shown
-        expect(() => screen.getByTestId(DataTestId.Error)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Error)).toBeNull();
         expect(screen.getByTestId(DataTestId.InvalidText)).toBeTruthy();
-        expect(() => screen.getByTestId(DataTestId.ValidText)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.ValidText)).toBeNull();
 
         // input a valid text
         fireEvent.change(screen.getByTestId(DataTestId.Textarea), {

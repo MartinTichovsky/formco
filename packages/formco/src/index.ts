@@ -5,4 +5,4 @@ export { MessageFor } from "./components/MessageFor";
 export { Validation } from "./components/Validation";
 export { CN } from "./constants";
 export { Controller } from "./controller";
-export { FormFields, ValidationPromiseResult } from "./private-controller.types";
+export { FormFields, OnValidationCustom, ValidationPromiseResult } from "./private-controller.types";

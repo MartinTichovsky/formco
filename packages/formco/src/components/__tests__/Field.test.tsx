@@ -5,8 +5,8 @@ import { Controller } from "../../controller";
 import { PrivateController } from "../../private-controller";
 import { getControllerProviderContext, ValidationProvider } from "../../providers";
 import { getGeneratedValues } from "../../__tests__/utils/value-generator";
-import { FormField } from "../FormField";
-import { FormFieldInternalProps, FormFieldPrivateProps, FormFieldType, InitialState } from "../FormField.types";
+import { FormField } from "../fields/FormField";
+import { FormFieldInternalProps, FormFieldPrivateProps, FormFieldType, InitialState } from "../fields/FormField.types";
 
 interface Form {
     input: string;
@@ -14,8 +14,6 @@ interface Form {
     radio: string;
 }
 
-let controller: Controller<Form>;
-let privateController: PrivateController<Form>;
 let passedValues: {
     disableIf?: Function;
     hideIf?: Function;
@@ -23,10 +21,8 @@ let passedValues: {
     validation?: Function;
 } = {};
 
-const testId = "test-id";
-
-jest.mock("../FormFieldComponent", () => {
-    const origin = jest.requireActual("../FormFieldComponent");
+jest.mock("../fields/FormFieldComponent", () => {
+    const origin = jest.requireActual("../fields/FormFieldComponent");
 
     return {
         FormFieldComponent: function (...args: any[]) {
@@ -36,42 +32,49 @@ jest.mock("../FormFieldComponent", () => {
     };
 });
 
-console.error = jest.fn();
+describe("FormField", () => {
+    let controller: Controller<Form>;
+    let privateController: PrivateController<Form>;
 
-const FieldContainer = <K extends keyof Form>(
-    props: React.PropsWithChildren<
-        FormFieldType<
+    const testId = "test-id";
+
+    const FieldContainer = <K extends keyof Form>(
+        props: React.PropsWithChildren<
+            FormFieldType<
+                Form,
+                K,
+                React.ComponentType<FormFieldPrivateProps>,
+                React.ElementType,
+                HTMLInputElement,
+                React.InputHTMLAttributes<HTMLInputElement>
+            > &
+                FormFieldInternalProps
+        >
+    ) => (
+        <FormField<
             Form,
             K,
             React.ComponentType<FormFieldPrivateProps>,
             React.ElementType,
             HTMLInputElement,
             React.InputHTMLAttributes<HTMLInputElement>
-        > &
-            FormFieldInternalProps
-    >
-) => (
-    <FormField<
-        Form,
-        K,
-        React.ComponentType<FormFieldPrivateProps>,
-        React.ElementType,
-        HTMLInputElement,
-        React.InputHTMLAttributes<HTMLInputElement>
-    >
-        {...props}
-    />
-);
+        >
+            {...props}
+        />
+    );
 
-beforeEach(() => {
-    passedValues = {};
-    privateController = new PrivateController<Form>({
-        setFormControllerState: jest.fn()
+    beforeAll(() => {
+        console.error = jest.fn();
     });
-    controller = new Controller(privateController);
-});
 
-describe("Field", () => {
+    beforeEach(() => {
+        passedValues = {};
+        privateController = new PrivateController<Form>({
+            setFormControllerState: jest.fn()
+        });
+        controller = new Controller(privateController);
+    });
+
     test("Default functionality", () => {
         const context = getControllerProviderContext<Form>();
 

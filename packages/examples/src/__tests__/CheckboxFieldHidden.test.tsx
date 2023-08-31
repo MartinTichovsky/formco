@@ -18,7 +18,7 @@ describe("CheckboxFieldHidden.tsx", () => {
 
         // the second checkbox should be checked
         expect(screen.getByTestId(DataTestId.Checkbox1)).not.toBeChecked();
-        expect(() => screen.getByTestId(DataTestId.Checkbox2)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Checkbox2)).toBeNull();
         expect(screen.getByTestId(DataTestId.Checkbox3)).not.toBeChecked();
 
         // click on the submit button
@@ -64,7 +64,7 @@ describe("CheckboxFieldHidden.tsx", () => {
 
         // the second checkbox should be checked
         expect(screen.getByTestId(DataTestId.Checkbox1)).not.toBeChecked();
-        expect(() => screen.getByTestId(DataTestId.Checkbox2)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Checkbox2)).toBeNull();
         expect(screen.getByTestId(DataTestId.Checkbox3)).not.toBeChecked();
 
         // check the first checkbox
@@ -117,7 +117,7 @@ describe("CheckboxFieldHidden.tsx", () => {
 
         // the second checkbox should be checked
         expect(screen.getByTestId(DataTestId.Checkbox1)).not.toBeChecked();
-        expect(() => screen.getByTestId(DataTestId.Checkbox2)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Checkbox2)).toBeNull();
         expect(screen.getByTestId(DataTestId.Checkbox3)).not.toBeChecked();
 
         // errors should not be shown

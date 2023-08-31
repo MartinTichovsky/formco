@@ -10,7 +10,7 @@ describe("GeneralRequired.tsx", () => {
     const allFieldsMustHaveInvalidClassName = () => {
         expect(screen.getByTestId(DataTestId.GivenName)).toHaveClass(CN.InvalidField);
         expect(screen.getByTestId(DataTestId.Surname)).toHaveClass(CN.InvalidField);
-        expect(() => screen.getByTestId(DataTestId.Radio1)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Radio1)).toBeNull();
         expect(screen.getByTestId(DataTestId.Radio2)).toHaveClass(CN.InvalidField);
         expect(screen.getByTestId(DataTestId.Radio3)).toHaveClass(CN.InvalidField);
         expect(screen.getByTestId(DataTestId.Select)).toHaveClass(CN.InvalidField);
@@ -41,7 +41,7 @@ describe("GeneralRequired.tsx", () => {
     const noInvalidClassNamesAreProvided = () => {
         expect(screen.getByTestId(DataTestId.GivenName)).not.toHaveClass(CN.InvalidField);
         expect(screen.getByTestId(DataTestId.Surname)).not.toHaveClass(CN.InvalidField);
-        expect(() => screen.getByTestId(DataTestId.Radio1)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Radio1)).toBeNull();
         expect(screen.getByTestId(DataTestId.Radio2)).not.toHaveClass(CN.InvalidField);
         expect(screen.getByTestId(DataTestId.Radio3)).not.toHaveClass(CN.InvalidField);
         expect(screen.getByTestId(DataTestId.Select)).not.toHaveClass(CN.InvalidField);
@@ -124,7 +124,7 @@ describe("GeneralRequired.tsx", () => {
         // check fields
         expectToBeInvalid(DataTestId.GivenName);
         expectToBeInvalid(DataTestId.Surname);
-        expect(() => screen.getByTestId(DataTestId.Radio1)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Radio1)).toBeNull();
         expectNotTohaveClasses(DataTestId.Radio2);
         expectNotTohaveClasses(DataTestId.Radio3);
         expectNotTohaveClasses(DataTestId.Select);
@@ -145,7 +145,7 @@ describe("GeneralRequired.tsx", () => {
         // check fields
         expectToBeInvalid(DataTestId.GivenName);
         expectToBeInvalid(DataTestId.Surname);
-        expect(() => screen.getByTestId(DataTestId.Radio1)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Radio1)).toBeNull();
         expectNotTohaveClasses(DataTestId.Radio2);
         expectNotTohaveClasses(DataTestId.Radio3);
         expectNotTohaveClasses(DataTestId.Select);

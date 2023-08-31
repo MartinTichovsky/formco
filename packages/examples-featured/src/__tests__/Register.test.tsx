@@ -2,59 +2,51 @@ import "@testing-library/jest-dom";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import * as React from "react";
 import { Register } from "../components/Register/Register";
+import { RegisterDataTestId } from "../components/Register/Register.enums";
 import { wait } from "../utils/utils";
 import { testInvalidMessage, testValidMessage } from "./utils/selectors";
 
-const emailTestId = "email";
-const messageTestId = "message";
-const pendingTestId = "pending";
-const submitTestId = "submit";
-const usernameInvalidTestId = "username-invalid";
-const usernameTestId = "username";
-const usernameLoadingTestId = "username-loading";
-const usernameValidTestId = "username-valid";
-
-const fetch: jest.Mock = (global.fetch = jest.fn());
-
-const mockResponse = (response: any, waitTimeout?: number) => {
-    fetch.mockImplementation(async (url: RequestInfo, init?: RequestInit) => {
-        if (waitTimeout) {
-            await wait(waitTimeout);
-        }
-
-        return {
-            arrayBuffer: () => Promise.resolve(new ArrayBuffer(0)),
-            blob: () => Promise.resolve(new Blob()),
-            body: {} as ReadableStream,
-            bodyUsed: false,
-            clone: () => ({}) as Response,
-            formData: () => Promise.resolve(new FormData()),
-            headers: (init?.headers || {}) as Headers,
-            json: () => Promise.resolve(response),
-            ok: true,
-            redirected: false,
-            status: 200,
-            statusText: "OK",
-            text: () => Promise.resolve(JSON.stringify(response)),
-            type: "basic",
-            url: url.toString()
-        };
-    });
-};
-
-beforeEach(() => {
-    jest.resetAllMocks();
-});
-
 describe("Register", () => {
+    const fetch: jest.Mock = (global.fetch = jest.fn());
+
+    const mockResponse = (response: any, waitTimeout?: number) => {
+        fetch.mockImplementation(async (url: RequestInfo, init?: RequestInit) => {
+            if (waitTimeout) {
+                await wait(waitTimeout);
+            }
+
+            return {
+                arrayBuffer: () => Promise.resolve(new ArrayBuffer(0)),
+                blob: () => Promise.resolve(new Blob()),
+                body: {} as ReadableStream,
+                bodyUsed: false,
+                clone: () => ({}) as Response,
+                formData: () => Promise.resolve(new FormData()),
+                headers: (init?.headers || {}) as Headers,
+                json: () => Promise.resolve(response),
+                ok: true,
+                redirected: false,
+                status: 200,
+                statusText: "OK",
+                text: () => Promise.resolve(JSON.stringify(response)),
+                type: "basic",
+                url: url.toString()
+            };
+        });
+    };
+
+    beforeEach(() => {
+        jest.resetAllMocks();
+    });
+
     test("Fetch", async () => {
         const { container } = render(<Register />);
 
         // loading should not be in the document
-        expect(() => screen.getByTestId(usernameLoadingTestId)).toThrowError();
+        expect(screen.queryByTestId(RegisterDataTestId.UsernameLoading)).toBeNull();
 
         // input one letter to trigger a promise with wait
-        fireEvent.change(screen.getByTestId(usernameTestId), {
+        fireEvent.change(screen.getByTestId(RegisterDataTestId.Username), {
             target: { value: "J" }
         });
 
@@ -65,7 +57,7 @@ describe("Register", () => {
 
         // wait for the return of the fetch
         await act(async () => {
-            await wait(1000);
+            await wait(2000);
         });
 
         // one error message should be shown
@@ -75,12 +67,12 @@ describe("Register", () => {
         mockResponse({ isValid: true }, 1000);
 
         // inout valid text to trigger a fetch
-        fireEvent.change(screen.getByTestId(usernameTestId), {
+        fireEvent.change(screen.getByTestId(RegisterDataTestId.Username), {
             target: { value: "James" }
         });
 
         // loading should be shown
-        expect(screen.getByTestId(usernameLoadingTestId)).toBeTruthy();
+        expect(screen.getByTestId(RegisterDataTestId.UsernameLoading)).toBeTruthy();
 
         // wait for the response
         await act(async () => {
@@ -88,21 +80,21 @@ describe("Register", () => {
         });
 
         // loading should not be shown
-        expect(() => screen.getByTestId(usernameLoadingTestId)).toThrowError();
+        expect(screen.queryByTestId(RegisterDataTestId.UsernameLoading)).toBeNull();
 
         // an icon with a checkmark should be shown
-        expect(screen.getByTestId(usernameValidTestId)).toBeTruthy();
+        expect(screen.getByTestId(RegisterDataTestId.UsernameValid)).toBeTruthy();
 
         // mock the fetch response to show an invalid message
         mockResponse({ isValid: false }, 1000);
 
         // input a text
-        fireEvent.change(screen.getByTestId(usernameTestId), {
+        fireEvent.change(screen.getByTestId(RegisterDataTestId.Username), {
             target: { value: "James B" }
         });
 
         // loading should be shown
-        expect(screen.getByTestId(usernameLoadingTestId)).toBeTruthy();
+        expect(screen.getByTestId(RegisterDataTestId.UsernameLoading)).toBeTruthy();
 
         // wait for the response
         await act(async () => {
@@ -110,11 +102,11 @@ describe("Register", () => {
         });
 
         // loading should not be shown
-        expect(() => screen.getByTestId(usernameLoadingTestId)).toThrowError();
+        expect(screen.queryByTestId(RegisterDataTestId.UsernameLoading)).toBeNull();
 
         // an invalid message should be shown
-        expect(screen.getByTestId(usernameInvalidTestId)).toBeTruthy();
-    }, 8000);
+        expect(screen.getByTestId(RegisterDataTestId.UsernameInvalid)).toBeTruthy();
+    });
 
     test("Call count on blur", async () => {
         render(<Register />);
@@ -123,7 +115,7 @@ describe("Register", () => {
         mockResponse({ isValid: true }, 2000);
 
         // input a value
-        fireEvent.change(screen.getByTestId(usernameTestId), {
+        fireEvent.change(screen.getByTestId(RegisterDataTestId.Username), {
             target: { value: "James" }
         });
 
@@ -134,7 +126,7 @@ describe("Register", () => {
         expect(fetch).toBeCalledTimes(1);
 
         // blur action on the input
-        fireEvent.blur(screen.getByTestId(usernameTestId));
+        fireEvent.blur(screen.getByTestId(RegisterDataTestId.Username));
 
         await wait(500);
 
@@ -149,17 +141,17 @@ describe("Register", () => {
         mockResponse({ isValid: true });
 
         // input a name
-        fireEvent.change(screen.getByTestId(usernameTestId), {
+        fireEvent.change(screen.getByTestId(RegisterDataTestId.Username), {
             target: { value: "James" }
         });
 
         // input a name
-        fireEvent.change(screen.getByTestId(emailTestId), {
+        fireEvent.change(screen.getByTestId(RegisterDataTestId.Email), {
             target: { value: "james.bond@gmail.com" }
         });
 
         // submit button should be disabled
-        expect(screen.getByTestId(submitTestId)).toBeDisabled();
+        expect(screen.getByTestId(RegisterDataTestId.Submit)).toBeDisabled();
 
         await act(async () => {
             await wait(500);
@@ -172,20 +164,20 @@ describe("Register", () => {
         testValidMessage(container, 2);
 
         // submit button should not be disabled
-        expect(screen.getByTestId(submitTestId)).not.toBeDisabled();
+        expect(screen.getByTestId(RegisterDataTestId.Submit)).not.toBeDisabled();
 
         mockResponse({ ok: true }, 1000);
 
         await waitFor(async () => {
-            fireEvent.click(screen.getByTestId(submitTestId));
+            fireEvent.click(screen.getByTestId(RegisterDataTestId.Submit));
         });
 
-        expect(screen.getByTestId(pendingTestId)).toBeTruthy();
+        expect(screen.getByTestId(RegisterDataTestId.Pending)).toBeTruthy();
 
         await act(async () => {
             await wait(1500);
         });
 
-        expect(screen.getByTestId(messageTestId)).toBeTruthy();
+        expect(screen.getByTestId(RegisterDataTestId.Message)).toBeTruthy();
     });
 });

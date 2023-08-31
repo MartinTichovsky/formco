@@ -11,15 +11,17 @@ interface Form {
     input: string;
 }
 
-const testid = "test-id";
-
-console.error = jest.fn();
-
-beforeEach(() => {
-    collector.reset();
-});
-
 describe("FormController", () => {
+    const testid = "test-id";
+
+    beforeAll(() => {
+        console.error = jest.fn();
+    });
+
+    beforeEach(() => {
+        collector.reset();
+    });
+
     describe("FormController Element", () => {
         test("Default functionality", () => {
             render(<FormController>{() => <div data-testid={testid}></div>}</FormController>);

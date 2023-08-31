@@ -4,8 +4,9 @@ import { validColor } from "./Register.styles";
 import { Api } from "./Register.types";
 
 const apiBaseUrl = "http://localhost:3000";
+
 export const emailApiUrl = `${apiBaseUrl}/email`;
-const registerApiUrl = `${apiBaseUrl}/register`;
+export const registerApiUrl = `${apiBaseUrl}/register`;
 export const usernameApiUrl = `${apiBaseUrl}/username`;
 
 const getFetchInit = (body: Record<string, string>, signal?: AbortSignal) => ({
@@ -17,21 +18,35 @@ const getFetchInit = (body: Record<string, string>, signal?: AbortSignal) => ({
     signal
 });
 
-export const api = async ({ body, errorMessage, fetchController, id, resolve, url }: Api) => {
-    fetchController.current = new AbortController();
+export const api = async ({
+    body,
+    errorMessage,
+    fetchController,
+    id,
+    invalidTestId,
+    resolve,
+    url,
+    validTestId
+}: Api) => {
+    fetchController.registerAbortController(id);
 
-    const response = await fetch(url, getFetchInit(body, fetchController.current?.signal));
+    const responseBody = await fetch(url, getFetchInit(body, fetchController.getSignal(id)))
+        .then((response) => response.json())
+        .catch(() => {
+            //
+        });
 
-    fetchController.current = undefined;
+    if (!responseBody) {
+        return;
+    }
 
-    const responseBody = await response.json();
     const isValid = responseBody.isValid;
 
     resolve({
         content: isValid ? (
-            <CheckIcon data-testid={`${id}-valid`} sx={{ color: validColor, fontSize: 16 }} />
+            <CheckIcon data-testid={validTestId} sx={{ color: validColor, fontSize: 16 }} />
         ) : (
-            <span data-testid={`${id}-invalid`}>{errorMessage}</span>
+            <span data-testid={invalidTestId}>{errorMessage}</span>
         ),
         isValid
     });

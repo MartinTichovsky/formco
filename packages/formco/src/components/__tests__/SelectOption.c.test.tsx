@@ -11,40 +11,40 @@ interface Form {
     select: string;
 }
 
-let controller: Controller<Form>;
-let privateController: PrivateController<Form>;
-let selectRef: React.MutableRefObject<HTMLSelectElement | undefined>;
-
-const defaultValue = "default value";
-const testId = "test-id";
-const testText = "Test text";
-
-beforeEach(() => {
-    collector.reset();
-    jest.resetAllMocks();
-
-    privateController = new PrivateController<Form>({
-        setFormControllerState: jest.fn()
-    });
-    controller = new Controller(privateController);
-    selectRef = {
-        current: { value: defaultValue }
-    } as React.MutableRefObject<HTMLSelectElement | undefined>;
-});
-
-const checkUseEffectActions = () => {
-    // useEffect should be called one times
-    expect(
-        collector
-            .getReactHooks(SelectOption.name, {
-                dataTestId: testId
-            })
-            ?.getHooksByType("useEffect")
-            ?.get(1)?.action
-    ).toBeCalledTimes(1);
-};
-
 describe("SelectOption", () => {
+    let controller: Controller<Form>;
+    let privateController: PrivateController<Form>;
+    let selectRef: React.MutableRefObject<HTMLSelectElement | undefined>;
+
+    const defaultValue = "default value";
+    const testId = "test-id";
+    const testText = "Test text";
+
+    const checkUseEffectActions = () => {
+        // useEffect should be called one times
+        expect(
+            collector
+                .getReactHooks(SelectOption.name, {
+                    dataTestId: testId
+                })
+                ?.getHooksByType("useEffect")
+                ?.get(1)?.action
+        ).toBeCalledTimes(1);
+    };
+
+    beforeEach(() => {
+        collector.reset();
+        jest.resetAllMocks();
+
+        privateController = new PrivateController<Form>({
+            setFormControllerState: jest.fn()
+        });
+        controller = new Controller(privateController);
+        selectRef = {
+            current: { value: defaultValue }
+        } as React.MutableRefObject<HTMLSelectElement | undefined>;
+    });
+
     test("Context is not provided", () => {
         const context = getControllerProviderContext<Form>();
 
@@ -57,7 +57,7 @@ describe("SelectOption", () => {
         );
 
         // option should not be in the document
-        expect(() => screen.getByTestId(testId)).toThrowError();
+        expect(screen.queryByTestId(testId)).toBeNull();
     });
 
     test("Default functionality", () => {
@@ -178,7 +178,7 @@ describe("SelectOption", () => {
         );
 
         // option should not be in the document
-        expect(() => screen.getByTestId(testId)).toThrowError();
+        expect(screen.queryByTestId(testId)).toBeNull();
 
         // the component should be rendered one times
         expect(collector.getCallCount(SelectOption.name, { dataTestId: testId })).toBe(1);
@@ -215,7 +215,7 @@ describe("SelectOption", () => {
         });
 
         // option should not be in the document
-        expect(() => screen.getByTestId(testId)).toThrowError();
+        expect(screen.queryByTestId(testId)).toBeNull();
 
         // check the render count
         expect(collector.getCallCount(SelectOption.name, { dataTestId: testId })).toBe(3);

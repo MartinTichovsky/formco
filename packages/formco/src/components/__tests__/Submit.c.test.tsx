@@ -12,66 +12,68 @@ interface Form {
     input: string;
 }
 
-let controller: Controller<Form>;
-let privateController: PrivateController<Form>;
-
-const buttonText = "Test text";
-
-const defaultFunctionalityTest = async (unmount: () => void, disabledByDefault?: boolean) => {
-    // button should contain the text and shouldn't be disabled
-    const button = screen.getByText(buttonText);
-
-    if (disabledByDefault) {
-        expect(button).toBeDisabled();
-    } else {
-        expect(button).not.toBeDisabled();
-    }
-
-    const useCallbackHooks = collector.getReactHooks(SubmitComponent.name)?.getHooksByType("useCallback");
-    const useEffectHooks = collector.getReactHooks(SubmitComponent.name)?.getHooksByType("useEffect");
-
-    // render and call count
-    expect(collector.getCallCount(SubmitComponent.name)).toBe(1);
-    expect(useCallbackHooks?.get(1)?.action).toBeCalledTimes(1);
-    expect(useEffectHooks?.get(1)?.action).toBeCalledTimes(1);
-    expect(useEffectHooks?.get(1)?.unmount).toBeUndefined();
-    expect(useEffectHooks?.get(2)?.action).toBeCalledTimes(1);
-    expect(useEffectHooks?.get(2)?.unmount).not.toBeCalled();
-
-    // onSubmit is not provided, click on the button should do nothing
-    await waitFor(async () => {
-        fireEvent.click(button);
-    });
-
-    expect(collector.getCallCount(SubmitComponent.name)).toBe(1);
-    expect(useCallbackHooks?.get(1)?.action).toBeCalledTimes(1);
-    expect(useEffectHooks?.get(1)?.action).toBeCalledTimes(1);
-    expect(useEffectHooks?.get(1)?.unmount).toBeUndefined();
-    expect(useEffectHooks?.get(2)?.action).toBeCalledTimes(1);
-    expect(useEffectHooks?.get(2)?.unmount).not.toBeCalled();
-
-    // unmout the component
-    unmount();
-
-    expect(collector.getCallCount(SubmitComponent.name)).toBe(1);
-    expect(useCallbackHooks?.get(1)?.action).toBeCalledTimes(1);
-    expect(useEffectHooks?.get(1)?.action).toBeCalledTimes(1);
-    expect(useEffectHooks?.get(1)?.unmount).toBeUndefined();
-    expect(useEffectHooks?.get(2)?.action).toBeCalledTimes(1);
-    expect(useEffectHooks?.get(2)?.unmount).toBeCalledTimes(1);
-};
-
-console.error = jest.fn();
-
-beforeEach(() => {
-    collector.reset();
-    privateController = new PrivateController<Form>({
-        setFormControllerState: jest.fn()
-    });
-    controller = new Controller(privateController);
-});
-
 describe("Submit", () => {
+    let controller: Controller<Form>;
+    let privateController: PrivateController<Form>;
+
+    const buttonText = "Test text";
+
+    const defaultFunctionalityTest = async (unmount: () => void, disabledByDefault?: boolean) => {
+        // button should contain the text and shouldn't be disabled
+        const button = screen.getByText(buttonText);
+
+        if (disabledByDefault) {
+            expect(button).toBeDisabled();
+        } else {
+            expect(button).not.toBeDisabled();
+        }
+
+        const useCallbackHooks = collector.getReactHooks(SubmitComponent.name)?.getHooksByType("useCallback");
+        const useEffectHooks = collector.getReactHooks(SubmitComponent.name)?.getHooksByType("useEffect");
+
+        // render and call count
+        expect(collector.getCallCount(SubmitComponent.name)).toBe(1);
+        expect(useCallbackHooks?.get(1)?.action).toBeCalledTimes(1);
+        expect(useEffectHooks?.get(1)?.action).toBeCalledTimes(1);
+        expect(useEffectHooks?.get(1)?.unmount).toBeUndefined();
+        expect(useEffectHooks?.get(2)?.action).toBeCalledTimes(1);
+        expect(useEffectHooks?.get(2)?.unmount).not.toBeCalled();
+
+        // onSubmit is not provided, click on the button should do nothing
+        await waitFor(async () => {
+            fireEvent.click(button);
+        });
+
+        expect(collector.getCallCount(SubmitComponent.name)).toBe(1);
+        expect(useCallbackHooks?.get(1)?.action).toBeCalledTimes(1);
+        expect(useEffectHooks?.get(1)?.action).toBeCalledTimes(1);
+        expect(useEffectHooks?.get(1)?.unmount).toBeUndefined();
+        expect(useEffectHooks?.get(2)?.action).toBeCalledTimes(1);
+        expect(useEffectHooks?.get(2)?.unmount).not.toBeCalled();
+
+        // unmout the component
+        unmount();
+
+        expect(collector.getCallCount(SubmitComponent.name)).toBe(1);
+        expect(useCallbackHooks?.get(1)?.action).toBeCalledTimes(1);
+        expect(useEffectHooks?.get(1)?.action).toBeCalledTimes(1);
+        expect(useEffectHooks?.get(1)?.unmount).toBeUndefined();
+        expect(useEffectHooks?.get(2)?.action).toBeCalledTimes(1);
+        expect(useEffectHooks?.get(2)?.unmount).toBeCalledTimes(1);
+    };
+
+    beforeAll(() => {
+        console.error = jest.fn();
+    });
+
+    beforeEach(() => {
+        collector.reset();
+        privateController = new PrivateController<Form>({
+            setFormControllerState: jest.fn()
+        });
+        controller = new Controller(privateController);
+    });
+
     describe("Submit Element", () => {
         test("Default functionality", () => {
             const context = getControllerProviderContext<Form>();

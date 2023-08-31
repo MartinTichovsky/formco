@@ -68,7 +68,7 @@ describe("GeneralAsynchronousValidation.tsx", () => {
         testInvalidMessage(container, 0);
 
         // no pending text should be shown
-        expect(() => screen.getAllByText(TestingContent.Pending).length).toThrowError();
+        expect(screen.queryAllByText(TestingContent.Pending).length).toBe(0);
 
         // input a valid text
         fireEvent.change(screen.getByTestId(DataTestId.Surname), {

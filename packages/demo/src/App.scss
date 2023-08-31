@@ -10,6 +10,7 @@ label {
 }
 
 .styled-form {
+
   input:not([type]),
   input[type="text"],
   input[type="date"],
@@ -91,15 +92,6 @@ label {
     color: red;
   }
 
-  .info {
-    border-top: 2px solid #dcdcdc;
-    font-family: "Arial";
-    font-size: 0.8em;
-    font-weight: bolder;
-    margin-top: 15px;
-    max-width: 500px;
-    padding-top: 15px;
-  }
 
   .field-row.buttons button:not(:first-child) {
     margin-left: 5px;
@@ -165,4 +157,41 @@ label {
 
 .re-render button:hover {
   background: #b11a1a;
+}
+
+.info {
+  border-top: 2px solid #dcdcdc;
+  font-family: "Arial";
+  font-size: 0.8em;
+  font-weight: bolder;
+  margin-top: 15px;
+  max-width: 500px;
+  padding-top: 15px;
+
+  p {
+    font-weight: normal;
+    margin-left: 1em;
+  }
+
+  .info-list {
+    margin-top: 1em;
+  }
+
+  .info-list-key {
+    font-weight: normal;
+    text-decoration: underline;
+  }
+
+  .info-list {
+    display: flex;
+  }
+
+  .info-list-items {
+    padding-left: 1.5em;
+
+    p {
+      margin: 0;
+      padding: 0;
+    }
+  }
 }

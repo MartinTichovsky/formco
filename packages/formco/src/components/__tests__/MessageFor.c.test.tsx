@@ -10,43 +10,45 @@ interface Form {
     input: string;
 }
 
-let controller: Controller<Form>;
-let privateController: PrivateController<Form>;
-
-const testText1 = "Test text 1";
-const testText2 = "Test text 2";
-
-beforeEach(() => {
-    collector.reset();
-    privateController = new PrivateController<Form>({
-        setFormControllerState: jest.fn()
-    });
-    controller = new Controller(privateController);
-
-    privateController["_fields"].input = {
-        isDisabled: false,
-        isValid: true,
-        isValidated: true,
-        isVisible: true,
-        validationContent: undefined,
-        validationInProgress: false,
-        validationToBeExecuted: false,
-        value: undefined
-    };
-});
-
-const checkUseEffectActions = () => {
-    // useEffect should be called one times
-    expect(collector.getReactHooks(MessageFor.name)?.getHooksByType("useEffect")?.get(1)?.action).toBeCalledTimes(1);
-
-    // the unmount action should not to be called
-    expect(collector.getReactHooks(MessageFor.name)?.getHooksByType("useEffect")?.get(1)?.unmount).not.toBeCalled();
-
-    // more useEffects should not exist
-    expect(collector.getReactHooks(MessageFor.name)?.getHooksByType("useEffect").get(2)).toBeUndefined();
-};
-
 describe("MessageFor", () => {
+    let controller: Controller<Form>;
+    let privateController: PrivateController<Form>;
+
+    const testText1 = "Test text 1";
+    const testText2 = "Test text 2";
+
+    const checkUseEffectActions = () => {
+        // useEffect should be called one times
+        expect(collector.getReactHooks(MessageFor.name)?.getHooksByType("useEffect")?.get(1)?.action).toBeCalledTimes(
+            1
+        );
+
+        // the unmount action should not to be called
+        expect(collector.getReactHooks(MessageFor.name)?.getHooksByType("useEffect")?.get(1)?.unmount).not.toBeCalled();
+
+        // more useEffects should not exist
+        expect(collector.getReactHooks(MessageFor.name)?.getHooksByType("useEffect").get(2)).toBeUndefined();
+    };
+
+    beforeEach(() => {
+        collector.reset();
+        privateController = new PrivateController<Form>({
+            setFormControllerState: jest.fn()
+        });
+        controller = new Controller(privateController);
+
+        privateController["_fields"].input = {
+            isDisabled: false,
+            isValid: true,
+            isValidated: true,
+            isVisible: true,
+            validationContent: undefined,
+            validationInProgress: false,
+            validationToBeExecuted: false,
+            value: undefined
+        };
+    });
+
     test("Default functionality - isValid is undefined, equal to false", () => {
         const context = getControllerProviderContext<Form>();
 
@@ -59,7 +61,7 @@ describe("MessageFor", () => {
         );
 
         // the test message should not be in the document
-        expect(() => screen.getByText(testText1)).toThrowError();
+        expect(screen.queryByText(testText1)).toBeNull();
 
         // the component should be rendered one times
         expect(collector.getCallCount(MessageFor.name)).toBe(1);
@@ -75,7 +77,7 @@ describe("MessageFor", () => {
         });
 
         // the test message should not be in the document
-        expect(() => screen.getByText(testText1)).toThrowError();
+        expect(screen.queryByText(testText1)).toBeNull();
 
         // check render count
         expect(collector.getCallCount(MessageFor.name)).toBe(1);
@@ -90,7 +92,7 @@ describe("MessageFor", () => {
         });
 
         // the test message should not be in the document because form is not submited and validateOnChange is false
-        expect(() => screen.getByText(testText1)).toThrowError();
+        expect(screen.queryByText(testText1)).toBeNull();
 
         privateController["_validateOnChange"] = true;
 
@@ -115,7 +117,7 @@ describe("MessageFor", () => {
         });
 
         // the test message should not be in the document
-        expect(() => screen.getByText(testText1)).toThrowError();
+        expect(screen.queryByText(testText1)).toBeNull();
 
         // check render count
         expect(collector.getCallCount(MessageFor.name)).toBe(3);
@@ -145,7 +147,7 @@ describe("MessageFor", () => {
         });
 
         // the test message should not be in the document
-        expect(() => screen.getByText(testText1)).toThrowError();
+        expect(screen.queryByText(testText1)).toBeNull();
 
         // check render count
         expect(collector.getCallCount(MessageFor.name)).toBe(5);
@@ -161,7 +163,7 @@ describe("MessageFor", () => {
         });
 
         // the test message should not be in the document
-        expect(() => screen.getByText(testText1)).toThrowError();
+        expect(screen.queryByText(testText1)).toBeNull();
 
         // check render count
         expect(collector.getCallCount(MessageFor.name)).toBe(5);
@@ -186,7 +188,7 @@ describe("MessageFor", () => {
         );
 
         // the test message should not be in the document
-        expect(() => screen.getByText(testText1)).toThrowError();
+        expect(screen.queryByText(testText1)).toBeNull();
 
         // the component should be rendered one times
         expect(collector.getCallCount(MessageFor.name)).toBe(1);
@@ -202,7 +204,7 @@ describe("MessageFor", () => {
         });
 
         // the test message should not be in the document
-        expect(() => screen.getByText(testText1)).toThrowError();
+        expect(screen.queryByText(testText1)).toBeNull();
 
         // check render count
         expect(collector.getCallCount(MessageFor.name)).toBe(1);
@@ -232,7 +234,7 @@ describe("MessageFor", () => {
         });
 
         // the test message should not be in the document
-        expect(() => screen.getByText(testText1)).toThrowError();
+        expect(screen.queryByText(testText1)).toBeNull();
 
         // check render count
         expect(collector.getCallCount(MessageFor.name)).toBe(3);
@@ -262,7 +264,7 @@ describe("MessageFor", () => {
         });
 
         // the test message should not be in the document
-        expect(() => screen.getByText(testText1)).toThrowError();
+        expect(screen.queryByText(testText1)).toBeNull();
 
         // check render count
         expect(collector.getCallCount(MessageFor.name)).toBe(5);
@@ -278,7 +280,7 @@ describe("MessageFor", () => {
         });
 
         // the test message should not be in the document
-        expect(() => screen.getByText(testText1)).toThrowError();
+        expect(screen.queryByText(testText1)).toBeNull();
 
         // check render count
         expect(collector.getCallCount(MessageFor.name)).toBe(5);
@@ -294,7 +296,7 @@ describe("MessageFor", () => {
         });
 
         // the test message should not be in the document
-        expect(() => screen.getByText(testText1)).toThrowError();
+        expect(screen.queryByText(testText1)).toBeNull();
 
         // check render count
         expect(collector.getCallCount(MessageFor.name)).toBe(5);
@@ -320,7 +322,7 @@ describe("MessageFor", () => {
         privateController["_validateOnChange"] = true;
 
         // the test message should not be in the document
-        expect(() => screen.getByText(testText1)).toThrowError();
+        expect(screen.queryByText(testText1)).toBeNull();
 
         // the component should be rendered one times
         expect(collector.getCallCount(MessageFor.name)).toBe(1);

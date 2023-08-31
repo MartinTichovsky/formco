@@ -13,8 +13,8 @@ describe("TextFieldMessageComponent.tsx", () => {
         render(<TextFieldMessageComponent />);
 
         // errors should not be shown
-        expect(() => screen.getByTestId(DataTestId.ClassComponent)).toThrowError();
-        expect(() => screen.getByTestId(DataTestId.FunctionalComponent)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.ClassComponent)).toBeNull();
+        expect(screen.queryByTestId(DataTestId.FunctionalComponent)).toBeNull();
 
         // submit invalid form
         await waitFor(async () => {
@@ -29,8 +29,8 @@ describe("TextFieldMessageComponent.tsx", () => {
         fireEvent.click(screen.getByTestId(DataTestId.Reset));
 
         // errors should not be shown
-        expect(() => screen.getByTestId(DataTestId.ClassComponent)).toThrowError();
-        expect(() => screen.getByTestId(DataTestId.FunctionalComponent)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.ClassComponent)).toBeNull();
+        expect(screen.queryByTestId(DataTestId.FunctionalComponent)).toBeNull();
 
         // input an empty text
         fireEvent.change(screen.getByTestId(DataTestId.GivenName), {
@@ -38,7 +38,7 @@ describe("TextFieldMessageComponent.tsx", () => {
         });
 
         // functional error must be shown
-        expect(() => screen.getByTestId(DataTestId.ClassComponent)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.ClassComponent)).toBeNull();
         expect(screen.getByTestId(DataTestId.FunctionalComponent)).toBeTruthy();
 
         // input an empty text
@@ -59,8 +59,8 @@ describe("TextFieldMessageComponent.tsx", () => {
         });
 
         // errors should not be shown
-        expect(() => screen.getByTestId(DataTestId.ClassComponent)).toThrowError();
-        expect(() => screen.getByTestId(DataTestId.FunctionalComponent)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.ClassComponent)).toBeNull();
+        expect(screen.queryByTestId(DataTestId.FunctionalComponent)).toBeNull();
 
         // submit valid form
         await waitFor(async () => {

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { FormFields } from "../../private-controller.types";
-import { FormField } from "../FormField";
-import { FormFieldPrivateProps, FormFieldType } from "../FormField.types";
+import { FormField } from "./FormField";
+import { FormFieldPrivateProps, FormFieldType } from "./FormField.types";
 
 export function Input<
     T extends FormFields<T>,

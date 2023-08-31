@@ -1,5 +1,5 @@
 import * as React from "react";
-import { FormFields } from "../../private-controller.types";
+import { FormFields, OnValidationCustom } from "../../private-controller.types";
 import { usePrivateController } from "../../providers";
 import { CustomFieldPrivateProps, CustomFieldType } from "./CustomField.types";
 import { CustomFieldComponent } from "./CustomFieldComponent";
@@ -37,6 +37,8 @@ export const CustomField = <
         throw new Error("Name must be a string");
     }
 
+    $onValidation = $onValidation || privateController.getOnValidationCondition($name);
+
     return (
         <CustomFieldComponent
             children={children}
@@ -51,7 +53,7 @@ export const CustomField = <
             onBlur={$onBlur}
             onChange={$onChange}
             onKeyDown={$onKeyDown}
-            onValidation={$onValidation}
+            onValidation={$onValidation as OnValidationCustom}
             privateController={privateController}
             provideValue={$provideValue}
             rest={rest}

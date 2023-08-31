@@ -14,9 +14,9 @@ describe("TextFieldHiddenUseCase2.tsx", () => {
         const { container } = render(<TextFieldHiddenUseCase2 />);
 
         // the first and the third input must not be in the document
-        expect(() => screen.getByTestId(DataTestId.Salutation)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Salutation)).toBeNull();
         expect(screen.getByTestId(DataTestId.GivenName)).toBeTruthy();
-        expect(() => screen.getByTestId(DataTestId.Surname)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Surname)).toBeNull();
         expect(screen.getByTestId(DataTestId.Submit)).not.toBeDisabled();
 
         // errors should not be shown
@@ -36,9 +36,9 @@ describe("TextFieldHiddenUseCase2.tsx", () => {
         });
 
         // the first and the third input must not be in the document
-        expect(() => screen.getByTestId(DataTestId.Salutation)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Salutation)).toBeNull();
         expect(screen.getByTestId(DataTestId.GivenName)).toBeTruthy();
-        expect(() => screen.getByTestId(DataTestId.Surname)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Surname)).toBeNull();
         expect(screen.getByTestId(DataTestId.Submit)).not.toBeDisabled();
 
         // errors should not be shown
@@ -50,7 +50,7 @@ describe("TextFieldHiddenUseCase2.tsx", () => {
         });
 
         // the first input must not be in the document and the submit button must be disabled
-        expect(() => screen.getByTestId(DataTestId.Salutation)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Salutation)).toBeNull();
         expect(screen.getByTestId(DataTestId.GivenName)).toBeTruthy();
         expect(screen.getByTestId(DataTestId.Surname)).toBeTruthy();
         expect(screen.getByTestId(DataTestId.Submit)).toBeDisabled();
@@ -64,7 +64,7 @@ describe("TextFieldHiddenUseCase2.tsx", () => {
         });
 
         // the first input must not be in the document and the submit button must be disabled
-        expect(() => screen.getByTestId(DataTestId.Salutation)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Salutation)).toBeNull();
         expect(screen.getByTestId(DataTestId.GivenName)).toBeTruthy();
         expect(screen.getByTestId(DataTestId.Surname)).toBeTruthy();
         expect(screen.getByTestId(DataTestId.Submit)).toBeDisabled();

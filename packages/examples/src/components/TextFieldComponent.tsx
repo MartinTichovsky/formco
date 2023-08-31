@@ -13,7 +13,6 @@ interface ClassComponentProps {
     defaultValue: string; // required
     disabled: boolean; // required
     labelText: string;
-    name: string;
     onBlur: (event: React.ChangeEvent) => void; // required
     onChange: (event: React.ChangeEvent) => void; // required
     onKeyDown: (event: React.KeyboardEvent) => void; // required

@@ -1,4 +1,4 @@
-import { CommonFormFieldProps } from "./components/FormField.types";
+import { CommonFormFieldProps } from "./components/fields/FormField.types";
 import { ValidationResult, Value } from "./private-controller.types";
 
 export type OnChangeCondition = ((fields: {}) => boolean) | undefined;

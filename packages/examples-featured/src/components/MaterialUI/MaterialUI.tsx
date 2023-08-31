@@ -20,7 +20,7 @@ export const MaterialUI = () => {
 
     return (
         <Template store={store}>
-            <FormController<MaterialUIForm> validateOnChange>
+            <FormController<MaterialUIForm> validateOnChange initialValues={{ gender: "female" }}>
                 {(controller) => (
                     <>
                         <FieldRow>
@@ -57,12 +57,7 @@ export const MaterialUI = () => {
                         <FieldRow>
                             <FormControl component="fieldset">
                                 <FormLabel component="legend">Gender</FormLabel>
-                                <FC.CustomField
-                                    $component={RadioGroup}
-                                    $controller={controller}
-                                    $name="gender"
-                                    defaultValue="female"
-                                >
+                                <FC.CustomField $component={RadioGroup} $controller={controller} $name="gender">
                                     <FormControlLabel value="female" control={<Radio />} label="Female" />
                                     <FormControlLabel value="male" control={<Radio />} label="Male" />
                                     <FormControlLabel value="other" control={<Radio />} label="Other" />

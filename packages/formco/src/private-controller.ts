@@ -1,4 +1,5 @@
 import * as React from "react";
+import { FormControllerProps } from "./components/FormController.types";
 import { Controller } from "./controller";
 import {
     Action,
@@ -21,6 +22,7 @@ import {
     OnDisableAction,
     OnSubmit,
     OnValidation,
+    OnValidationCustom,
     PrivateControllerSetKey,
     PromiseQueue,
     SetDefaultIsDisabled,
@@ -60,6 +62,7 @@ export class PrivateController<T extends FormFields<T>> {
     private _isSubmitted = false;
     private _onChangeCounter = 0;
     private _onSubmit?: OnSubmit<T>;
+    private _onValidation?: FormControllerProps<T>["onValidation"];
     private _scrolledToElement: boolean = false;
     private _setFormControllerState: React.Dispatch<React.SetStateAction<PrivateControllerSetKey>>;
     private _validateOnBlur;
@@ -88,6 +91,7 @@ export class PrivateController<T extends FormFields<T>> {
         initialValues,
         options,
         onSubmit,
+        onValidation,
         requiredInvalidMessage,
         requiredValidMessage,
         setFormControllerState,
@@ -107,6 +111,7 @@ export class PrivateController<T extends FormFields<T>> {
         this._disableIf = disableIf;
         this._hideIf = hideIf;
         this._setFormControllerState = setFormControllerState;
+        this._onValidation = onValidation;
         this._validation = validation;
         this._validateOnBlur = validateOnBlur;
         this._validateOnChange = validateOnChange;
@@ -359,6 +364,18 @@ export class PrivateController<T extends FormFields<T>> {
 
     private getQueueId(key: keyof T) {
         return key in this._validationQueue ? this._validationQueue[key] : 0;
+    }
+
+    public getOnValidationCondition<R>(key: keyof T) {
+        return (
+            this._onValidation
+                ? typeof this._onValidation === "object" && key in this._onValidation
+                    ? this._onValidation[key]
+                    : typeof this._onValidation === "function"
+                    ? this._onValidation
+                    : undefined
+                : undefined
+        ) as OnValidationCustom<R> | undefined;
     }
 
     public getValidationCondition(key: keyof T) {

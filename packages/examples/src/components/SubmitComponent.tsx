@@ -54,7 +54,7 @@ const FunctionalSubmitComponent = ({
 
 interface ClassSubmitComponentProps {
     disabled: boolean; // required
-    onClick: (event: React.MouseEvent) => Controller<MyForm>; // required
+    onClick: (event: React.MouseEvent) => Promise<Controller<MyForm>>; // required
 }
 
 class ClassSubmitComponent extends React.Component<ClassSubmitComponentProps> {

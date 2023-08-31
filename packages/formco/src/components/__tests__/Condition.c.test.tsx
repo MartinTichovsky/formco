@@ -12,65 +12,67 @@ interface Form {
     input: string;
 }
 
-let controller: Controller<Form>;
-let privateController: PrivateController<Form>;
+describe("Condition", () => {
+    let controller: Controller<Form>;
+    let privateController: PrivateController<Form>;
 
-const testId = "test-id";
+    const testId = "test-id";
 
-const testValidForm = (unmount: () => void) => {
-    const useEffectHooks = collector.getReactHooks(ConditionComponent.name)?.getHooksByType("useEffect");
+    const testValidForm = (unmount: () => void) => {
+        const useEffectHooks = collector.getReactHooks(ConditionComponent.name)?.getHooksByType("useEffect");
 
-    // Should be rendered once and action should be called, by default is children not rendered
-    expect(collector.getCallCount(ConditionComponent.name)).toBe(1);
-    expect(useEffectHooks?.get(1)?.action).toBeCalledTimes(1);
-    expect(useEffectHooks?.get(1)?.unmount).not.toBeCalled();
-    expect(useEffectHooks?.get(2)).toBeUndefined();
-    expect(() => screen.getByTestId(testId)).toThrowError();
+        // Should be rendered once and action should be called, by default is children not rendered
+        expect(collector.getCallCount(ConditionComponent.name)).toBe(1);
+        expect(useEffectHooks?.get(1)?.action).toBeCalledTimes(1);
+        expect(useEffectHooks?.get(1)?.unmount).not.toBeCalled();
+        expect(useEffectHooks?.get(2)).toBeUndefined();
+        expect(screen.queryByTestId(testId)).toBeNull();
 
-    // onChange is trigered and the form is valid, it should re-render the component and show the children
-    privateController.onChange();
+        // onChange is trigered and the form is valid, it should re-render the component and show the children
+        privateController.onChange();
 
-    expect(collector.getCallCount(ConditionComponent.name)).toBe(2);
-    expect(useEffectHooks?.get(1)?.action).toBeCalledTimes(1);
-    expect(useEffectHooks?.get(1)?.unmount).not.toBeCalled();
-    expect(useEffectHooks?.get(2)).toBeUndefined();
-    expect(screen.getByTestId(testId)).toBeTruthy();
+        expect(collector.getCallCount(ConditionComponent.name)).toBe(2);
+        expect(useEffectHooks?.get(1)?.action).toBeCalledTimes(1);
+        expect(useEffectHooks?.get(1)?.unmount).not.toBeCalled();
+        expect(useEffectHooks?.get(2)).toBeUndefined();
+        expect(screen.getByTestId(testId)).toBeTruthy();
 
-    // set form values and make the form invalid, it should hide the children
-    privateController["_fields"].input = {
-        isDisabled: false,
-        isValid: false,
-        isValidated: true,
-        isVisible: true,
-        validationContent: "error",
-        validationInProgress: false,
-        validationToBeExecuted: false,
-        value: undefined
+        // set form values and make the form invalid, it should hide the children
+        privateController["_fields"].input = {
+            isDisabled: false,
+            isValid: false,
+            isValidated: true,
+            isVisible: true,
+            validationContent: "error",
+            validationInProgress: false,
+            validationToBeExecuted: false,
+            value: undefined
+        };
+
+        privateController.onChange();
+        expect(collector.getCallCount(ConditionComponent.name)).toBe(3);
+        expect(useEffectHooks?.get(1)?.action).toBeCalledTimes(1);
+        expect(useEffectHooks?.get(1)?.unmount).not.toBeCalled();
+        expect(useEffectHooks?.get(2)).toBeUndefined();
+        expect(screen.queryByTestId(testId)).toBeNull();
+
+        // unmount the component
+        unmount();
+
+        // unmount action should be called
+        expect(useEffectHooks?.get(1)?.unmount).toBeCalledTimes(1);
     };
 
-    privateController.onChange();
-    expect(collector.getCallCount(ConditionComponent.name)).toBe(3);
-    expect(useEffectHooks?.get(1)?.action).toBeCalledTimes(1);
-    expect(useEffectHooks?.get(1)?.unmount).not.toBeCalled();
-    expect(useEffectHooks?.get(2)).toBeUndefined();
-    expect(() => screen.getByTestId(testId)).toThrowError();
+    beforeAll(() => {
+        console.error = jest.fn();
+    });
 
-    // unmount the component
-    unmount();
+    beforeEach(() => {
+        collector.reset();
+        privateController = new PrivateController<Form>({ setFormControllerState: jest.fn() });
+        controller = new Controller(privateController);
+    });
 
-    // unmount action should be called
-    expect(useEffectHooks?.get(1)?.unmount).toBeCalledTimes(1);
-};
-
-console.error = jest.fn();
-
-beforeEach(() => {
-    collector.reset();
-    privateController = new PrivateController<Form>({ setFormControllerState: jest.fn() });
-    controller = new Controller(privateController);
-});
-
-describe("Condition", () => {
     describe("Condition Element", () => {
         test("Providing wrong showIf should throw an error", () => {
             const values = getGeneratedValues(false, "function", "undefined");
@@ -140,7 +142,7 @@ describe("Condition", () => {
                 </ConditionComponent>
             );
 
-            expect(() => screen.getByTestId(testId)).toThrowError();
+            expect(screen.queryByTestId(testId)).toBeNull();
         });
 
         test("dynamicRender", () => {
@@ -250,21 +252,21 @@ describe("Condition", () => {
                 </ConditionComponent>
             );
 
-            expect(() => screen.getByTestId(testId)).toThrowError();
+            expect(screen.queryByTestId(testId)).toBeNull();
 
             const useEffectHooks = collector.getReactHooks(ConditionComponent.name)?.getHooksByType("useEffect");
 
             expect(collector.getCallCount(ConditionComponent.name)).toBe(1);
             expect(useEffectHooks?.get(1)?.action).toBeCalledTimes(1);
             expect(useEffectHooks?.get(1)?.unmount).not.toBeCalled();
-            expect(() => screen.getByTestId(testId)).toThrowError();
+            expect(screen.queryByTestId(testId)).toBeNull();
 
             // the form is not valid because of the custom condition, the component shouldn't re-render
             privateController.onChange();
             expect(collector.getCallCount(ConditionComponent.name)).toBe(1);
             expect(useEffectHooks?.get(1)?.action).toBeCalledTimes(1);
             expect(useEffectHooks?.get(1)?.unmount).not.toBeCalled();
-            expect(() => screen.getByTestId(testId)).toThrowError();
+            expect(screen.queryByTestId(testId)).toBeNull();
         });
     });
 });

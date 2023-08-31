@@ -1,7 +1,7 @@
 import * as React from "react";
-import { CN } from "../constants";
-import { FormFields, PrivateProps, ValidationResult } from "../private-controller.types";
-import { SelectProvider } from "../providers";
+import { CN } from "../../constants";
+import { FormFields, PrivateProps, ValidationResult } from "../../private-controller.types";
+import { SelectProvider } from "../../providers";
 import {
     FormFieldComponentType,
     FormFieldInitialProps,
@@ -55,7 +55,6 @@ export function FormFieldComponent<
                 : privateController.getFieldValue(name) === value
     });
 
-    const defaultValueRef = React.useRef(privateController.getFieldValue(name) || "");
     const keyRef = React.useRef(0);
     const ref = React.useRef<HTMLSelectElement | HTMLInputElement>();
     const stateRef = React.useRef<FormFieldState>();
@@ -420,14 +419,14 @@ export function FormFieldComponent<
         [MessageComponent]
     );
 
+    const props = {
+        defaultChecked: false,
+        defaultValue: value || React.useMemo(() => privateController.getFieldValue(name) || "", [privateController])
+    };
+
     if (!state.isVisible) {
         return null;
     }
-
-    const props = {
-        defaultChecked: false,
-        defaultValue: value || defaultValueRef.current
-    };
 
     if ((type === "checkbox" || type === "radio") && state.isSelected) {
         props.defaultChecked = true;

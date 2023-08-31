@@ -8,9 +8,7 @@ export const CustomFieldComponent = <
     IComponent extends React.ComponentType<React.ComponentProps<IComponent> & CustomFieldPrivateProps>
 >({
     component: Component,
-    onValidation,
-    provideValue,
-    validation,
+    initialValidation,
     children,
     controller,
     id,
@@ -18,17 +16,24 @@ export const CustomFieldComponent = <
     onBlur,
     onChange,
     onKeyDown,
+    onValidation,
     privateController,
+    provideValue,
     validateOnBlur,
     validateOnChange,
     disableIf,
     hideIf,
-    rest
+    rest,
+    validation
 }: React.PropsWithChildren<CustomFieldComponentType<T, K, IComponent>> & PrivateProps<T>) => {
-    const [props, setProps] = React.useState<React.ComponentProps<React.ElementType>>(rest);
+    const [props, setProps] = React.useState<React.ComponentProps<React.ElementType>>({});
     const ref = React.useRef<HTMLElement>();
     const propsRef = React.useRef(props);
     propsRef.current = props;
+
+    const defaultValue = rest["defaultValue"]
+        ? rest["defaultValue"]
+        : React.useMemo(() => privateController.getFieldValue(name) || "", [privateController]);
 
     React.useEffect(
         () => {
@@ -159,7 +164,9 @@ export const CustomFieldComponent = <
     return React.createElement(
         Component,
         {
+            ...rest,
             ...props,
+            defaultValue,
             id,
             name,
             onBlur: onBlurHandler,

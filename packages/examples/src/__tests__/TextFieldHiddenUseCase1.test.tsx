@@ -14,9 +14,9 @@ describe("TextFieldHiddenUseCase1.tsx", () => {
         const { container } = render(<TextFieldHiddenUseCase1 />);
 
         // the first and the third input must not be in the document and the submit button must be disabled
-        expect(() => screen.getByTestId(DataTestId.Salutation)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Salutation)).toBeNull();
         expect(screen.getByTestId(DataTestId.GivenName)).toBeTruthy();
-        expect(() => screen.getByTestId(DataTestId.Surname)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Surname)).toBeNull();
         expect(screen.getByTestId(DataTestId.Submit)).toBeDisabled();
 
         // errors should not be shown
@@ -28,9 +28,9 @@ describe("TextFieldHiddenUseCase1.tsx", () => {
         });
 
         // the first and the third input must not be in the document and the submit button must be disabled
-        expect(() => screen.getByTestId(DataTestId.Salutation)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Salutation)).toBeNull();
         expect(screen.getByTestId(DataTestId.GivenName)).toBeTruthy();
-        expect(() => screen.getByTestId(DataTestId.Surname)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Surname)).toBeNull();
         expect(screen.getByTestId(DataTestId.Submit)).toBeDisabled();
 
         // one error should be shown
@@ -42,7 +42,7 @@ describe("TextFieldHiddenUseCase1.tsx", () => {
         });
 
         // the first input must not be in the document and the submit button must be disabled
-        expect(() => screen.getByTestId(DataTestId.Salutation)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Salutation)).toBeNull();
         expect(screen.getByTestId(DataTestId.GivenName)).toBeTruthy();
         expect(screen.getByTestId(DataTestId.Surname)).toBeTruthy();
         expect(screen.getByTestId(DataTestId.Submit)).toBeDisabled();
@@ -56,7 +56,7 @@ describe("TextFieldHiddenUseCase1.tsx", () => {
         });
 
         // the first input must not be in the document and the submit button must be disabled
-        expect(() => screen.getByTestId(DataTestId.Salutation)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Salutation)).toBeNull();
         expect(screen.getByTestId(DataTestId.GivenName)).toBeTruthy();
         expect(screen.getByTestId(DataTestId.Surname)).toBeTruthy();
         expect(screen.getByTestId(DataTestId.Submit)).toBeDisabled();
@@ -98,9 +98,9 @@ describe("TextFieldHiddenUseCase1.tsx", () => {
         });
 
         // the first and the third input must not be in the document and the submit button must be disabled
-        expect(() => screen.getByTestId(DataTestId.Salutation)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Salutation)).toBeNull();
         expect(screen.getByTestId(DataTestId.GivenName)).toBeTruthy();
-        expect(() => screen.getByTestId(DataTestId.Surname)).toThrowError();
+        expect(screen.queryByTestId(DataTestId.Surname)).toBeNull();
         expect(screen.getByTestId(DataTestId.Submit)).toBeDisabled();
 
         // one error should be shown
