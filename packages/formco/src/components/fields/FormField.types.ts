@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Controller } from "../../controller";
-import { FormFields, ValidationResult } from "../../private-controller.types";
+import { DisableIf, FormFields, HideIf, Validation, ValidationResult } from "../../private-controller.types";
 
 export interface CommonFormFieldProps {
     $hideMessage?: boolean;
@@ -27,9 +27,59 @@ export interface InitialState {
     message: ValidationResult;
 }
 
-export interface FormFieldInitialProps {
+export interface FormFieldComponentInitialProps {
     initialState: InitialState;
 }
+
+export interface FormFieldComponentState extends InitialState {
+    isOnFirstPosition: boolean;
+    isSelected: boolean;
+}
+
+export type FormFieldComponentType<
+    T extends FormFields<T>,
+    K extends keyof T,
+    IComponent extends React.ComponentType<React.ComponentProps<IComponent> & FormFieldPrivateProps>,
+    MComponent extends React.ElementType
+> = {
+    component?: IComponent;
+    controller: FormFieldPublicProps<T, K>["$controller"];
+    disableIf?: FormFieldPublicProps<T, K>["$disableIf"];
+    hideIf?: FormFieldPublicProps<T, K>["$hideIf"];
+    hideMessage?: boolean;
+    id?: FormFieldPublicProps<T, K>["$id"];
+    label?: string | JSX.Element;
+    messageComponent?: MComponent;
+    name: FormFieldPublicProps<T, K>["$name"];
+    onBlur?: (event: React.ChangeEvent) => void;
+    onChange?: (event: React.ChangeEvent) => void;
+    onFormChange?: (name: K) => void;
+    onKeyDown?: (event: React.KeyboardEvent) => void;
+    rest: { className?: string } & Object;
+    type?:
+        | undefined
+        | "color"
+        | "date"
+        | "datetime-local"
+        | "email"
+        | "file"
+        | "image"
+        | "month"
+        | "number"
+        | "password"
+        | "range"
+        | "search"
+        | "tel"
+        | "text"
+        | "time"
+        | "url"
+        | "week"
+        | "radio"
+        | "checkbox";
+    validateOnBlur: FormFieldPublicProps<T, K>["$validateOnBlur"];
+    validation?: Validation<T, K>;
+    value?: string;
+} & CommonFormFieldComponentProps;
 
 export interface FormFieldInternalProps {
     fieldType: "input" | "select" | "textarea";
@@ -45,8 +95,8 @@ export interface FormFieldPrivateProps {
 
 export interface FormFieldPublicProps<T extends FormFields<T>, K extends keyof T> {
     $controller: Controller<T>;
-    $disableIf?: (fields: Partial<T>) => boolean;
-    $hideIf?: (fields: Partial<T>) => boolean;
+    $disableIf?: DisableIf<T>;
+    $hideIf?: HideIf<T>;
     $id?: string;
     $initialValidation?: boolean;
     $name: K;
@@ -55,11 +105,6 @@ export interface FormFieldPublicProps<T extends FormFields<T>, K extends keyof T
     $onKeyDown?: (event: React.KeyboardEvent) => void;
     $validateOnBlur?: boolean;
     $validateOnChange?: boolean;
-}
-
-export interface FormFieldState extends InitialState {
-    isOnFirstPosition: boolean;
-    isSelected: boolean;
 }
 
 export type FormFieldType<
@@ -112,7 +157,7 @@ export type FormFieldType<
                         | "time"
                         | "url"
                         | "week";
-                    $validation?: (value: T[K] | undefined, fields: Partial<T>) => ValidationResult;
+                    $validation?: Validation<T, K>;
                     $validationDependencies?: (keyof T)[];
                     $value?: undefined;
                 }
@@ -128,7 +173,7 @@ export type FormFieldType<
                     $hideMessage?: boolean;
                     $label: string | JSX.Element;
                     $type: "checkbox";
-                    $validation?: (value: T[K] | undefined, fields: Partial<T>) => ValidationResult;
+                    $validation?: Validation<T, K>;
                     $validationDependencies?: (keyof T)[];
                     $value?: undefined;
                 }
@@ -137,7 +182,7 @@ export type FormFieldType<
               $hideMessage?: boolean;
               $label?: string | JSX.Element;
               $type?: undefined;
-              $validation?: (value: T[K] | undefined, fields: Partial<T>) => ValidationResult;
+              $validation?: Validation<T, K>;
               $validationDependencies?: (keyof T)[];
               $value?: undefined;
           }
@@ -145,52 +190,7 @@ export type FormFieldType<
               $hideMessage?: boolean;
               $label?: string | JSX.Element;
               $type?: undefined;
-              $validation?: (value: T[K] | undefined, fields: Partial<T>) => ValidationResult;
+              $validation?: Validation<T, K>;
               $validationDependencies?: (keyof T)[];
               $value?: undefined;
           });
-
-export type FormFieldComponentType<
-    T extends FormFields<T>,
-    K extends keyof T,
-    IComponent extends React.ComponentType<React.ComponentProps<IComponent> & FormFieldPrivateProps>,
-    MComponent extends React.ElementType
-> = {
-    component?: IComponent;
-    controller: FormFieldPublicProps<T, K>["$controller"];
-    disableIf?: FormFieldPublicProps<T, K>["$disableIf"];
-    hideIf?: FormFieldPublicProps<T, K>["$hideIf"];
-    hideMessage?: boolean;
-    id?: FormFieldPublicProps<T, K>["$id"];
-    label?: string | JSX.Element;
-    messageComponent?: MComponent;
-    name: FormFieldPublicProps<T, K>["$name"];
-    onBlur?: (event: React.ChangeEvent) => void;
-    onChange?: (event: React.ChangeEvent) => void;
-    onFormChange?: (name: K) => void;
-    onKeyDown?: (event: React.KeyboardEvent) => void;
-    rest: { className?: string } & Object;
-    type?:
-        | undefined
-        | "color"
-        | "date"
-        | "datetime-local"
-        | "email"
-        | "file"
-        | "image"
-        | "month"
-        | "number"
-        | "password"
-        | "range"
-        | "search"
-        | "tel"
-        | "text"
-        | "time"
-        | "url"
-        | "week"
-        | "radio"
-        | "checkbox";
-    validateOnBlur: FormFieldPublicProps<T, K>["$validateOnBlur"];
-    validation?: (value: T[K] | undefined, fields: Partial<T>) => ValidationResult;
-    value?: string;
-} & CommonFormFieldComponentProps;

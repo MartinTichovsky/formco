@@ -1,13 +1,6 @@
 import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
 import FormControl from "@mui/material/FormControl";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import { Condition, FC, FormController } from "formco";
 import * as React from "react";
@@ -45,6 +38,16 @@ export const MaterialUI = () => {
                                         <FC.CustomField
                                             $controller={controller}
                                             $component={TextField}
+                                            $disableIf={(fields) => {
+                                                if (fields.firstName?.value === "James") {
+                                                    return {
+                                                        isDisabled: true,
+                                                        value: "Bond"
+                                                    };
+                                                }
+
+                                                return false;
+                                            }}
                                             $name="surname"
                                             $useDefaultOnValidation
                                             $validation={(value) => !value?.trim()}
@@ -55,7 +58,7 @@ export const MaterialUI = () => {
                                 )}
                             />
                         </FieldRow>
-                        <FieldRow>
+                        {/* <FieldRow>
                             <FormControl sx={{ margin: 0, minWidth: 120 }}>
                                 <InputLabel id="age">Age</InputLabel>
                                 <FC.CustomField
@@ -115,7 +118,7 @@ export const MaterialUI = () => {
                                     </FormControl>
                                 )}
                             />
-                        </FieldRow>
+                        </FieldRow> */}
                         <FieldRow>
                             <FC.Submit
                                 $component={Button}

@@ -35,6 +35,7 @@ export { SubmitDefaultDisabled } from "./components/SubmitDefaultDisabled";
 export { SubmitDisabledOnSubmit } from "./components/SubmitDisabledOnSubmit";
 export { TextareaField } from "./components/TextareaField";
 export { TextField } from "./components/TextField";
+export { TextFieldAutofillUseCase1 } from "./components/TextFieldAutofillUseCase1";
 export { TextFieldComponent } from "./components/TextFieldComponent";
 export { TextFieldDefaultValuesUseCase1 } from "./components/TextFieldDefaultValuesUseCase1";
 export { TextFieldDefaultValuesUseCase2 } from "./components/TextFieldDefaultValuesUseCase2";

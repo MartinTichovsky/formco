@@ -1,12 +1,15 @@
 import * as React from "react";
 import { Controller } from "../controller";
 import { FormFields, PrivateProps } from "../private-controller.types";
+import { ValidationProvider } from "../providers";
 import { ConditionComponentState, ConditionProps } from "./Condition.types";
 
 export const ConditionComponent = <T extends FormFields<T>>({
     children,
+    disableIf,
     dynamicContent,
     dynamicRender,
+    hideIf,
     ifFormValid,
     privateController,
     showIf
@@ -14,7 +17,7 @@ export const ConditionComponent = <T extends FormFields<T>>({
     const [state, setState] = React.useState<ConditionComponentState>({
         isVisible: false
     });
-    const stateRef = React.useRef<ConditionComponentState>();
+    const stateRef = React.useRef(state);
     stateRef.current = state;
 
     const key = React.useRef(0);
@@ -25,8 +28,8 @@ export const ConditionComponent = <T extends FormFields<T>>({
 
     React.useEffect(() => {
         const action = (isValid: boolean) => {
-            const setStateOnNotVisible = dynamicRender || dynamicContent || !stateRef.current!.isVisible;
-            const setStateOnVisible = dynamicRender || dynamicContent || stateRef.current!.isVisible;
+            const setStateOnNotVisible = dynamicRender || dynamicContent || !stateRef.current.isVisible;
+            const setStateOnVisible = dynamicRender || dynamicContent || stateRef.current.isVisible;
 
             if (ifFormValid === undefined && showIf === undefined && setStateOnNotVisible) {
                 setState({ isVisible: true });
@@ -53,13 +56,13 @@ export const ConditionComponent = <T extends FormFields<T>>({
     }, [privateController, ifFormValid, stateRef, showIf]);
 
     return (
-        <>
+        <ValidationProvider disableIf={disableIf} hideIf={hideIf}>
             {state.isVisible &&
                 (dynamicContent ? (
                     <React.Fragment>{dynamicContent(new Controller(privateController))}</React.Fragment>
                 ) : (
                     <React.Fragment key={key.current}>{children}</React.Fragment>
                 ))}
-        </>
+        </ValidationProvider>
     );
 };

@@ -79,7 +79,7 @@ export const GeneralRequired = ({
                             <FieldRow data-testid={DataTestId.RadioFieldRow1}>
                                 <FC.Input
                                     $controller={controller}
-                                    $hideIf={(fields) => !fields.firstName?.trim()}
+                                    $hideIf={(fields) => !fields.firstName?.value?.trim()}
                                     $label={TestingContent.CaptionOption1}
                                     $name="radio"
                                     $type="radio"

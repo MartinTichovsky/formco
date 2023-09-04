@@ -1,7 +1,50 @@
 import { Controller } from "../../controller";
-import { FormFields, OnValidationCustom, ValidationResult } from "../../private-controller.types";
+import {
+    DisableIf,
+    FormFields,
+    HideIf,
+    OnValidationCustom,
+    Validation,
+    ValidationResult
+} from "../../private-controller.types";
+import { InitialState } from "./FormField.types";
+
+export interface CustomFieldComponentInitialProps {
+    initialState: InitialState;
+}
+
+export interface CustomFieldComponentState extends InitialState {}
+
+export interface CustomFieldComponentProps<T extends FormFields<T>, K extends keyof T> {
+    controller: CustomFieldPublicProps<T, K>["$controller"];
+    disableIf?: CustomFieldPublicProps<T, K>["$disableIf"];
+    hideIf?: CustomFieldPublicProps<T, K>["$hideIf"];
+    id?: CustomFieldPublicProps<T, K>["$id"];
+    initialValidation?: CustomFieldPublicProps<T, K>["$initialValidation"];
+    name: CustomFieldPublicProps<T, K>["$name"];
+    onBlur?: CustomFieldPublicProps<T, K>["$onBlur"];
+    onChange?: CustomFieldPublicProps<T, K>["$onChange"];
+    onKeyDown?: CustomFieldPublicProps<T, K>["$onKeyDown"];
+    required?: CustomFieldPublicProps<T, K>["$required"];
+    rest: Object;
+    useDefaultOnValidation: CustomFieldPublicProps<T, K>["$useDefaultOnValidation"];
+    validateOnBlur?: CustomFieldPublicProps<T, K>["$validateOnBlur"];
+    validateOnChange?: CustomFieldPublicProps<T, K>["$validateOnChange"];
+}
+
+export type CustomFieldComponentType<
+    T extends FormFields<T>,
+    K extends keyof T,
+    IComponent extends React.ComponentType<React.ComponentProps<IComponent> & CustomFieldPrivateProps>
+> = CustomFieldComponentProps<T, K> & {
+    component: IComponent;
+    onValidation?: OnValidationCustom;
+    provideValue?: boolean;
+    validation?: (value: T[K] | undefined, fields: Partial<T>) => ValidationResult;
+};
 
 export interface CustomFieldPrivateProps {
+    disabled: boolean;
     name: string;
     onBlur: (event: React.ChangeEvent) => void;
     onChange: (event: React.ChangeEvent) => void;
@@ -10,8 +53,8 @@ export interface CustomFieldPrivateProps {
 
 export interface CustomFieldPublicProps<T extends FormFields<T>, K extends keyof T> {
     $controller: Controller<T>;
-    $disableIf?: (fields: Partial<T>) => boolean;
-    $hideIf?: (fields: Partial<T>) => boolean;
+    $disableIf?: DisableIf<T>;
+    $hideIf?: HideIf<T>;
     $id?: string;
     $initialValidation?: boolean;
     $name: K;
@@ -52,35 +95,7 @@ export interface CustomFieldType<
             $component: IComponent;
             $onValidation?: OnValidationCustom<typeof rest>;
             $provideValue?: boolean;
-            $validation?: (value: T[K] | undefined, fields: Partial<T>) => ValidationResult;
-        } & Omit<React.ComponentPropsWithoutRef<IComponent>, "name" | "onBlur" | "onChange" | "onKeyDown">
+            $validation?: Validation<T, K>;
+        } & Omit<React.ComponentPropsWithoutRef<IComponent>, "disabled" | "name" | "onBlur" | "onChange" | "onKeyDown">
     >): JSX.Element | null;
 }
-
-export interface CustomFieldComponentProps<T extends FormFields<T>, K extends keyof T> {
-    controller: CustomFieldPublicProps<T, K>["$controller"];
-    disableIf?: CustomFieldPublicProps<T, K>["$disableIf"];
-    hideIf?: CustomFieldPublicProps<T, K>["$hideIf"];
-    id?: CustomFieldPublicProps<T, K>["$id"];
-    initialValidation?: CustomFieldPublicProps<T, K>["$initialValidation"];
-    name: CustomFieldPublicProps<T, K>["$name"];
-    onBlur?: CustomFieldPublicProps<T, K>["$onBlur"];
-    onChange?: CustomFieldPublicProps<T, K>["$onChange"];
-    onKeyDown?: CustomFieldPublicProps<T, K>["$onKeyDown"];
-    required?: CustomFieldPublicProps<T, K>["$required"];
-    rest: Object;
-    useDefaultOnValidation: CustomFieldPublicProps<T, K>["$useDefaultOnValidation"];
-    validateOnBlur?: CustomFieldPublicProps<T, K>["$validateOnBlur"];
-    validateOnChange?: CustomFieldPublicProps<T, K>["$validateOnChange"];
-}
-
-export type CustomFieldComponentType<
-    T extends FormFields<T>,
-    K extends keyof T,
-    IComponent extends React.ComponentType<React.ComponentProps<IComponent> & CustomFieldPrivateProps>
-> = CustomFieldComponentProps<T, K> & {
-    component: IComponent;
-    onValidation?: OnValidationCustom;
-    provideValue?: boolean;
-    validation?: (value: T[K] | undefined, fields: Partial<T>) => ValidationResult;
-};

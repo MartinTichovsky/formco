@@ -30,19 +30,19 @@ export const SelectFieldOptionDisabled = (props: Partial<React.ComponentProps<ty
                                 <option></option>
                                 <FC.SelectOption
                                     $controller={controller}
-                                    $disableIf={(fields) => fields.select2 !== TestingContent.CaptionOption21}
+                                    $disableIf={(fields) => fields.select2?.value !== TestingContent.CaptionOption21}
                                 >
                                     {TestingContent.CaptionOption11}
                                 </FC.SelectOption>
                                 <FC.SelectOption
                                     $controller={controller}
-                                    $disableIf={(fields) => fields.select2 !== TestingContent.CaptionOption22}
+                                    $disableIf={(fields) => fields.select2?.value !== TestingContent.CaptionOption22}
                                 >
                                     {TestingContent.CaptionOption12}
                                 </FC.SelectOption>
                                 <FC.SelectOption
                                     $controller={controller}
-                                    $disableIf={(fields) => fields.select2 !== TestingContent.ValueOption23}
+                                    $disableIf={(fields) => fields.select2?.value !== TestingContent.ValueOption23}
                                     value={TestingContent.ValueOption13}
                                 >
                                     {TestingContent.CaptionOption13}

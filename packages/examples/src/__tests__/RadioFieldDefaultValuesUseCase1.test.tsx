@@ -243,16 +243,18 @@ describe("RadioFieldDefaultValuesUseCase1.tsx", () => {
         expect(screen.getByTestId(DataTestId.Radio33)).not.toBeDisabled();
 
         // check selected options
-        expect(screen.getByTestId(DataTestId.Radio11)).toBeChecked();
         expect(screen.getByTestId(DataTestId.Radio21)).toBeChecked();
 
-        // submit valid form
+        // submit invalid form
         await waitFor(async () => {
             fireEvent.click(screen.getByTestId(DataTestId.Submit));
         });
 
         // one error should be shown
-        testInvalidMessage(container, 1);
+        testInvalidMessage(container, 2);
+
+        // click on the first option of radio volume 1
+        fireEvent.click(screen.getByTestId(DataTestId.Radio11));
 
         // click on the first option of radio volume 3
         fireEvent.click(screen.getByTestId(DataTestId.Radio31));

@@ -7,14 +7,14 @@ import {
     ControllerOptions,
     ControllerProps,
     DefaultActiveRadioId,
-    DefaultDisabledRadioId,
-    DisableIf,
+    DisableIfObject,
     ExecutePromise,
     Field,
     Fields,
+    FieldsPublic,
     FieldTypes,
     FormFields,
-    HideIf,
+    HideIfObject,
     InitialValues,
     KeyType,
     OnChangeAction,
@@ -32,9 +32,9 @@ import {
     SetIsDisabled,
     SetIsVisible,
     SubscribeValidator,
-    Validation,
     ValidationContentResult,
     ValidationDependencies,
+    ValidationObject,
     ValidationQueue,
     ValidationResult,
     Validator,
@@ -53,10 +53,9 @@ export class PrivateController<T extends FormFields<T>> {
         visible: new Map()
     };
     private _defaultActiveRadioId: DefaultActiveRadioId<T> = {};
-    private _defaultDisabledRadioId: DefaultDisabledRadioId<T> = {};
-    private _disableIf?: DisableIf<T>;
+    private _disableIf?: DisableIfObject<T>;
     private _fields: Fields<T> = {};
-    private _hideIf?: HideIf<T>;
+    private _hideIf?: HideIfObject<T>;
     private _initialRender = true;
     private _initialValues?: InitialValues<T>;
     private _isSubmitted = false;
@@ -67,7 +66,7 @@ export class PrivateController<T extends FormFields<T>> {
     private _setFormControllerState: React.Dispatch<React.SetStateAction<PrivateControllerSetKey>>;
     private _validateOnBlur;
     private _validateOnChange;
-    private _validation?: Validation<T>;
+    private _validation?: ValidationObject<T>;
     private _validationQueue: ValidationQueue<T> = {};
 
     private isSelectedListeners = new Map<string, Action>();
@@ -142,6 +141,30 @@ export class PrivateController<T extends FormFields<T>> {
                 (result[key] as Value) =
                     this.options?.trimValues && value && typeof value === "string" ? value.trim() : value;
             }
+        }
+
+        return result;
+    }
+
+    get fieldsData(): FieldsPublic<T> {
+        const result: FieldsPublic<T> = {};
+
+        for (let key in this._fields) {
+            const field = this._fields[key]!;
+
+            result[key] = {
+                isDisabled: field.isDisabled,
+                isTouched: field.isTouched,
+                isValid: field.isValid,
+                isValidated: field.isValidated,
+                isVisible: field.isVisible,
+                options: field.options ? new Map(field.options) : undefined,
+                validationInProgress: field.validationInProgress,
+                validationToBeExecuted: field.validationToBeExecuted,
+                value: (this.options?.trimValues && field.value && typeof field.value === "string"
+                    ? field.value.trim()
+                    : field.value) as T[Extract<keyof T, string>]
+            };
         }
 
         return result;
@@ -624,12 +647,6 @@ export class PrivateController<T extends FormFields<T>> {
         this._fields[key]!.isDisabled = Array.from(this._fields[key]!.options!.values()).every(
             (item) => item.isDisabled
         );
-
-        if (!(key in this._defaultDisabledRadioId)) {
-            this._defaultDisabledRadioId[key] = [];
-        }
-
-        this._defaultDisabledRadioId[key]!.push(id);
     }
 
     public setDefaultIsValid({ initialValidation, isValidated, key, type, validationResult }: SetDefaultIsInvalid<T>) {
@@ -814,45 +831,43 @@ export class PrivateController<T extends FormFields<T>> {
         }
     }
 
-    public setIsDisabled({ id, isDisabled, key, type }: SetIsDisabled<T>) {
+    public setIsDisabled({ id, isDisabled, key, type, value }: SetIsDisabled<T>) {
+        const field = this._fields[key];
+
         if (
-            this._fields[key] === undefined ||
-            (type !== "radio" && this._fields[key]!.isDisabled === isDisabled) ||
-            (id && this._fields[key]!.options && this._fields[key]!.options!.get(id)?.isDisabled === isDisabled)
+            field === undefined ||
+            (type !== "radio" && field.isDisabled === isDisabled) ||
+            (id && field.options && field.options!.get(id)?.isDisabled === isDisabled)
         ) {
             return;
         }
 
         let disable = isDisabled;
 
-        if (type === "radio" && id && this._fields[key]!.options?.has(id)) {
-            this._fields[key]!.options!.get(id)!.isDisabled = isDisabled;
-            disable = Array.from(this._fields[key]!.options!.values()).every((item) => item.isDisabled);
+        if (type === "radio" && id && field.options?.has(id)) {
+            field.options!.get(id)!.isDisabled = isDisabled;
+            disable = Array.from(field.options!.values()).every((item) => item.isDisabled);
             this.setIsDisabledAfterAll(key);
         }
 
-        let value =
-            disable || this._fields[key]!.options === undefined
+        let newValue =
+            value ??
+            ((disable || field.options === undefined) && this.options?.setInitialValueOnDisable
                 ? this.getInitialValue(key)
-                : isDisabled && this._fields[key]!.activeId === id && id !== this._defaultActiveRadioId[key]
+                : isDisabled && field.activeId === id && id !== this._defaultActiveRadioId[key]
                 ? undefined
-                : this._fields[key]!.value;
+                : field.value);
 
-        if (
-            isDisabled &&
-            this._fields[key]!.activeId === id &&
-            this._defaultActiveRadioId[key] &&
-            this._defaultDisabledRadioId[key]?.includes(this._defaultActiveRadioId[key]!)
-        ) {
-            value = this.getInitialValue(key);
+        if (type === "radio" && disable && field.activeId === id && this.options?.setInitialValueOnDisable) {
+            newValue = this.getInitialValue(key);
             this.isSelectedAction(this._defaultActiveRadioId[key]);
         }
 
         this._fields[key] = {
-            ...this._fields[key],
+            ...field,
             isDisabled: disable,
             isValidated: false,
-            value
+            value: newValue
         };
 
         if (type === "radio") {

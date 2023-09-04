@@ -1,6 +1,6 @@
 import { Controller } from "../../controller";
 import { PrivateController } from "../../private-controller";
-import { FormFields, Value } from "../../private-controller.types";
+import { DisableIf, FormFields, HideIf, Value } from "../../private-controller.types";
 
 export type FormType = {
     [key: string]: Value;
@@ -19,8 +19,8 @@ export interface RegisterAfterAll {
 export type SelectOptionProps<T extends FormFields<T>> = React.PropsWithChildren<
     React.OptionHTMLAttributes<HTMLOptionElement> & {
         $controller: Controller<T>;
-        $disableIf?: (fields: Partial<T>) => boolean;
-        $hideIf?: (fields: Partial<T>) => boolean;
+        $disableIf?: DisableIf<T>;
+        $hideIf?: HideIf<T>;
     }
 >;
 

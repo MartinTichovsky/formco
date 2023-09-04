@@ -75,9 +75,11 @@ export function FormField<
         throw new Error("ValidationDependencies must be an array");
     }
 
-    if (!privateController.registerKey($name, $type || "text")) {
-        console.warn(`Key '${$name}' is already registered in the form`);
-    }
+    React.useEffect(() => {
+        if (!privateController.registerKey($name, $type || "text")) {
+            console.warn(`Key '${$name}' is already registered in the form`);
+        }
+    }, [$name, $type, privateController]);
 
     if ($validationDependencies) {
         privateController.registerValidationDependencies($name, $validationDependencies);
@@ -188,9 +190,14 @@ export function FormField<
         validationUpdated &&
         validationUpdated(privateController.getFieldValue($name), privateController.getObservedFields($name));
 
+    const disableIfResult = providedProps.$disableIf ? providedProps.$disableIf(privateController.fieldsData) : false;
+
     const initialState: InitialState = {
-        isDisabled: providedProps.$disableIf ? providedProps.$disableIf(privateController.fields) : false,
-        isVisible: providedProps.$hideIf ? !providedProps.$hideIf(privateController.fields) : true,
+        isDisabled:
+            typeof disableIfResult === "object" && "isDisabled" in disableIfResult
+                ? disableIfResult.isDisabled
+                : disableIfResult,
+        isVisible: providedProps.$hideIf ? !providedProps.$hideIf(privateController.fieldsData) : true,
         message: $initialValidation ? privateController.getValidationResultContent(validationResult) : undefined
     };
 

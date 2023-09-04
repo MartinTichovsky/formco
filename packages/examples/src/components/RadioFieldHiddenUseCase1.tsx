@@ -23,7 +23,7 @@ export const RadioFieldHiddenUseCase1 = (props: Partial<React.ComponentProps<typ
                                 value === undefined && <span style={{ color: "red" }}>Choose an option</span>
                             }
                         >
-                            <Validation<MyForm> hideIf={(fields) => !fields.radioVolume3}>
+                            <Validation<MyForm> hideIf={(fields) => !fields.radioVolume3?.value}>
                                 <FieldRow>
                                     <b>Radio Volume 1</b>
                                 </FieldRow>
@@ -73,7 +73,7 @@ export const RadioFieldHiddenUseCase1 = (props: Partial<React.ComponentProps<typ
                                 />
                             </FieldRow>
 
-                            <Validation<MyForm> hideIf={(fields) => !fields.radioVolume2}>
+                            <Validation<MyForm> hideIf={(fields) => !fields.radioVolume2?.value}>
                                 <FieldRow>
                                     <b>Radio Volume 3</b>
                                 </FieldRow>

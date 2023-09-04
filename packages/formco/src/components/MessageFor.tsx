@@ -13,7 +13,7 @@ export const MessageFor = <T extends FormFields<T>, K extends keyof T>({
         message: undefined,
         isVisible: false
     });
-    const stateRef = React.useRef<MessageForState>();
+    const stateRef = React.useRef(state);
     stateRef.current = state;
 
     React.useEffect(() => {
@@ -22,12 +22,12 @@ export const MessageFor = <T extends FormFields<T>, K extends keyof T>({
                 if (
                     show &&
                     ((isValid && fieldIsValid) || (!isValid && !fieldIsValid)) &&
-                    (!stateRef.current!.isVisible || (!children && stateRef.current!.message !== validationResult))
+                    (!stateRef.current.isVisible || (!children && stateRef.current.message !== validationResult))
                 ) {
                     setState({ isVisible: true, message: validationResult });
                 } else if (
                     (!show || (isValid && !fieldIsValid) || (!isValid && fieldIsValid)) &&
-                    stateRef.current!.isVisible
+                    stateRef.current.isVisible
                 ) {
                     setState({ isVisible: false, message: undefined });
                 }

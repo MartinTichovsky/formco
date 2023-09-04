@@ -1,6 +1,11 @@
 import * as React from "react";
-import { FormFields, PrivateProps, ValidationResult } from "../../private-controller.types";
-import { CustomFieldComponentType, CustomFieldPrivateProps } from "./CustomField.types";
+import { FormFields, PrivateProps, ValidationResult, Value } from "../../private-controller.types";
+import {
+    CustomFieldComponentInitialProps,
+    CustomFieldComponentState,
+    CustomFieldComponentType,
+    CustomFieldPrivateProps
+} from "./CustomField.types";
 
 export const CustomFieldComponent = <
     T extends FormFields<T>,
@@ -8,11 +13,11 @@ export const CustomFieldComponent = <
     IComponent extends React.ComponentType<React.ComponentProps<IComponent> & CustomFieldPrivateProps>
 >({
     component: Component,
+    initialState,
     initialValidation,
     children,
     controller,
     disableIf,
-
     hideIf,
     id,
     name,
@@ -28,15 +33,21 @@ export const CustomFieldComponent = <
     validation,
     validateOnBlur,
     validateOnChange
-}: React.PropsWithChildren<CustomFieldComponentType<T, K, IComponent>> & PrivateProps<T>) => {
+}: React.PropsWithChildren<CustomFieldComponentType<T, K, IComponent>> &
+    PrivateProps<T> &
+    CustomFieldComponentInitialProps) => {
     const [props, setProps] = React.useState<React.ComponentProps<React.ElementType>>({});
-    const ref = React.useRef<HTMLElement>();
     const propsRef = React.useRef(props);
     propsRef.current = props;
 
-    const defaultValue = rest["defaultValue"]
-        ? rest["defaultValue"]
-        : React.useMemo(() => privateController.getFieldValue(name) || "", [privateController]);
+    const [state, setState] = React.useState<CustomFieldComponentState>({
+        ...initialState
+    });
+    const stateRef = React.useRef(state);
+    stateRef.current = state;
+
+    const ref = React.useRef<HTMLElement>();
+    const defaultValue = rest["defaultValue"];
 
     React.useEffect(
         () => {
@@ -123,6 +134,50 @@ export const CustomFieldComponent = <
         };
     }, [privateController, name, onValidation, setProps]);
 
+    React.useEffect(() => {
+        if (!disableIf) {
+            return;
+        }
+
+        const action = () => {
+            const isDisabledResult = disableIf(privateController.fieldsData);
+            let isDisabled = false;
+            let value: Value | undefined;
+
+            if (typeof isDisabledResult === "object" && "isDisabled" in isDisabledResult) {
+                isDisabled = isDisabledResult.isDisabled;
+                value = isDisabledResult.value;
+            } else {
+                isDisabled = isDisabledResult;
+            }
+
+            privateController.setIsDisabled({
+                id,
+                isDisabled,
+                key: name,
+                value
+            });
+
+            if (isDisabled && !stateRef.current.isDisabled) {
+                setState((prevState) => ({
+                    ...prevState,
+                    isDisabled: true
+                }));
+            } else if (!isDisabled && stateRef.current.isDisabled) {
+                setState((prevState) => ({
+                    ...prevState,
+                    isDisabled: false
+                }));
+            }
+        };
+
+        privateController.subscribeOnChange(action);
+
+        return () => {
+            privateController.unsubscribeOnChange(action);
+        };
+    }, [defaultValue, disableIf, id, name, privateController, stateRef, setState]);
+
     const onBlurHandler = React.useCallback((event: React.ChangeEvent<Element>) => {
         privateController.setFieldProperties(name, {
             isTouched: true
@@ -177,13 +232,14 @@ export const CustomFieldComponent = <
         {
             ...rest,
             ...props,
-            defaultValue,
+            disabled: state.isDisabled,
             id,
             name,
             onBlur: onBlurHandler,
             onChange: onChangeHandler,
             onKeyDown: onKeyDownHandler,
-            ref
+            ref,
+            value: defaultValue ?? privateController.getFieldValue(name) ?? ""
         },
         children
     );

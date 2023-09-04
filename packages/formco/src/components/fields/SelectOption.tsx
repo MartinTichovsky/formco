@@ -87,11 +87,21 @@ export const SelectOption = <T extends FormFields<T>>({
 
     const privateController = usePrivateController<T>();
     const { id, name, selectRef } = context;
-    const [state, setState] = React.useState<SelectOptionState>({
-        isDisabled: disableIf !== undefined && disableIf(privateController.fields),
-        isVisible: hideIf === undefined || !hideIf(privateController.fields)
-    });
-    const stateRef = React.useRef<SelectOptionState>();
+
+    const [state, setState] = React.useState<SelectOptionState>(
+        React.useMemo(() => {
+            const disableIfResult = disableIf ? disableIf(privateController.fieldsData) : false;
+
+            return {
+                isDisabled:
+                    typeof disableIfResult === "object" && "isDisabled" in disableIfResult
+                        ? disableIfResult.isDisabled
+                        : disableIfResult,
+                isVisible: hideIf === undefined || !hideIf(privateController.fieldsData)
+            };
+        }, [])
+    );
+    const stateRef = React.useRef(state);
     stateRef.current = state;
 
     const key = React.useRef(0);
@@ -102,10 +112,14 @@ export const SelectOption = <T extends FormFields<T>>({
         }
 
         const action = () => {
-            const isDisabled = disableIf !== undefined && disableIf(privateController.fields);
-            const isVisible = hideIf === undefined || !hideIf(privateController.fields);
+            const disableIfResult = disableIf ? disableIf(privateController.fieldsData) : false;
+            const isDisabled =
+                typeof disableIfResult === "object" && "isDisabled" in disableIfResult
+                    ? disableIfResult.isDisabled
+                    : disableIfResult;
+            const isVisible = hideIf === undefined || !hideIf(privateController.fieldsData);
 
-            if (stateRef.current!.isDisabled !== isDisabled || stateRef.current!.isVisible !== isVisible) {
+            if (stateRef.current.isDisabled !== isDisabled || stateRef.current.isVisible !== isVisible) {
                 registerAfterAll({
                     id,
                     isDisabled,

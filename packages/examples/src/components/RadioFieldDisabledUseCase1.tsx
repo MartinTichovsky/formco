@@ -15,7 +15,11 @@ export const RadioFieldDisabledUseCase1 = (props: Partial<React.ComponentProps<t
 
     return (
         <Template store={store}>
-            <FormController<MyForm> {...props} onSubmit={(fields) => console.log(fields)}>
+            <FormController<MyForm>
+                {...props}
+                options={{ setInitialValueOnDisable: true, ...props.options }}
+                onSubmit={(fields) => console.log(fields)}
+            >
                 {(controller) => (
                     <>
                         <Validation
@@ -23,7 +27,7 @@ export const RadioFieldDisabledUseCase1 = (props: Partial<React.ComponentProps<t
                                 value === undefined && <span style={{ color: "red" }}>Choose an option</span>
                             }
                         >
-                            <Validation<MyForm> disableIf={(fields) => !fields.radioVolume3}>
+                            <Validation<MyForm> disableIf={(fields) => !fields.radioVolume3?.value}>
                                 <FieldRow>
                                     <b>Radio Volume 1</b>
                                 </FieldRow>
@@ -73,7 +77,7 @@ export const RadioFieldDisabledUseCase1 = (props: Partial<React.ComponentProps<t
                                 />
                             </FieldRow>
 
-                            <Validation<MyForm> disableIf={(fields) => !fields.radioVolume2}>
+                            <Validation<MyForm> disableIf={(fields) => !fields.radioVolume2?.value}>
                                 <FieldRow>
                                     <b>Radio Volume 3</b>
                                 </FieldRow>

@@ -18,13 +18,18 @@ export const TextFieldDefaultValuesUseCase2 = (props: Partial<React.ComponentPro
 
     return (
         <Template store={store}>
-            <FormController<MyForm> initialValues={initialValues} {...props} onSubmit={(fields) => console.log(fields)}>
+            <FormController<MyForm>
+                initialValues={initialValues}
+                {...props}
+                options={{ setInitialValueOnDisable: true, ...props.options }}
+                onSubmit={(fields) => console.log(fields)}
+            >
                 {(controller) => (
                     <>
                         <FieldRow>
                             <FC.Input
                                 $controller={controller}
-                                $disableIf={(fields) => !fields.surname?.trim()}
+                                $disableIf={(fields) => !fields.surname?.value?.trim()}
                                 $name="firstName"
                                 $validation={(value) =>
                                     (value === undefined || !value.trim()) && "Provide a valid given name"

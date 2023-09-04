@@ -1,5 +1,5 @@
 import { CommonFormFieldProps } from "./components/fields/FormField.types";
-import { ValidationResult, Value } from "./private-controller.types";
+import { DisableIf, HideIf, ValidationResult, Value } from "./private-controller.types";
 
 export type OnChangeCondition = ((fields: {}) => boolean) | undefined;
 
@@ -11,9 +11,9 @@ export interface SelectProviderProps {
 
 export type ValidationAction = (value: Value, fields: {}) => ValidationResult;
 
-export interface ValidationProviderProps {
-    readonly disableIf?: OnChangeCondition;
-    readonly hideIf?: OnChangeCondition;
+export interface ValidationProviderProps<T> {
+    readonly disableIf?: DisableIf<T>;
+    readonly hideIf?: HideIf<T>;
     readonly hideMessage?: CommonFormFieldProps["$hideMessage"];
     readonly hideRequiredStar?: CommonFormFieldProps["$hideRequiredStar"];
     readonly required?: CommonFormFieldProps["$required"];

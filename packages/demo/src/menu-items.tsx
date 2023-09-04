@@ -36,6 +36,7 @@ import {
     SubmitDisabledOnSubmit,
     TextareaField,
     TextField,
+    TextFieldAutofillUseCase1,
     TextFieldComponent,
     TextFieldDefaultValuesUseCase1,
     TextFieldDefaultValuesUseCase2,
@@ -189,6 +190,10 @@ const menuItems: MenuItems = {
         }
     ],
     "Text Fields": [
+        {
+            label: "Autofill - UseCase 1",
+            render: () => <TextFieldAutofillUseCase1 />
+        },
         {
             label: "Basic Text Fields",
             render: () => <TextField />

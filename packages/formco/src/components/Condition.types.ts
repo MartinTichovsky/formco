@@ -1,9 +1,11 @@
 import { Controller } from "../controller";
-import { FormFields } from "../private-controller.types";
+import { DisableIf, FormFields, HideIf } from "../private-controller.types";
 
 export type ConditionProps<T extends FormFields<T>> = React.PropsWithChildren<
     {
         controller: Controller<T>;
+        disableIf?: DisableIf<T>;
+        hideIf?: HideIf<T>;
         ifFormValid?: boolean;
         showIf?: () => boolean;
     } & (

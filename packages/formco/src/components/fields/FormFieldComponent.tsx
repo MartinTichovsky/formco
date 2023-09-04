@@ -1,13 +1,13 @@
 import * as React from "react";
 import { CN } from "../../constants";
-import { FormFields, PrivateProps, ValidationResult } from "../../private-controller.types";
+import { FormFields, PrivateProps, ValidationResult, Value } from "../../private-controller.types";
 import { SelectProvider } from "../../providers";
 import {
+    FormFieldComponentInitialProps,
+    FormFieldComponentState,
     FormFieldComponentType,
-    FormFieldInitialProps,
     FormFieldInternalProps,
-    FormFieldPrivateProps,
-    FormFieldState
+    FormFieldPrivateProps
 } from "./FormField.types";
 
 export function FormFieldComponent<
@@ -16,13 +16,16 @@ export function FormFieldComponent<
     IComponent extends React.ComponentType<React.ComponentProps<IComponent> & FormFieldPrivateProps>,
     MComponent extends React.ElementType
 >({
+    children,
     component: Component,
     controller,
+    fieldType,
     disableIf,
     hideMessage,
     hideIf,
     hideRequiredStar,
     id,
+    initialState,
     label,
     messageComponent: MessageComponent,
     name,
@@ -30,25 +33,22 @@ export function FormFieldComponent<
     onChange,
     onFormChange,
     onKeyDown,
+    privateController,
     required,
     requiredComponent,
     requiredInvalidMessage,
     requiredValidMessage,
+    rest,
     type,
     validateOnBlur,
     validation,
-    value,
-    children,
-    fieldType,
-    initialState,
-    privateController,
-    rest
+    value
 }: React.PropsWithChildren<FormFieldComponentType<T, K, IComponent, MComponent>> &
     FormFieldInternalProps &
-    FormFieldInitialProps &
+    FormFieldComponentInitialProps &
     PrivateProps<T>) {
-    const [state, setState] = React.useState<FormFieldState>({
-        ...initialState!,
+    const [state, setState] = React.useState<FormFieldComponentState>({
+        ...initialState,
         isOnFirstPosition: privateController.isOnFirstPosition(name, id),
         isSelected:
             type === "checkbox"
@@ -58,8 +58,8 @@ export function FormFieldComponent<
 
     const keyRef = React.useRef(0);
     const ref = React.useRef<HTMLSelectElement | HTMLInputElement>();
-    const stateRef = React.useRef<FormFieldState>();
 
+    const stateRef = React.useRef(state);
     stateRef.current = state;
 
     React.useEffect(() => {
@@ -72,8 +72,8 @@ export function FormFieldComponent<
                 const isOnFirstPosition = privateController.isOnFirstPosition(name, id);
 
                 if (
-                    (!stateRef.current?.isOnFirstPosition && isOnFirstPosition) ||
-                    (stateRef.current?.isOnFirstPosition && !isOnFirstPosition)
+                    (!stateRef.current.isOnFirstPosition && isOnFirstPosition) ||
+                    (stateRef.current.isOnFirstPosition && !isOnFirstPosition)
                 ) {
                     setState((prevState) => ({
                         ...prevState,
@@ -121,7 +121,7 @@ export function FormFieldComponent<
 
             if (
                 validationResult &&
-                (stateRef.current!.message !== validationResult || stateRef.current!.isValid !== isValid)
+                (stateRef.current.message !== validationResult || stateRef.current.isValid !== isValid)
             ) {
                 setState((prevState) => ({
                     ...prevState,
@@ -130,7 +130,7 @@ export function FormFieldComponent<
                 }));
             } else if (
                 !validationResult &&
-                (stateRef.current!.message !== undefined || stateRef.current?.isValid !== isValid)
+                (stateRef.current.message !== undefined || stateRef.current.isValid !== isValid)
             ) {
                 setState((prevState) => ({
                     ...prevState,
@@ -157,7 +157,7 @@ export function FormFieldComponent<
     React.useEffect(() => {
         const action = {
             action: (disable: boolean) => {
-                if (disable !== stateRef.current!.isDisabled) {
+                if (disable !== stateRef.current.isDisabled) {
                     setState((prevState) => ({
                         ...prevState,
                         isDisabled: disable
@@ -180,16 +180,27 @@ export function FormFieldComponent<
         }
 
         const action = () => {
-            const isDisabled = disableIf(privateController.fields);
+            const isDisabledResult = disableIf(privateController.fieldsData);
+            let isDisabled = false;
+            let newValue: Value | undefined;
+
+            if (typeof isDisabledResult === "object" && "isDisabled" in isDisabledResult) {
+                isDisabled = isDisabledResult.isDisabled;
+                newValue = isDisabledResult.value;
+            } else {
+                isDisabled = isDisabledResult;
+            }
 
             privateController.setIsDisabled({
                 id,
                 isDisabled,
                 key: name,
-                type
+                type,
+                value: newValue
             });
 
-            if (isDisabled && !stateRef.current!.isDisabled) {
+            if (isDisabled && !stateRef.current.isDisabled) {
+                // changing key helps to set a defaultValue to show the correct text
                 keyRef.current++;
 
                 setState((prevState) => ({
@@ -201,10 +212,16 @@ export function FormFieldComponent<
                     isValid: undefined,
                     message: undefined
                 }));
-            } else if (!isDisabled && stateRef.current!.isDisabled) {
+            } else if (!isDisabled && stateRef.current.isDisabled) {
+                // changing key helps to set a defaultValue to show the correct text
+                keyRef.current++;
+
                 setState((prevState) => ({
                     ...prevState,
-                    isDisabled: false
+                    isDisabled: false,
+                    isSelected:
+                        (type === "checkbox" && privateController.getFieldValue(name) === true) ||
+                        privateController.getFieldValue(name) === value
                 }));
             }
         };
@@ -238,7 +255,7 @@ export function FormFieldComponent<
         }
 
         const action = () => {
-            const isVisible = !hideIf(privateController.fields);
+            const isVisible = !hideIf(privateController.fieldsData);
 
             privateController.setIsVisible({
                 id,
@@ -247,13 +264,13 @@ export function FormFieldComponent<
                 type
             });
 
-            if (!isVisible && stateRef.current!.isVisible) {
+            if (!isVisible && stateRef.current.isVisible) {
                 setState((prevState) => ({
                     ...prevState,
                     isOnFirstPosition: privateController.isOnFirstPosition(name, id),
                     isVisible: false
                 }));
-            } else if (isVisible && !stateRef.current!.isVisible) {
+            } else if (isVisible && !stateRef.current.isVisible) {
                 keyRef.current++;
 
                 setState((prevState) => ({
@@ -426,7 +443,9 @@ export function FormFieldComponent<
 
     const props = {
         defaultChecked: false,
-        defaultValue: value || React.useMemo(() => privateController.getFieldValue(name) || "", [privateController])
+        defaultValue:
+            value ??
+            React.useMemo(() => privateController.getFieldValue(name) || "", [keyRef.current, privateController])
     };
 
     if (!state.isVisible) {

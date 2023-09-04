@@ -1,11 +1,13 @@
 import { Controller } from "../controller";
 import {
     ControllerOptions,
+    DisableIf,
     FormFields,
+    HideIf,
     InitialValues,
     OnSubmit,
     OnValidationCustom,
-    ValidationResult
+    Validation
 } from "../private-controller.types";
 
 export type FormControllerComponentProps<T extends FormFields<T>> = FormControllerProps<T> &
@@ -14,10 +16,10 @@ export type FormControllerComponentProps<T extends FormFields<T>> = FormControll
 export type FormControllerProps<T extends FormFields<T>> = React.PropsWithChildren<{
     children: (controller: Controller<T>) => React.ReactNode;
     disableIf?: {
-        [key in keyof T]?: (fields: Partial<T>) => boolean;
+        [K in keyof T]?: DisableIf<T>;
     };
     hideIf?: {
-        [key in keyof T]?: (fields: Partial<T>) => boolean;
+        [K in keyof T]?: HideIf<T>;
     };
     initialValidation?: boolean;
     initialValues?: InitialValues<T>;
@@ -25,7 +27,7 @@ export type FormControllerProps<T extends FormFields<T>> = React.PropsWithChildr
     onSubmit?: OnSubmit<T>;
     onValidation?:
         | {
-              [key in keyof T]?: OnValidationCustom;
+              [K in keyof T]?: OnValidationCustom;
           }
         | OnValidationCustom;
     requiredInvalidMessage?: string | JSX.Element;
@@ -33,6 +35,6 @@ export type FormControllerProps<T extends FormFields<T>> = React.PropsWithChildr
     validateOnBlur?: boolean;
     validateOnChange?: boolean;
     validation?: {
-        [key in keyof T]?: (value: T[key] | undefined, props: unknown) => ValidationResult;
+        [K in keyof T]?: Validation<T, K>;
     };
 }>;

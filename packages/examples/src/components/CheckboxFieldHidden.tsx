@@ -36,7 +36,7 @@ export const CheckboxFieldHidden = (props: Partial<React.ComponentProps<typeof F
                         <FieldRow>
                             <FC.Input
                                 $controller={controller}
-                                $hideIf={(fields) => !fields.checkbox1}
+                                $hideIf={(fields) => !fields.checkbox1?.value}
                                 $label={TestingContent.CaptionCheckbox2}
                                 $name="checkbox2"
                                 $type="checkbox"

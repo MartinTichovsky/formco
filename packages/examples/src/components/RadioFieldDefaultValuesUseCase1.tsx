@@ -21,6 +21,7 @@ export const RadioFieldDefaultValuesUseCase1 = (props: Partial<React.ComponentPr
                     radioVolume3: TestingContent.CaptionOption33
                 }}
                 {...props}
+                options={{ setInitialValueOnDisable: true, ...props.options }}
                 onSubmit={(fields) => console.log(fields)}
             >
                 {(controller) => (
@@ -36,8 +37,10 @@ export const RadioFieldDefaultValuesUseCase1 = (props: Partial<React.ComponentPr
                             <FieldRow>
                                 <FC.Input
                                     $controller={controller}
-                                    $disableIf={(fields) => fields.radioVolume3 !== TestingContent.CaptionOption31}
-                                    $label={TestingContent.CaptionOption12}
+                                    $disableIf={(fields) =>
+                                        fields.radioVolume3?.value !== TestingContent.CaptionOption31
+                                    }
+                                    $label={TestingContent.CaptionOption11}
                                     $name="radioVolume1"
                                     $type="radio"
                                     $value={TestingContent.CaptionOption11}
@@ -47,7 +50,9 @@ export const RadioFieldDefaultValuesUseCase1 = (props: Partial<React.ComponentPr
                             <FieldRow>
                                 <FC.Input
                                     $controller={controller}
-                                    $disableIf={(fields) => fields.radioVolume3 !== TestingContent.CaptionOption32}
+                                    $disableIf={(fields) =>
+                                        fields.radioVolume3?.value !== TestingContent.CaptionOption32
+                                    }
                                     $label={TestingContent.CaptionOption12}
                                     $name="radioVolume1"
                                     $type="radio"
@@ -105,7 +110,9 @@ export const RadioFieldDefaultValuesUseCase1 = (props: Partial<React.ComponentPr
                             <FieldRow>
                                 <FC.Input
                                     $controller={controller}
-                                    $disableIf={(fields) => fields.radioVolume2 !== TestingContent.CaptionOption21}
+                                    $disableIf={(fields) =>
+                                        fields.radioVolume2?.value !== TestingContent.CaptionOption21
+                                    }
                                     $label={TestingContent.CaptionOption31}
                                     $name="radioVolume3"
                                     $type="radio"
@@ -116,7 +123,9 @@ export const RadioFieldDefaultValuesUseCase1 = (props: Partial<React.ComponentPr
                             <FieldRow>
                                 <FC.Input
                                     $controller={controller}
-                                    $disableIf={(fields) => fields.radioVolume2 !== TestingContent.CaptionOption22}
+                                    $disableIf={(fields) =>
+                                        fields.radioVolume2?.value !== TestingContent.CaptionOption22
+                                    }
                                     $label={TestingContent.CaptionOption32}
                                     $name="radioVolume3"
                                     $type="radio"

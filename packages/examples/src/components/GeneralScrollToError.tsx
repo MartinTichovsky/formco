@@ -72,7 +72,7 @@ export const GeneralScrollToError = (props: Partial<React.ComponentProps<typeof 
                             <FieldRow style={{ marginTop: 100 }}>
                                 <FC.Input
                                     $controller={controller}
-                                    $hideIf={(fields) => fields.surname === TestingContent.Bond}
+                                    $hideIf={(fields) => fields.surname?.value === TestingContent.Bond}
                                     $label={TestingContent.CaptionOption1}
                                     $name="radio"
                                     $type="radio"

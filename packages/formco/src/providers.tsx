@@ -1,14 +1,14 @@
 import * as React from "react";
 import { CommonFormFieldProps } from "./components/fields/FormField.types";
 import { PrivateController } from "./private-controller";
-import { FormFields } from "./private-controller.types";
-import { OnChangeCondition, SelectProviderProps, ValidationAction, ValidationProviderProps } from "./providers.types";
+import { DisableIf, FormFields, HideIf } from "./private-controller.types";
+import { SelectProviderProps, ValidationAction, ValidationProviderProps } from "./providers.types";
 
 export const commonPropsContext = React.createContext<CommonFormFieldProps>({});
 
-export const disableIfContext = React.createContext<OnChangeCondition | undefined>(undefined);
+export const disableIfContext = React.createContext<DisableIf<{}> | undefined>(undefined);
 
-export const hideIfContext = React.createContext<OnChangeCondition | undefined>(undefined);
+export const hideIfContext = React.createContext<HideIf<{}> | undefined>(undefined);
 
 export const privateControllerContext = React.createContext<PrivateController<{}> | undefined>(undefined);
 
@@ -33,13 +33,13 @@ export const SelectProvider = ({ children, ...rest }: React.PropsWithChildren<Se
     return <selectContext.Provider value={rest}>{children}</selectContext.Provider>;
 };
 
-export const ValidationProvider = ({
+export const ValidationProvider = <T extends FormFields<T>>({
     children,
     disableIf,
     hideIf,
     validation,
     ...commonProps
-}: React.PropsWithChildren<ValidationProviderProps>) => {
+}: React.PropsWithChildren<ValidationProviderProps<T>>) => {
     let result = <>{children}</>;
 
     if (Object.keys(commonProps).length > 0) {

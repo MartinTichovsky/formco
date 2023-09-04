@@ -21,7 +21,7 @@ export const TextFieldDisabledUseCase1 = (props: Partial<React.ComponentProps<ty
                         <FieldRow>
                             <FC.Input
                                 $controller={controller}
-                                $disableIf={(fields) => !fields.surname?.trim()}
+                                $disableIf={(fields) => fields.surname?.isDisabled || !fields.surname?.value?.trim()}
                                 $name="salutation"
                                 $validation={(value) => !value?.trim() && "Provide a valid salutation"}
                                 data-testid={DataTestId.Salutation}
@@ -40,7 +40,7 @@ export const TextFieldDisabledUseCase1 = (props: Partial<React.ComponentProps<ty
                         <FieldRow>
                             <FC.Input
                                 $controller={controller}
-                                $disableIf={(fields) => !fields.firstName?.trim()}
+                                $disableIf={(fields) => !fields.firstName?.value?.trim()}
                                 $name="surname"
                                 $validation={(value) => !value?.trim() && "Provide a valid surname"}
                                 data-testid={DataTestId.Surname}

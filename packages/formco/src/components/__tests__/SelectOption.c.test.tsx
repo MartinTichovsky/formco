@@ -104,7 +104,7 @@ describe("SelectOption", () => {
                     <SelectOption
                         $controller={controller}
                         data-testid={testId}
-                        $disableIf={(fields) => !fields.input?.trim()}
+                        $disableIf={(fields) => !fields.input?.value?.trim()}
                     >
                         {testText}
                     </SelectOption>
@@ -169,7 +169,7 @@ describe("SelectOption", () => {
                     <SelectOption
                         $controller={controller}
                         data-testid={testId}
-                        $hideIf={(fields) => !fields.input?.trim()}
+                        $hideIf={(fields) => !fields.input?.value?.trim()}
                     >
                         {testText}
                     </SelectOption>
@@ -236,10 +236,10 @@ describe("SelectOption", () => {
                 <SelectProvider name="select" selectRef={selectRef}>
                     <select ref={selectRef as React.RefObject<HTMLSelectElement>}>
                         <option></option>
-                        <SelectOption $controller={controller} $hideIf={(fields) => !fields.input}>
+                        <SelectOption $controller={controller} $hideIf={(fields) => !fields.input?.value}>
                             Option 1
                         </SelectOption>
-                        <SelectOption $controller={controller} $hideIf={(fields) => !fields.input}>
+                        <SelectOption $controller={controller} $hideIf={(fields) => !fields.input?.value}>
                             {testText}
                         </SelectOption>
                     </select>
@@ -288,7 +288,7 @@ describe("SelectOption", () => {
             <context.Provider value={privateController}>
                 <SelectProvider name="select" selectRef={selectRef}>
                     <select ref={selectRef as React.RefObject<HTMLSelectElement>}>
-                        <SelectOption $controller={controller} $hideIf={(fields) => !fields.input}>
+                        <SelectOption $controller={controller} $hideIf={(fields) => !fields.input?.value}>
                             {testText}
                         </SelectOption>
                     </select>

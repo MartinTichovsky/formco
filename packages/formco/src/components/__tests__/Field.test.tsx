@@ -4,6 +4,7 @@ import * as React from "react";
 import { Controller } from "../../controller";
 import { PrivateController } from "../../private-controller";
 import { getControllerProviderContext, ValidationProvider } from "../../providers";
+import { wait } from "../../utils/utils";
 import { getGeneratedValues } from "../../__tests__/utils/value-generator";
 import { FormField } from "../fields/FormField";
 import { FormFieldInternalProps, FormFieldPrivateProps, FormFieldType, InitialState } from "../fields/FormField.types";
@@ -203,7 +204,7 @@ describe("FormField", () => {
             expect(console.warn).not.toBeCalled();
         });
 
-        test("Providing same name should log a warning", () => {
+        test("Providing same name should log a warning - basic", async () => {
             console.warn = jest.fn();
             const context = getControllerProviderContext<Form>();
 
@@ -216,10 +217,12 @@ describe("FormField", () => {
                 </context.Provider>
             );
 
+            await wait(100);
+
             expect(console.warn).toBeCalled();
         });
 
-        test("Providing same name should log a warning - test with radio", () => {
+        test("Providing same name should log a warning - test with radio", async () => {
             console.warn = jest.fn();
             const context = getControllerProviderContext<Form>();
 
@@ -238,6 +241,8 @@ describe("FormField", () => {
                     />
                 </context.Provider>
             );
+
+            await wait(100);
 
             expect(console.warn).toBeCalled();
         });

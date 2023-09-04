@@ -1,5 +1,5 @@
 import { PrivateController } from "./private-controller";
-import { FormFields, MapFields } from "./private-controller.types";
+import { FormFields, MapFields, Value } from "./private-controller.types";
 
 export class Controller<T extends FormFields<T>> {
     constructor(private privateController: PrivateController<T>) {}
@@ -23,6 +23,10 @@ export class Controller<T extends FormFields<T>> {
      */
     public disableFields(disable: boolean) {
         this.privateController.disableFields(disable);
+    }
+
+    public fillField(value: Value, key: keyof T) {
+        //
     }
 
     /**
@@ -100,8 +104,21 @@ export class Controller<T extends FormFields<T>> {
                 (formShouldBeSubmitted && this.isFormSubmitted) ||
                 !fieldShouldBeTouched ||
                 (fieldShouldBeTouched && field?.isTouched === true)) &&
-            !field?.isValid
+            field?.isValid === false &&
+            field?.isDisabled === false &&
+            field?.isVisible === true
         );
+    }
+
+    /**
+     * Check if the field is disabled
+     * with the field
+     *
+     * @param key Field key
+     * @returns true if the field is disabled
+     */
+    public isFieldDisabled(key: keyof T) {
+        return this.privateController.getField(key)?.isDisabled === true;
     }
 
     /**

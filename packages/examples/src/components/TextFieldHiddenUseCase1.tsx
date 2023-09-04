@@ -21,7 +21,7 @@ export const TextFieldHiddenUseCase1 = (props: Partial<React.ComponentProps<type
                         <FieldRow>
                             <FC.Input
                                 $controller={controller}
-                                $hideIf={(fields) => !fields.surname?.trim()}
+                                $hideIf={(fields) => !fields.surname?.value?.trim()}
                                 $name="salutation"
                                 $validation={(value) => !value?.trim() && "Provide a valid salutation"}
                                 data-testid={DataTestId.Salutation}
@@ -40,7 +40,7 @@ export const TextFieldHiddenUseCase1 = (props: Partial<React.ComponentProps<type
                         <FieldRow>
                             <FC.Input
                                 $controller={controller}
-                                $hideIf={(fields) => !fields.firstName?.trim()}
+                                $hideIf={(fields) => !fields.firstName?.value?.trim()}
                                 $name="surname"
                                 $validation={(value) => !value?.trim() && "Provide a valid surname"}
                                 data-testid={DataTestId.Surname}

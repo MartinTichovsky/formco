@@ -12,6 +12,10 @@ export type AfterAll<T> = {
 };
 
 export interface ControllerOptions {
+    /**
+     * If true, it set an initial value when a field goes disabled
+     */
+    setInitialValueOnDisable?: boolean;
     scrollToError?: boolean;
     trimValues?: boolean;
     validationTimeout?: number;
@@ -19,10 +23,10 @@ export interface ControllerOptions {
 
 export interface ControllerProps<T extends FormFields<T>> {
     disableIf?: {
-        [K in keyof T]?: (fields: Partial<T>) => boolean;
+        [K in keyof T]?: DisableIf<T>;
     };
     hideIf?: {
-        [K in keyof T]?: (fields: Partial<T>) => boolean;
+        [K in keyof T]?: HideIf<T>;
     };
     initialValues?: InitialValues<T>;
     options?: ControllerOptions;
@@ -49,8 +53,10 @@ export type DefaultActiveRadioId<T> = { [K in keyof T]?: string };
 
 export type DefaultDisabledRadioId<T> = { [K in keyof T]?: string[] };
 
-export type DisableIf<T> = {
-    [K in keyof T]?: (fields: Partial<T>) => boolean;
+export type DisableIf<T> = (fields: FieldsPublic<T>) => boolean | { isDisabled: boolean; value: Value };
+
+export type DisableIfObject<T> = {
+    [K in keyof T]?: DisableIf<T>;
 };
 
 export interface ExecutePromise<T> {
@@ -92,6 +98,28 @@ export type Fields<T> = {
     [K in keyof T]?: Field;
 };
 
+export interface FieldPublic<T, K extends keyof T> {
+    isDisabled: boolean;
+    isTouched?: boolean;
+    isValid: boolean;
+    isValidated: boolean;
+    isVisible: boolean;
+    options?: Map<
+        string,
+        {
+            isDisabled: boolean;
+            isVisible: boolean;
+        }
+    >;
+    validationInProgress: boolean;
+    validationToBeExecuted: boolean;
+    value?: T[K];
+}
+
+export type FieldsPublic<T> = {
+    [K in keyof T]?: FieldPublic<T, K>;
+};
+
 export type FieldTypes =
     | "checkbox"
     | "color"
@@ -114,7 +142,9 @@ export type FieldTypes =
 
 export type FormFields<T> = { [K in keyof T]: Value };
 
-export type HideIf<T> = { [K in keyof T]?: (fields: Partial<T>) => boolean };
+export type HideIf<T> = (fields: FieldsPublic<T>) => boolean;
+
+export type HideIfObject<T> = { [K in keyof T]?: HideIf<T> };
 
 export type InitialValues<T> = {
     [K in keyof T]?: T[K] | number;
@@ -213,6 +243,7 @@ export interface SetIsDisabled<T> {
     isDisabled: boolean;
     key: keyof T;
     type?: FieldTypes;
+    value?: Value;
 }
 
 export interface SetIsVisible<T> {
@@ -230,8 +261,13 @@ export interface SubscribeValidator<T> {
     validation: ValidatorAction;
 }
 
-export type Validation<T> = {
-    [K in keyof T]?: (value: T[K] | undefined, fields: Partial<T>) => ValidationResult;
+export type Validation<T, K extends keyof FormFields<T>> = (
+    value: T[K] | undefined,
+    fields: Partial<T>
+) => ValidationResult;
+
+export type ValidationObject<T> = {
+    [K in keyof T]?: Validation<T, K>;
 };
 
 export type ValidationContentResult = boolean | string | null | undefined | JSX.Element;

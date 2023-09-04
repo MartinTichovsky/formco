@@ -20,6 +20,7 @@ export const CheckboxFieldDisabled = (props: Partial<React.ComponentProps<typeof
                     checkbox2: true
                 }}
                 {...props}
+                options={{ setInitialValueOnDisable: true, ...props.options }}
                 onSubmit={(fields) => console.log(fields)}
             >
                 {(controller) => (
@@ -36,7 +37,7 @@ export const CheckboxFieldDisabled = (props: Partial<React.ComponentProps<typeof
                         <FieldRow>
                             <FC.Input
                                 $controller={controller}
-                                $disableIf={(fields) => !fields.checkbox1}
+                                $disableIf={(fields) => !fields.checkbox1?.value}
                                 $label={TestingContent.CaptionCheckbox2}
                                 $name="checkbox2"
                                 $type="checkbox"

@@ -30,7 +30,7 @@ export const RadioFieldHiddenUseCase3 = (props: Partial<React.ComponentProps<typ
                             <FieldRow>
                                 <FC.Input
                                     $controller={controller}
-                                    $hideIf={(fields) => fields.radioVolume3 !== TestingContent.CaptionOption31}
+                                    $hideIf={(fields) => fields.radioVolume3?.value !== TestingContent.CaptionOption31}
                                     $label={TestingContent.CaptionOption11}
                                     $name="radioVolume1"
                                     $type="radio"
@@ -41,7 +41,7 @@ export const RadioFieldHiddenUseCase3 = (props: Partial<React.ComponentProps<typ
                             <FieldRow>
                                 <FC.Input
                                     $controller={controller}
-                                    $hideIf={(fields) => fields.radioVolume3 !== TestingContent.CaptionOption32}
+                                    $hideIf={(fields) => fields.radioVolume3?.value !== TestingContent.CaptionOption32}
                                     $label={TestingContent.CaptionOption12}
                                     $name="radioVolume1"
                                     $type="radio"
@@ -100,7 +100,7 @@ export const RadioFieldHiddenUseCase3 = (props: Partial<React.ComponentProps<typ
                             <FieldRow>
                                 <FC.Input
                                     $controller={controller}
-                                    $hideIf={(fields) => fields.radioVolume2 !== TestingContent.CaptionOption21}
+                                    $hideIf={(fields) => fields.radioVolume2?.value !== TestingContent.CaptionOption21}
                                     $label={TestingContent.CaptionOption31}
                                     $name="radioVolume3"
                                     $type="radio"
@@ -111,7 +111,7 @@ export const RadioFieldHiddenUseCase3 = (props: Partial<React.ComponentProps<typ
                             <FieldRow>
                                 <FC.Input
                                     $controller={controller}
-                                    $hideIf={(fields) => fields.radioVolume2 !== TestingContent.CaptionOption22}
+                                    $hideIf={(fields) => fields.radioVolume2?.value !== TestingContent.CaptionOption22}
                                     $label={TestingContent.CaptionOption32}
                                     $name="radioVolume3"
                                     $type="radio"

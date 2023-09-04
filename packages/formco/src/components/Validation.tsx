@@ -16,7 +16,7 @@ export const Validation = <T extends FormFields<T>>({
     validation
 }: ValidationProps<T>) => {
     return (
-        <ValidationProvider
+        <ValidationProvider<T>
             hideMessage={hideMessage}
             hideRequiredStar={hideRequiredStar}
             disableIf={disableIf}

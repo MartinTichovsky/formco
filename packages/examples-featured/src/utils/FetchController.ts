@@ -1,5 +1,5 @@
 export class FetchController<Form> {
-    private controllers: { [key in keyof Form]?: AbortController } = {};
+    private controllers: { [K in keyof Form]?: AbortController } = {};
 
     abortLastFetch(id: keyof Form) {
         this.controllers[id]?.abort();
